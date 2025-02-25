@@ -1,5 +1,5 @@
-import Button from "@/components/Button";
-
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -11,12 +11,16 @@ export default function Home() {
           Please login or create a new account to continue
         </p>
         <div className="flex flex-col space-y-4">
-          <Button href="/auth/login">Login</Button>
-          <Button href="/auth/signup" variant="secondary">
-            Sign Up
+          <Button asChild>
+            <Link href="/api/auth/login">Login</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/api/auth/signup">SignUp</Link>
           </Button>
         </div>
       </div>
     </main>
   );
 }
+
+// ngrok http 3000

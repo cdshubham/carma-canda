@@ -1,8 +1,7 @@
 import { connect } from "@/db/connection";
-import User from "@/models/userModels";
 import { NextRequest, NextResponse } from "next/server";
-import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
+
+import { signIn } from "@/auth";
 
 connect();
 
@@ -12,45 +11,18 @@ export async function POST(request: NextRequest) {
     const { email, password } = reqBody;
     console.log(reqBody);
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return NextResponse.json(
-        { error: "User does not exist" },
-        { status: 400 }
-      );
-    }
-    console.log("user exists");
-
-    const validPassword = await bcryptjs.compare(password, user.password);
-    if (!validPassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
-    }
-    console.log(user);
-
-    const tokenData = {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-    };
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
-      expiresIn: "1d",
+    await signIn("credentials", {
+      redirect: false,
+      callbackUrl: "/",
+      email,
+      password,
     });
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       message: "Login successful",
       success: true,
     });
-    response.cookies.set("token", token, {
-      httpOnly: true,
-    });
-    return response;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    return NextResponse.json(
-      { error: "An unknown error occurred" },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

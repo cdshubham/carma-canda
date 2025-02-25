@@ -3,16 +3,19 @@ import User from "@/models/userModels";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { UserRequestBody } from "@/types/userSchema.types";
+import axios from "axios";
 
 connect();
 
 export async function POST(request: NextRequest) {
   try {
+    console.log(request);
+
     const req = await request.json();
     console.log(req);
 
     const { username, email, password }: UserRequestBody = req;
-    console.log(req);
+    console.log(username);
     const user = await User.findOne({ email });
     if (user) {
       return NextResponse.json(
@@ -29,6 +32,15 @@ export async function POST(request: NextRequest) {
     });
     const savedUser = await newUser.save();
     console.log(savedUser);
+    //TODO:
+    // try {
+    //   await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
+    //     sendTo: email,
+    //   });
+    //   console.log("Welcome email sent successfully.");
+    // } catch (emailError) {
+    //   console.error("Error sending email:", emailError);
+    // }
     return NextResponse.json({
       message: "User registered successfully saved",
       success: true,
