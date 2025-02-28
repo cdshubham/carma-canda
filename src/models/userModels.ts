@@ -7,10 +7,13 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide an email"],
     unique: true,
   },
-  password: { type: String, required: [true, "Please provide password"] },
+  password: { type: String, required: [true, "Please provide a password"] },
+  phoneNumber: { type: String },
   role: { type: String, enum: ["user", "admin"], default: "user" },
+  kids: [{ type: mongoose.Schema.Types.ObjectId, ref: "Kid" }],
   createdAt: { type: Date, default: Date.now },
 });
 
 const User = mongoose.models?.users || mongoose.model("users", userSchema);
+
 export default User;

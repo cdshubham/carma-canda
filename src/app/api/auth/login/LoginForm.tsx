@@ -45,7 +45,7 @@ export default function LoginPage() {
         autoDismiss: true,
         onSuccess: () => {
           setTimeout(async () => {
-            const updatedSession = await getSession(); // ✅ Now works inside async function
+            const updatedSession = await getSession();
 
             console.log("👍😂", updatedSession);
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
               router.push("/admin/orders");
             } else {
               console.log("👍👍", updatedSession?.user);
-              router.push("/");
+              router.push("/customer");
             }
           }, 500);
         },
@@ -65,9 +65,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-md w-full p-6 rounded-lg  sm:p-8">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">
+        <h2 className="text-2xl font-bold text-center mb-6 text-black">
           Sign In
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -78,7 +78,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Email"
                 {...register("email", { required: "Email is required" })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black"
               />
             </div>
             {errors.email && (
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 {...register("password", { required: "Password is required" })}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black text-sm sm:text-base"
               />
               <span
                 onClick={togglePasswordVisibility}
@@ -116,14 +116,14 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
+            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
           >
             {loading ? "loading ..." : "Login"}
           </button>
         </form>
-        <p className="text-xs sm:text-sm text-center mt-3 sm:mt-4">
+        <p className="text-xs sm:text-sm text-center mt-3 sm:mt-4 text-black">
           Don't have an account?{" "}
-          <Link href="/api/auth/signup" className="text-blue-500 font-bold">
+          <Link href="/api/auth/signup" className="text-black font-bold">
             Sign Up
           </Link>
         </p>

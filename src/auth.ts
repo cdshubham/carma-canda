@@ -76,12 +76,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
     async authorized({ request, auth }) {
-      if (
-        request.nextUrl.pathname.includes("/admin") &&
-        auth?.user.role !== "admin"
-      ) {
-        console.log("chal haatt");
+      const path = request.nextUrl.pathname;
+      console.log("😊💥", path);
 
+      if (path === "/") {
+        if (auth?.user.role === "admin") {
+          console.log("Hello");
+
+          return Response.redirect(new URL("/admin/orders", request.url));
+        }
+        if (auth?.user.role === "user") {
+          return Response.redirect(new URL("/customer", request.url));
+        }
+      }
+
+      if (path.includes("/admin") && auth?.user.role !== "admin") {
+        console.log("chal haatt 🔫");
+        return false;
+      }
+
+      if (
+        path.includes("/customer") &&
+        !path.includes("/admin") &&
+        auth?.user.role !== "user"
+      ) {
+        console.log("chal haatt 🤡");
         return false;
       }
 
