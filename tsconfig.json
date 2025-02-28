@@ -20,6 +20,7 @@
     ],
     "baseUrl": "./",
     "paths": {
+      "mongoose": ["node_modules/mongoose"],
       "@/*": ["src/*"],
       "@types/*": ["src/types/*"]
     }
