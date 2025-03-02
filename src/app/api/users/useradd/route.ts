@@ -5,12 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { UserRequestBody } from "@/types/userSchema.types";
 import axios from "axios";
 
-connect();
-
 export async function POST(request: NextRequest) {
+  await connect();
   try {
-    console.log(request);
-
     const req = await request.json();
     console.log(req);
 
@@ -23,6 +20,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    console.log(password, "😍😍😍😍");
+
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
     const newUser = new User({
@@ -33,15 +32,17 @@ export async function POST(request: NextRequest) {
     });
     const savedUser = await newUser.save();
     console.log(savedUser);
-    //TODO:
-    // try {
-    //   await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
-    //     sendTo: email,
-    //   });
-    //   console.log("Welcome email sent successfully.");
-    // } catch (emailError) {
-    //   console.error("Error sending email:", emailError);
-    // }
+
+    try {
+      await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
+        sendTo: email,
+        password,
+      });
+      console.log("Welcome email sent successfully.");
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+    }
+
     return NextResponse.json({
       message: "User registered successfully saved",
       success: true,

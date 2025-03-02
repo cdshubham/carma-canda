@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import useFetch from "@/hooks/useFetch";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@pheralb/toast";
 
 const orderFormSchema = z.object({
   productId: z.string().min(1, "Product ID is required"),
@@ -27,13 +28,18 @@ const orderFormSchema = z.object({
   customerId: z.string().min(1, "Customer is required"),
 });
 
+const Loader = () => (
+  <div className="flex justify-center items-center h-64 w-full">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+  </div>
+);
+
 export default function OrdersPage() {
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [customers, setCustomers] = useState([]);
   const [orders, setOrders] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const { fetchData: fetchCustomers } = useFetch("/api/users/getusers", {
     method: "GET",
@@ -50,78 +56,120 @@ export default function OrdersPage() {
     defaultValues: { productId: "", size: "", customerId: "" },
   });
 
-  const fetchOrdersCallback = useCallback(fetchOrders, []);
-  const fetchCustomersCallback = useCallback(fetchCustomers, []);
-
   useEffect(() => {
     const getData = async () => {
-      setIsLoading(true);
-      const [ordersRes, customersRes] = await Promise.all([
-        fetchOrdersCallback(),
-        fetchCustomersCallback(),
-      ]);
-      if (ordersRes?.success) setOrders(ordersRes.data);
-      if (customersRes?.success) setCustomers(customersRes.data);
-      setIsLoading(false);
+      setIsInitialLoading(true);
+      try {
+        const [ordersRes, customersRes] = await Promise.all([
+          fetchOrders(),
+          fetchCustomers(),
+        ]);
+        if (ordersRes?.success) setOrders(ordersRes.data);
+        if (customersRes?.success) setCustomers(customersRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error({ text: "Failed to load data" });
+      } finally {
+        setIsInitialLoading(false);
+      }
     };
     getData();
-  }, [fetchOrdersCallback, fetchCustomersCallback]);
+  }, []);
 
   const handleAddOrder = async (data) => {
-    console.log("💥✔️🤔", data);
-
     setIsLoading(true);
-    const response = await addOrder({
-      body: JSON.stringify({ ...data, timestamp: new Date().toISOString() }),
-    });
-    if (response?.success) {
-      setOrders([
-        ...orders,
-        {
-          ...data,
-          orderId: response.data.orderId,
-          date: new Date().toISOString().split("T")[0],
-        },
-      ]);
-      setIsAddModalOpen(false);
+    try {
+      const response = await addOrder(data);
+      toast.success({ text: "Order added successfully" });
+      const newOrder = {
+        orderId: response.order.orderId,
+        productId: data.productId,
+        size: data.size,
+        customerId: data.customerId,
+        date: new Date().toISOString().split("T")[0],
+        createdAt: new Date().toISOString(),
+      };
+
+      setOrders((prev) => [...prev, newOrder]);
+    } catch (error) {
+      console.error("Error adding order:", error);
+      toast.error({ text: "Error adding order" });
+    } finally {
       form.reset();
+      setIsAddModalOpen(false);
+      setIsLoading(false);
     }
-    setIsLoading(false);
+  };
+
+  const handleCloseModal = () => {
+    form.reset();
+    setIsAddModalOpen(false);
   };
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Orders</h1>
-        <Button onClick={() => setIsAddModalOpen(true)} disabled={isLoading}>
+        <Button
+          onClick={() => setIsAddModalOpen(true)}
+          disabled={isLoading || isInitialLoading}
+          className="text-white bg-black hover:bg-gray-800"
+        >
           Add New Order
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Order ID</TableHead>
-            <TableHead>Customer ID</TableHead>
-            <TableHead>Product ID</TableHead>
-            <TableHead>Size</TableHead>
-            <TableHead>Date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.orderId}>
-              <TableCell>{order.orderId}</TableCell>
-              <TableCell>{order.customerId}</TableCell>
-              <TableCell>{order.productId}</TableCell>
-              <TableCell>{order.size}</TableCell>
-              <TableCell>{order.date}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="w-full overflow-x-auto shadow rounded-lg sm:h-[calc(100vh-200px)] h-[calc(100vh-150px)]">
+        {isInitialLoading ? (
+          <Loader />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Customer ID</TableHead>
+                <TableHead>Product ID</TableHead>
+                <TableHead>Size</TableHead>
+                <TableHead>Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <TableRow key={order.orderId || order._id} className="m-4">
+                    <TableCell className="py-4 whitespace-nowrap">
+                      {order.orderId || order._id}
+                    </TableCell>
+                    <TableCell className="py-4 whitespace-nowrap">
+                      {order.customerId}
+                    </TableCell>
+                    <TableCell className="py-4 whitespace-nowrap">
+                      {order.productId}
+                    </TableCell>
+                    <TableCell className="py-4 whitespace-nowrap">
+                      {order.size}
+                    </TableCell>
+                    <TableCell className="py-4 whitespace-nowrap">
+                      {order.date ||
+                        new Date(order.createdAt || Date.now())
+                          .toISOString()
+                          .split("T")[0]}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-4">
+                    No orders found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+      </div>
 
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+      <Dialog open={isAddModalOpen} onOpenChange={handleCloseModal}>
         <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>Add New Order</DialogTitle>
@@ -164,6 +212,7 @@ export default function OrdersPage() {
               <select
                 {...form.register("customerId")}
                 className="w-full border p-2"
+                disabled={isInitialLoading}
               >
                 <option value="">Select customer</option>
                 {customers.map((customer) => (
@@ -182,7 +231,7 @@ export default function OrdersPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsAddModalOpen(false)}
+                onClick={handleCloseModal}
               >
                 Cancel
               </Button>

@@ -1,3 +1,4 @@
+// models/Kid.js
 import mongoose from "mongoose";
 
 const kidSchema = new mongoose.Schema({
@@ -7,8 +8,8 @@ const kidSchema = new mongoose.Schema({
     required: true,
   },
   name: { type: String, required: true },
-  age: { type: Number, required: true },
   gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+  birthday: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 

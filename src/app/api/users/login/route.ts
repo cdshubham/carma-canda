@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { signIn } from "@/auth";
 
-connect();
-
 export async function POST(request: NextRequest) {
+  await connect();
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;

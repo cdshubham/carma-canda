@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import User from "@/models/userModels";
 import { connect } from "@/db/connection";
 
-connect();
 export async function GET() {
+  await connect();
   try {
     const customers = await User.find({ role: "user" });
     console.log("Customer", customers);

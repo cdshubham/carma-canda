@@ -34,6 +34,12 @@ interface ValidationError {
   phone: string;
 }
 
+const Loader = () => (
+  <div className="flex justify-center items-center h-64 w-full">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+  </div>
+);
+
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -110,7 +116,6 @@ export default function CustomersPage() {
       [name]: value,
     }));
 
-    // Validate on change
     const errorMessage = validateField(name, value);
     setErrors((prev) => ({
       ...prev,
@@ -133,7 +138,6 @@ export default function CustomersPage() {
   };
 
   const handleAddCustomer = async () => {
-    // Check if form is valid before submission
     if (!validateForm()) {
       toast.error({ text: "Please correct the form errors" });
       return;
@@ -151,13 +155,9 @@ export default function CustomersPage() {
 
     try {
       const response = await addCustomer(customerData);
-
       if (response && response.savedUser) {
-        // Format the new customer to match the Customer interface
         const formattedCustomer: Customer = {
-          id:
-            response.savedUser.id ||
-            `C${customers.length + 1}`.padStart(4, "0"),
+          id: response.savedUser._id,
           name: response.savedUser.username || newCustomer.name,
           email: response.savedUser.email || newCustomer.email,
           phone: response.savedUser.phone || newCustomer.phone,
@@ -186,15 +186,16 @@ export default function CustomersPage() {
         <Button
           onClick={() => setIsModalOpen(true)}
           className="text-white bg-black hover:bg-gray-600 w-full sm:w-auto"
+          disabled={isInitialLoading}
         >
           Add New Customer
         </Button>
       </div>
 
-      {isInitialLoading ? (
-        <div className="text-center py-8">Loading customers...</div>
-      ) : (
-        <div className="w-full overflow-x-auto shadow rounded-lg sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+      <div className="w-full overflow-x-auto shadow rounded-lg sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+        {isInitialLoading ? (
+          <Loader />
+        ) : (
           <Table>
             <TableHeader>
               <TableRow>
@@ -236,8 +237,8 @@ export default function CustomersPage() {
               )}
             </TableBody>
           </Table>
-        </div>
-      )}
+        )}
+      </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-md bg-white">

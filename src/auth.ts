@@ -39,12 +39,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!valid) {
           throw new CredentialsSignin("Invalid email or password");
         }
+        console.log("😶😶‍🌫️😶‍🌫️", user);
 
         const userData = {
           id: user._id,
           name: user.username,
           email: user.email,
           role: user.role,
+          memberSince: user.createdAt,
         };
         return userData;
       },
@@ -63,6 +65,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
+        console.log("chlo ji", token, user);
+
         token.role = user.role;
       }
       return token;

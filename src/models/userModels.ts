@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["user", "admin"], default: "user" },
   kids: [{ type: mongoose.Schema.Types.ObjectId, ref: "Kid" }],
   createdAt: { type: Date, default: Date.now },
+  address: { type: String },
 });
 
 const User = mongoose.models?.users || mongoose.model("users", userSchema);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useState } from "react";
 import {
   Card,
@@ -19,29 +20,68 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import useFetch from "@/hooks/useFetch";
+import { useSession } from "next-auth/react";
 
 export default function SetKidsDetailPage() {
-  const [children, setChildren] = useState([
-    { id: 1, firstName: "", lastName: "", birthday: "", age: "", gender: "" },
-  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      children: [{ firstName: "", lastName: "", birthday: "", gender: "" }],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "children",
+  });
 
   const addNewChild = () => {
-    const newId =
-      children.length > 0
-        ? Math.max(...children.map((child) => child.id)) + 1
-        : 1;
-    setChildren([
-      ...children,
-      {
-        id: newId,
-        firstName: "",
-        lastName: "",
-        birthday: "",
-        age: "",
-        gender: "",
-      },
-    ]);
+    append({ firstName: "", lastName: "", birthday: "", gender: "" });
   };
+  const { loading, fetchData } = useFetch("/api/savekids", { method: "POST" });
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    console.log(data);
+
+    try {
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
+
+      const kidsData = data.children.map((child) => ({
+        name: `${child.firstName} ${child.lastName}`.trim(),
+        gender: child.gender,
+        birthday: child.birthday,
+      }));
+
+      const requestData = {
+        userId,
+        kids: kidsData,
+      };
+
+      const response = await fetchData(requestData);
+
+      if (!response) {
+        throw new Error("Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div className="space-y-6 p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto">
@@ -52,96 +92,146 @@ export default function SetKidsDetailPage() {
         Manage information about your children
       </p>
 
-      <div className="space-y-6">
-        {children.map((child, index) => (
-          <Card key={child.id} className="w-full">
-            <CardHeader>
-              <CardTitle>Child {index + 1}</CardTitle>
-              <CardDescription>
-                Enter information for your child
-              </CardDescription>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {fields.map((field, index) => (
+          <Card key={field.id} className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Child {index + 1}</CardTitle>
+                <CardDescription>
+                  Enter information for your child
+                </CardDescription>
+              </div>
+              {fields.length > 1 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => remove(index)}
+                >
+                  Remove
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor={`firstName-${child.id}`}>First name</Label>
-                  <Input id={`firstName-${child.id}`} className="w-full" />
+                  <Label htmlFor={`firstName-${field.id}`}>First name</Label>
+                  <Input
+                    id={`firstName-${field.id}`}
+                    className="w-full"
+                    {...register(`children.${index}.firstName`, {
+                      required: "First name is required",
+                    })}
+                  />
+                  {errors.children?.[index]?.firstName && (
+                    <p className="text-sm text-red-500">
+                      {errors.children[index].firstName.message}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor={`lastName-${child.id}`}>Last name</Label>
-                  <Input id={`lastName-${child.id}`} className="w-full" />
+                  <Label htmlFor={`lastName-${field.id}`}>Last name</Label>
+                  <Input
+                    id={`lastName-${field.id}`}
+                    className="w-full"
+                    {...register(`children.${index}.lastName`, {
+                      required: "Last name is required",
+                    })}
+                  />
+                  {errors.children?.[index]?.lastName && (
+                    <p className="text-sm text-red-500">
+                      {errors.children[index].lastName.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor={`birthday-${child.id}`}>Birthday</Label>
+                  <Label htmlFor={`birthday-${field.id}`}>Birthday</Label>
                   <Input
-                    id={`birthday-${child.id}`}
+                    id={`birthday-${field.id}`}
                     type="date"
                     className="w-full"
+                    max={today}
+                    {...register(`children.${index}.birthday`, {
+                      required: "Birthday is required",
+                    })}
                   />
+                  {errors.children?.[index]?.birthday && (
+                    <p className="text-sm text-red-500">
+                      {errors.children[index].birthday.message}
+                    </p>
+                  )}
                 </div>
+                <div className="space-y-2"></div>
                 <div className="space-y-2">
-                  <Label htmlFor={`age-${child.id}`}>Age</Label>
-                  <Input
-                    id={`age-${child.id}`}
-                    type="number"
-                    className="w-full"
+                  <Label htmlFor={`gender-${field.id}`}>Gender</Label>
+                  <Controller
+                    name={`children.${index}.gender`}
+                    control={control}
+                    rules={{ required: "Gender is required" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          id={`gender-${field.id}`}
+                          className="w-full"
+                        >
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white shadow-md rounded-md">
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`gender-${child.id}`}>Gender</Label>
-                  <Select>
-                    <SelectTrigger id={`gender-${child.id}`} className="w-full">
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white shadow-md rounded-md">
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {errors.children?.[index]?.gender && (
+                    <p className="text-sm text-red-500">
+                      {errors.children[index].gender.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
-            {index !== children.length - 1 && <Separator className="my-2" />}
+            {index !== fields.length - 1 && <Separator className="my-2" />}
           </Card>
         ))}
 
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <Button
+            type="button"
             onClick={addNewChild}
             variant="outline"
             className="flex items-center gap-1 w-full sm:w-auto"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
             Add Another Child
           </Button>
 
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
-            <Button className="w-full sm:w-auto text-white bg-black">
-              Save Changes
+            <Button
+              type="submit"
+              className="w-full sm:w-auto text-white bg-black"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

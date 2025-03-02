@@ -5,9 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { UserRequestBody } from "@/types/userSchema.types";
 import axios from "axios";
 
-connect();
-
 export async function POST(request: NextRequest) {
+  await connect();
   try {
     console.log(request);
 
@@ -33,14 +32,14 @@ export async function POST(request: NextRequest) {
     const savedUser = await newUser.save();
     console.log(savedUser);
     //TODO:
-    // try {
-    //   await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
-    //     sendTo: email,
-    //   });
-    //   console.log("Welcome email sent successfully.");
-    // } catch (emailError) {
-    //   console.error("Error sending email:", emailError);
-    // }
+    try {
+      await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
+        sendTo: email,
+      });
+      console.log("Welcome email sent successfully.");
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+    }
     return NextResponse.json({
       message: "User registered successfully saved",
       success: true,

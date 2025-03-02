@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema({
     ref: "users",
     required: true,
   },
+  size: { type: String },
   productId: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });

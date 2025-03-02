@@ -12,7 +12,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-export default function RegisterUserEmail() {
+export default function RegisterUserEmail({ password }) {
   return (
     <Html>
       <Head />
@@ -36,6 +36,7 @@ export default function RegisterUserEmail() {
               Welcome to Our Store!
             </Heading>
             <Text className="text-lg text-gray-600 leading-relaxed">
+              {password && <p>Your password is: ${password}</p>}
               Hey there! We're thrilled to have you on board. 🎊 Start exploring
               our exclusive collection and enjoy a seamless shopping experience.
             </Text>
