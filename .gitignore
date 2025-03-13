@@ -41,5 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # Ignore the models directory inside public
-/public/models/*
-!/public/models/*.glb
+public/models/mens_long_sleeve_shirt.glb
