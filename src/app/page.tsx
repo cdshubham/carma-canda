@@ -2,17 +2,177 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, Suspense, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, OrbitControls, Html } from "@react-three/drei";
+import * as THREE from "three";
 
-export default function Home() {
-  const [isClient, setIsClient] = useState(false);
+function ShirtModel({ color, setIsHovered }) {
+  const { scene } = useGLTF("/models/mens_long_sleeve_shirt.glb");
+  console.log("color", color);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+
+        if (child.material) {
+          const newMaterial = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(color),
+            roughness: 0.4,
+            metalness: 0.2,
+          });
+
+          if (child.material.map) newMaterial.map = child.material.map;
+          if (child.material.normalMap)
+            newMaterial.normalMap = child.material.normalMap;
+
+          child.material = newMaterial;
+        }
+      }
+    });
+  }, [scene, color]);
 
   return (
-    <main className="bg-white text-black h-screen overflow-auto">
+    <primitive
+      object={scene}
+      scale={5.5}
+      position={[0, -8.5, 0]} // Adjusted position to center vertically
+      rotation={[0, Math.PI / 8, 0]} // Slight rotation for better viewing angle
+      onPointerOver={() => setIsHovered(true)}
+      onPointerOut={() => setIsHovered(false)}
+    />
+  );
+}
+
+function FeaturedProductScene({ productType = "shirt" }) {
+  const [hovered, setIsHovered] = useState(false);
+  const [color, setColor] = useState("#3c4f7a");
+
+  const availableColors = [
+    "#3c4f7a", // Navy Blue
+    "#835c3b", // Brown
+    "#1d1d1d", // Black
+    "#792626", // Maroon
+    "#307428", // Green
+  ];
+
+  const productInfo = {
+    shirt: {
+      name: "Ethereal Silk Shirt",
+      price: "129.99",
+      type: "Premium Collection",
+    },
+    sharara: {
+      name: "Royal Embroidered Sharara",
+      price: "189.99",
+      type: "Signature Collection",
+    },
+  };
+
+  const currentProduct = productInfo[productType] || productInfo.shirt;
+
+  return (
+    <div className="relative w-full h-full">
+      <Canvas
+        shadows
+        camera={{ position: [0, 0, 8], fov: 40 }} // Adjusted camera settings
+        dpr={[1, 2]}
+      >
+        <Suspense
+          fallback={
+            <Html center>
+              <div className="flex items-center justify-center p-4 bg-white bg-opacity-75 rounded-lg shadow">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mr-2"></div>
+                <div className="text-black font-medium">
+                  Loading 3D Model...
+                </div>
+              </div>
+            </Html>
+          }
+        >
+          <ambientLight intensity={50} /> {/* Increased ambient light */}
+          <spotLight
+            position={[50, 50, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={10} // Increased intensity
+            castShadow
+          />
+          <pointLight position={[-10, -10, -10]} intensity={0.8} />{" "}
+          {/* Increased intensity */}
+          <pointLight position={[5, 5, -5]} intensity={0.5} />{" "}
+          {/* Additional light source */}
+          <ShirtModel setIsHovered={setIsHovered} color={color} />
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            minPolarAngle={Math.PI / 4}
+            maxPolarAngle={Math.PI / 2}
+            autoRotate={!hovered}
+            autoRotateSpeed={2}
+            target={[0, 0, 0]} // Explicitly set the target to the center
+          />
+        </Suspense>
+      </Canvas>
+
+      <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
+        {availableColors.map((c) => (
+          <ColorSwatch
+            key={c}
+            color={c}
+            isSelected={color === c}
+            onClick={setColor}
+          />
+        ))}
+      </div>
+
+      <ProductInfo
+        type={currentProduct.type}
+        price={currentProduct.price}
+        name={currentProduct.name}
+        visible={hovered}
+      />
+
+      <div className="absolute top-4 right-4 bg-white bg-opacity-70 px-3 py-1 rounded text-sm">
+        Interact with model • Try different colors
+      </div>
+    </div>
+  );
+}
+// Fabric Texture Swatches
+function ColorSwatch({ color, isSelected, onClick }) {
+  return (
+    <div
+      className={`w-8 h-8 rounded-full cursor-pointer transition-all transform hover:scale-110 ${isSelected ? "ring-2 ring-black ring-offset-2" : ""}`}
+      style={{ backgroundColor: color }}
+      onClick={() => onClick(color)}
+    />
+  );
+}
+
+// Info Card that appears when a product is hovered
+function ProductInfo({ type, price, name, visible }) {
+  if (!visible) return null;
+
+  return (
+    <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 p-4 rounded shadow-lg transform transition-all duration-300 ease-in-out">
+      <h3 className="text-lg font-semibold">{name}</h3>
+      <p className="text-sm text-gray-600">{type}</p>
+      <p className="text-lg font-bold mt-1">${price}</p>
+      <Button className="mt-2 w-full bg-black hover:bg-gray-800 text-white">
+        View Details
+      </Button>
+    </div>
+  );
+}
+
+useGLTF.preload("/models/mens_long_sleeve_shirt.glb");
+
+export default function Home() {
+  return (
+    <main className="bg-white text-black min-h-screen overflow-auto">
       <div className="relative bg-white">
         <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center">
@@ -57,23 +217,24 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-                Effortless Style,{" "}
-                <span className="text-black">Timeless Elegance</span>
+                Experience Fashion in{" "}
+                <span className="text-black">3D Realism</span>
               </h1>
               <p className="text-lg text-gray-700">
-                Discover our curated collection of sustainable fashion that
-                brings together modern trends and timeless designs.
+                Interact with our premium shirts and shararas in immersive 3D.
+                Explore textures, colors and details like never before.
               </p>
-              <div className="flex flex-row space-x-4 space-y-4items-center">
+
+              <div className="flex flex-row space-x-4 mt-8">
                 <Link href="/api/auth/signup">
-                  <Button className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded text-base shadow-sm transition-all self-center">
+                  <Button className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded text-base shadow-sm transition-all">
                     Sign Up
                   </Button>
                 </Link>
                 <Link href="/api/auth/login">
                   <Button
                     variant="outline"
-                    className="border-gray-300 text-black hover:bg-gray-100 px-6 py-2 rounded text-base transition-all self-center "
+                    className="border-gray-300 text-black hover:bg-gray-100 px-6 py-2 rounded text-base transition-all"
                   >
                     Login
                   </Button>
@@ -96,20 +257,65 @@ export default function Home() {
                 <span>Free shipping on orders over $75</span>
               </div>
             </div>
-
-            {isClient && (
-              <div className="relative md:block">
-                <div className="w-full h-[300px] md:h-[500px] relative border border-gray-200 rounded overflow-hidden">
-                  <img
-                    src="https://images.pexels.com/photos/1884579/pexels-photo-1884579.jpeg?auto=compress&cs=tinysrgb&w=600"
-                    alt="Fashion model wearing Elegance clothing"
-                    className="rounded w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            )}
+            <div className="h-96">
+              <FeaturedProductScene productType="shirt" />
+            </div>
           </div>
         </div>
+
+        <section id="collections" className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-3xl font-bold mb-12 text-center">
+              Our Featured Collections
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "Premium Shirts",
+                  description: "Handcrafted with the finest materials",
+                  image:
+                    "https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=600",
+                },
+                {
+                  title: "Designer Shararas",
+                  description: "The perfect blend of tradition and modernity",
+                  image:
+                    "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=600",
+                },
+                {
+                  title: "Complete Sets",
+                  description: "Coordinated elegance for every occasion",
+                  image:
+                    "https://images.pexels.com/photos/5384423/pexels-photo-5384423.jpeg?auto=compress&cs=tinysrgb&w=600",
+                },
+              ].map((collection, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="h-64 overflow-hidden">
+                    <img
+                      src={collection.image}
+                      alt={collection.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">
+                      {collection.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      {collection.description}
+                    </p>
+                    <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                      Explore Collection
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
 
       <footer className="bg-gray-100 text-black py-12 border-t border-gray-200">

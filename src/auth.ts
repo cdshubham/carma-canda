@@ -84,17 +84,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       console.log("😊💥", path);
 
       if (path === "/") {
-        if (auth?.user.role === "admin") {
+        if (auth?.user?.role === "admin") {
           console.log("Hello");
 
           return Response.redirect(new URL("/admin/orders", request.url));
         }
-        if (auth?.user.role === "user") {
+        if (auth?.user?.role === "user") {
           return Response.redirect(new URL("/customer", request.url));
         }
       }
 
-      if (path.includes("/admin") && auth?.user.role !== "admin") {
+      if (path.includes("/admin") && auth?.user?.role !== "admin") {
         console.log("chal haatt 🔫");
         return false;
       }
@@ -102,7 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (
         path.includes("/customer") &&
         !path.includes("/admin") &&
-        auth?.user.role !== "user"
+        auth?.user?.role !== "user"
       ) {
         console.log("chal haatt 🤡");
         return false;

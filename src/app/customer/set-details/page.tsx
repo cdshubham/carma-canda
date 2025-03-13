@@ -34,6 +34,8 @@ export default function SetDetailsPage() {
       email: "",
       phone: "",
       address: "",
+      sizeParameter1: "",
+      sizeParameter2: "",
     },
   });
 
@@ -65,6 +67,8 @@ export default function SetDetailsPage() {
         email: userData.email || "",
         phone: userData.phone !== "Not provided" ? userData.phone : "",
         address: userData.address !== "Not provided" ? userData.address : "",
+        sizeParameter1: userData.sizeParameter1 || "",
+        sizeParameter2: userData.sizeParameter2 || "",
       };
 
       setOriginalData(formattedData);
@@ -119,7 +123,7 @@ export default function SetDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 overflow-hidden ">
         <h1 className="text-3xl font-bold tracking-tight">Customer Details</h1>
         <p className="text-muted-foreground">Loading your information...</p>
         <Card className="min-h-64">
@@ -135,7 +139,7 @@ export default function SetDetailsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6  h-screen mb-4">
       <h1 className="text-3xl font-bold tracking-tight">Customer Details</h1>
       <p className="text-muted-foreground">Update your personal information</p>
 
@@ -233,6 +237,42 @@ export default function SetDetailsPage() {
               )}
             </div>
           </CardContent>
+
+          <CardHeader>
+            <CardTitle>Size Information</CardTitle>
+            <CardDescription>Your size is: L</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="sizeParameter1">Size Parameter 1</Label>
+                <Input
+                  id="sizeParameter1"
+                  {...register("sizeParameter1")}
+                  aria-invalid={errors.sizeParameter1 ? "true" : "false"}
+                />
+                {errors.sizeParameter1 && (
+                  <p className="text-sm text-red-500">
+                    {errors.sizeParameter1.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sizeParameter2">Size Parameter 2</Label>
+                <Input
+                  id="sizeParameter2"
+                  {...register("sizeParameter2")}
+                  aria-invalid={errors.sizeParameter2 ? "true" : "false"}
+                />
+                {errors.sizeParameter2 && (
+                  <p className="text-sm text-red-500">
+                    {errors.sizeParameter2.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+
           <CardFooter className="flex justify-end space-x-2">
             <Button
               type="button"

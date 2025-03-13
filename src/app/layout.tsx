@@ -15,7 +15,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white min-h-screen overflow-hidden relative">
+      <body className="bg-white min-h-screen overflow-auto relative">
         <Suspense fallback={<Loader />}>
           {children}
           <Toaster />

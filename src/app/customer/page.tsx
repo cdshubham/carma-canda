@@ -187,7 +187,7 @@ export default function HomePage() {
                                   {kid.gender}
                                 </Badge>
                               </span>
-                              <span className="flex items-center">
+                              <span className="flex items-cente r">
                                 <Calendar className="h-3 w-3 mr-1" />
                                 {calculateAge(kid.birthday)}
                               </span>
