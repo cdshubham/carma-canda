@@ -1,23 +1,37 @@
-import mongoose from "mongoose";
+import { MongoClient } from "mongodb";
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: [true, "Please provide a username"] },
-  email: {
-    type: String,
-    required: [true, "Please provide an email"],
-    unique: true,
-  },
-  password: { type: String, required: [true, "Please provide a password"] },
-  phoneNumber: { type: String },
-  role: { type: String, enum: ["user", "admin"], default: "user" },
-  kids: [{ type: mongoose.Schema.Types.ObjectId, ref: "Kid" }],
-  createdAt: { type: Date, default: Date.now },
-  address: { type: String },
-});
+let cachedClient: MongoClient | null = null;
+let cachedDb: any = null;
 
-const User = mongoose.models?.users || mongoose.model("users", userSchema);
+// MongoDB connection URL
+const client = new MongoClient(process.env.MONGODB_URI || "");
+const dbName = "your_database_name"; // Update this with your actual DB name
 
-export default User;
+async function connectToDatabase() {
+  // If a cached connection exists, return it
+  if (cachedClient && cachedDb) {
+    return { client: cachedClient, db: cachedDb };
+  }
+
+  try {
+    // Connect to MongoDB if no cached connection
+    await client.connect();
+    cachedClient = client;
+    cachedDb = client.db(dbName);
+
+    console.log("Connected to MongoDB");
+
+    return { client, db: cachedDb };
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    throw error;
+  }
+}
+
+export async function getUsersCollection() {
+  const { db } = await connectToDatabase();
+  return db.collection("users");
+}
 // import mongoose from "mongoose";
 
 // const personSchema = new mongoose.Schema(

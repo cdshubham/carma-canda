@@ -3,48 +3,48 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, Suspense, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Html } from "@react-three/drei";
-import * as THREE from "three";
+// import { Canvas } from "@react-three/fiber";
+// import { useGLTF, OrbitControls, Html } from "@react-three/drei";
+// import * as THREE from "three";
 
-function ShirtModel({ color, setIsHovered }) {
-  const { scene } = useGLTF("/models/mens_long_sleeve_shirt.glb");
-  console.log("color", color);
+// function ShirtModel({ color, setIsHovered }) {
+//   const { scene } = useGLTF("/models/mens_long_sleeve_shirt.glb");
+//   console.log("color", color);
 
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+//   useEffect(() => {
+//     scene.traverse((child) => {
+//       if (child.isMesh) {
+//         child.castShadow = true;
+//         child.receiveShadow = true;
 
-        if (child.material) {
-          const newMaterial = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(color),
-            roughness: 0.4,
-            metalness: 0.2,
-          });
+//         if (child.material) {
+//           const newMaterial = new THREE.MeshStandardMaterial({
+//             color: new THREE.Color(color),
+//             roughness: 0.4,
+//             metalness: 0.2,
+//           });
 
-          if (child.material.map) newMaterial.map = child.material.map;
-          if (child.material.normalMap)
-            newMaterial.normalMap = child.material.normalMap;
+//           if (child.material.map) newMaterial.map = child.material.map;
+//           if (child.material.normalMap)
+//             newMaterial.normalMap = child.material.normalMap;
 
-          child.material = newMaterial;
-        }
-      }
-    });
-  }, [scene, color]);
+//           child.material = newMaterial;
+//         }
+//       }
+//     });
+//   }, [scene, color]);
 
-  return (
-    <primitive
-      object={scene}
-      scale={5.5}
-      position={[0, -8.5, 0]} // Adjusted position to center vertically
-      rotation={[0, Math.PI / 8, 0]} // Slight rotation for better viewing angle
-      onPointerOver={() => setIsHovered(true)}
-      onPointerOut={() => setIsHovered(false)}
-    />
-  );
-}
+//   return (
+//     <primitive
+//       object={scene}
+//       scale={5.5}
+//       position={[0, -8.5, 0]} // Adjusted position to center vertically
+//       rotation={[0, Math.PI / 8, 0]} // Slight rotation for better viewing angle
+//       onPointerOver={() => setIsHovered(true)}
+//       onPointerOut={() => setIsHovered(false)}
+//     />
+//   );
+// }
 
 function FeaturedProductScene({ productType = "shirt" }) {
   const [hovered, setIsHovered] = useState(false);
@@ -71,69 +71,27 @@ function FeaturedProductScene({ productType = "shirt" }) {
     },
   };
 
-  const currentProduct = productInfo[productType] || productInfo.shirt;
+  // const currentProduct = productInfo[productType] || productInfo.shirt;
 
   return (
     <div className="relative w-full h-full">
-      <Canvas
-        shadows
-        camera={{ position: [0, 0, 8], fov: 40 }} // Adjusted camera settings
-        dpr={[1, 2]}
-      >
-        <Suspense
-          fallback={
-            <Html center>
-              <div className="flex items-center justify-center p-4 bg-white bg-opacity-75 rounded-lg shadow">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mr-2"></div>
-                <div className="text-black font-medium">
-                  Loading 3D Model...
-                </div>
-              </div>
-            </Html>
-          }
-        >
-          <ambientLight intensity={50} /> {/* Increased ambient light */}
-          <spotLight
-            position={[50, 50, 10]}
-            angle={0.15}
-            penumbra={1}
-            intensity={10} // Increased intensity
-            castShadow
-          />
-          <pointLight position={[-10, -10, -10]} intensity={0.8} />{" "}
-          {/* Increased intensity */}
-          <pointLight position={[5, 5, -5]} intensity={0.5} />{" "}
-          {/* Additional light source */}
-          <ShirtModel setIsHovered={setIsHovered} color={color} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            minPolarAngle={Math.PI / 4}
-            maxPolarAngle={Math.PI / 2}
-            autoRotate={!hovered}
-            autoRotateSpeed={2}
-            target={[0, 0, 0]} // Explicitly set the target to the center
-          />
-        </Suspense>
-      </Canvas>
-
       <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
-        {availableColors.map((c) => (
+        {/* {availableColors.map((c) => (
           <ColorSwatch
             key={c}
             color={c}
             isSelected={color === c}
             onClick={setColor}
           />
-        ))}
+        ))} */}
       </div>
 
-      <ProductInfo
+      {/* <ProductInfo
         type={currentProduct.type}
         price={currentProduct.price}
         name={currentProduct.name}
         visible={hovered}
-      />
+      /> */}
 
       <div className="absolute top-4 right-4 bg-white bg-opacity-70 px-3 py-1 rounded text-sm">
         Interact with model • Try different colors
@@ -142,33 +100,33 @@ function FeaturedProductScene({ productType = "shirt" }) {
   );
 }
 // Fabric Texture Swatches
-function ColorSwatch({ color, isSelected, onClick }) {
-  return (
-    <div
-      className={`w-8 h-8 rounded-full cursor-pointer transition-all transform hover:scale-110 ${isSelected ? "ring-2 ring-black ring-offset-2" : ""}`}
-      style={{ backgroundColor: color }}
-      onClick={() => onClick(color)}
-    />
-  );
-}
+// function ColorSwatch({ color, isSelected, onClick }) {
+//   return (
+//     <div
+//       className={`w-8 h-8 rounded-full cursor-pointer transition-all transform hover:scale-110 ${isSelected ? "ring-2 ring-black ring-offset-2" : ""}`}
+//       style={{ backgroundColor: color }}
+//       onClick={() => onClick(color)}
+//     />
+//   );
+// }
 
 // Info Card that appears when a product is hovered
-function ProductInfo({ type, price, name, visible }) {
-  if (!visible) return null;
+// function ProductInfo({ type, price, name, visible }) {
+//   if (!visible) return null;
 
-  return (
-    <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 p-4 rounded shadow-lg transform transition-all duration-300 ease-in-out">
-      <h3 className="text-lg font-semibold">{name}</h3>
-      <p className="text-sm text-gray-600">{type}</p>
-      <p className="text-lg font-bold mt-1">${price}</p>
-      <Button className="mt-2 w-full bg-black hover:bg-gray-800 text-white">
-        View Details
-      </Button>
-    </div>
-  );
-}
+//   return (
+//     <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 p-4 rounded shadow-lg transform transition-all duration-300 ease-in-out">
+//       <h3 className="text-lg font-semibold">{name}</h3>
+//       <p className="text-sm text-gray-600">{type}</p>
+//       <p className="text-lg font-bold mt-1">${price}</p>
+//       <Button className="mt-2 w-full bg-black hover:bg-gray-800 text-white">
+//         View Details
+//       </Button>
+//     </div>
+//   );
+// }
 
-useGLTF.preload("/models/mens_long_sleeve_shirt.glb");
+// useGLTF.preload("/models/mens_long_sleeve_shirt.glb");
 
 export default function Home() {
   return (

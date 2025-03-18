@@ -68,7 +68,7 @@ export default function CustomersPage() {
     const getCustomers = async () => {
       setIsInitialLoading(true);
       try {
-        const response = await fetchCustomers();
+        const response: any = await fetchCustomers();
         console.log(response);
 
         if (response && response.data) {
@@ -154,7 +154,7 @@ export default function CustomersPage() {
     setIsLoading(true);
 
     try {
-      const response = await addCustomer(customerData);
+      const response: any = await addCustomer(customerData);
       if (response && response.savedUser) {
         const formattedCustomer: Customer = {
           id: response.savedUser._id,
@@ -209,7 +209,7 @@ export default function CustomersPage() {
             </TableHeader>
             <TableBody>
               {customers.length > 0 ? (
-                customers.map((customer) => (
+                customers.map((customer: any) => (
                   <TableRow
                     key={customer._id || customer.id}
                     className="border-b"
