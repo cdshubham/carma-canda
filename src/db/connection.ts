@@ -1,7 +1,7 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
 type ConnectionObject = {
-  isConnected?: boolean;
+  isConnected?: number;
 };
 
 const connection: ConnectionObject = {};
@@ -12,9 +12,8 @@ export async function connect(): Promise<void> {
     return;
   }
   try {
-    const client = new MongoClient(process.env.MONGODB_URI || "", {});
-    await client.connect();
-    connection.isConnected = true;
+    const db = await mongoose.connect(process.env.MONGODB_URI || "", {});
+    connection.isConnected = db.connections[0].readyState;
     console.log("Connected to MongoDB");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
