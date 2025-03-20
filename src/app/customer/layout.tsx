@@ -73,7 +73,7 @@ export default function RootLayout({
                   }`}
                 >
                   <FaUsers size={20} />
-                  Kids Details
+                  Family Details
                 </Button>
               </Link>
               <Link href="/customer/tracking" passHref>
