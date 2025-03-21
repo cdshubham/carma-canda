@@ -166,7 +166,6 @@ export default function SetDetailsPage() {
       watchSocialMedia.forEach((social, index) => {
         if (social.platform) {
           const fieldType = getFieldTypeForPlatform(social.platform);
-          // Clear the opposite field type when platform changes
           if (fieldType === "handle" && social.url) {
             setValue(`social_media.${index}.url`, "");
           } else if (fieldType === "url" && social.handle) {
@@ -177,7 +176,6 @@ export default function SetDetailsPage() {
     }
   }, [watchSocialMedia, setValue]);
 
-  // Validate date helper function
   const validateDate = (date) => {
     const { day, month, year } = date;
 
@@ -247,11 +245,9 @@ export default function SetDetailsPage() {
       return;
     }
 
-    // Format date fields for timezone safety
     const formatDate = (dateParts) => {
       if (!dateParts.day || !dateParts.month || !dateParts.year) return null;
 
-      // Use YYYY-MM-DD format directly to avoid timezone issues
       return `${dateParts.year}-${dateParts.month.padStart(2, "0")}-${dateParts.day.padStart(2, "0")}`;
     };
     console.log("hrhrhhrr", data);

@@ -2,17 +2,16 @@ import { connect } from "@/db/connection";
 import User from "@/models/userModels";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import { UserRequestBody } from "@/types/userSchema.types";
 import axios from "axios";
 
 export async function POST(request: NextRequest) {
   await connect();
   try {
     const req = await request.json();
-    console.log(req);
 
-    const { username, email, password, phone }: UserRequestBody = req;
-    console.log(username);
+    const { username, email, password, phone } = req;
+    console.log(password, email, phone);
+
     const user = await User.findOne({ email });
     if (user) {
       return NextResponse.json(
@@ -20,12 +19,16 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(password, "😍😍😍😍");
+
+    const nameParts = username.trim().split(" ");
+    const first_name = nameParts[0] || "";
+    const last_name = nameParts.slice(1).join(" ") || "";
 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
     const newUser = new User({
-      username,
+      first_name,
+      last_name,
       email,
       password: hashedPassword,
       phone,

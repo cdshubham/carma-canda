@@ -14,6 +14,7 @@ import {
 import { signOut } from "next-auth/react";
 import { SessionProvider } from "next-auth/react";
 import Image from "next/image";
+import { ShoppingCart, ShoppingCartIcon } from "lucide-react";
 
 export default function RootLayout({
   children,
@@ -87,6 +88,19 @@ export default function RootLayout({
                 >
                   <FaTruck size={20} />
                   Order Tracking
+                </Button>
+              </Link>
+              <Link href="/customer/showorders" passHref>
+                <Button
+                  variant="ghost"
+                  className={`w-full justify-start rounded-lg px-4 py-2 flex items-center gap-2 ${
+                    pathname === "/customer/showorders"
+                      ? "bg-white text-black shadow-lg"
+                      : "text-white hover:bg-slate-800"
+                  }`}
+                >
+                  <ShoppingCartIcon size={20} />
+                  Your Orders
                 </Button>
               </Link>
               <Link href="/customer/setpassword" passHref>
@@ -173,6 +187,19 @@ export default function RootLayout({
                 >
                   <FaTruck size={20} />
                   Track
+                </Button>
+              </Link>
+              <Link href="/customer/tracking" passHref>
+                <Button
+                  variant="ghost"
+                  className={`min-w-24 flex flex-col items-center rounded-lg px-4 py-2 ${
+                    pathname === "/customer/showorders"
+                      ? "bg-white text-black shadow-lg"
+                      : "text-white hover:bg-slate-800"
+                  }`}
+                >
+                  <ShoppingCart size={20} />
+                  Your orders
                 </Button>
               </Link>
               <Link href="/customer/setpassword" passHref>

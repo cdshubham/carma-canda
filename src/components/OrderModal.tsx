@@ -18,15 +18,14 @@ import {
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { PlusCircle, X, Pencil, Eye, Trash } from "lucide-react";
+import debounce from "lodash/debounce";
 
 const OrderModal = ({
   isAddModalOpen,
   handleCloseModal,
   form,
   handleAddOrder,
-  isLoading,
   customers = [],
 }) => {
   const [savedItems, setSavedItems] = useState([]);
@@ -39,8 +38,10 @@ const OrderModal = ({
   });
   const [editMode, setEditMode] = useState(false);
   const [editItemIndex, setEditItemIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [options, setOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Predefined colors for swatches
   const colorSwatches = [
     "#FF5733", // Red-Orange
     "#33FF57", // Green
@@ -49,22 +50,106 @@ const OrderModal = ({
     "#FF33F3", // Pink
   ];
 
-  // Reset items when modal is opened/closed
+  // Function to reset all modal fields
+  const resetModalFields = () => {
+    setSavedItems([]);
+    setCurrentItem(null);
+    setCurrentTab("order");
+    setErrors({
+      order: false,
+      product: false,
+      measurements: false,
+    });
+    setEditMode(false);
+    setEditItemIndex(null);
+    setSearchTerm("");
+    setOptions([]);
+    form.reset();
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        options.length > 0 &&
+        !event.target.closest(".search-dropdown-container")
+      ) {
+        setOptions([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [options.length]);
+
   useEffect(() => {
     if (!isAddModalOpen) {
-      setSavedItems([]);
-      setCurrentItem(null);
-      setCurrentTab("order");
-      setErrors({
-        order: false,
-        product: false,
-        measurements: false,
-      });
-      setEditMode(false);
-      setEditItemIndex(null);
-      form.reset();
+      resetModalFields();
     }
-  }, [isAddModalOpen, form]);
+  }, [isAddModalOpen]);
+
+  const debouncedSearch = debounce(async (query) => {
+    if (query.length < 3) {
+      setOptions([]);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch(
+        `/api/users/searchbyname?q=${encodeURIComponent(query)}`,
+        { signal: controller.signal }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Failed with status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      setOptions(data.users || []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      if (error.name !== "AbortError") {
+        setOptions([]);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, 300);
+
+  useEffect(() => {
+    debouncedSearch(searchTerm);
+
+    // Cleanup
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [searchTerm]);
+
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleOptionSelect = (user) => {
+    form.setValue("customerId", user._id);
+    const displayValue = `${user.first_name} ${user.last_name} (${user.email})`;
+    setSearchTerm(displayValue);
+    form.setValue("customerName", displayValue);
+    setOptions([]);
+  };
+
+  useEffect(() => {
+    form.setValue("items", savedItems);
+  }, [savedItems, form]);
 
   const measurementUnits = [
     { id: "cm", name: "cm" },
@@ -227,7 +312,6 @@ const OrderModal = ({
       return isValid;
     } else if (productType === "sharara") {
       const shararaMeasurements = currentItem.measurements.shararaMeasurements;
-      // Check if all required measurements have values
       const isValid = Object.values(shararaMeasurements).every(
         (measurement) => measurement.value !== ""
       );
@@ -235,26 +319,24 @@ const OrderModal = ({
       return isValid;
     }
 
-    // If product type is not selected or invalid
     setErrors((prev) => ({ ...prev, product: true }));
     return false;
   };
 
   const handleTabChange = (newTab) => {
-    // Validate current tab before allowing navigation
     if (currentTab === "order" && newTab !== "order") {
       if (!validateOrderTab()) return;
     }
-
-    if (currentTab === "product" && newTab === "measurements") {
+    if (
+      currentTab === "product" &&
+      (newTab === "measurements" || newTab === "saved")
+    ) {
       if (!validateProductTab()) return;
     }
-
     if (currentTab === "measurements" && newTab === "saved") {
       if (!validateMeasurementsTab()) return;
     }
 
-    // Special cases for navigation
     if (newTab === "product" && currentTab !== "product" && !currentItem) {
       createNewItem();
       return;
@@ -263,8 +345,12 @@ const OrderModal = ({
     setCurrentTab(newTab);
   };
 
+  const handleClose = () => {
+    resetModalFields();
+    handleCloseModal();
+  };
+
   const onSubmit = (data) => {
-    // Final validation before submission
     console.log("onSubmit start", data);
 
     if (!validateOrderTab()) {
@@ -282,43 +368,69 @@ const OrderModal = ({
       return;
     }
 
-    // Prepare the complete order data
     const orderData = {
       ...data,
-      items: savedItems.map((item) => ({
-        ...item,
-        // Restructure measurements with units and ensure values are numbers
-        measurements: {
-          shirtMeasurements: Object.fromEntries(
-            Object.entries(item.measurements.shirtMeasurements).map(
-              ([key, { value, unit }]) => [
-                key,
-                {
-                  value: value === "" ? null : Number(value),
-                  unit: unit || "in", // Provide default unit if missing
-                },
-              ]
-            )
-          ),
-          shararaMeasurements: Object.fromEntries(
-            Object.entries(item.measurements.shararaMeasurements).map(
-              ([key, { value, unit }]) => [
-                key,
-                {
-                  value: value === "" ? null : Number(value),
-                  unit: unit || "in", // Provide default unit if missing
-                },
-              ]
-            )
-          ),
-        },
-      })),
+      items: savedItems.map((item) => {
+        let measurements = {};
+
+        if (item.productType === "shirt") {
+          measurements = {
+            shirtMeasurements: Object.fromEntries(
+              Object.entries(item.measurements.shirtMeasurements).map(
+                ([key, { value, unit }]) => [
+                  key,
+                  {
+                    value:
+                      value === ""
+                        ? null
+                        : isNaN(Number(value))
+                          ? null
+                          : Number(value),
+                    unit: unit || "in",
+                  },
+                ]
+              )
+            ),
+          };
+        } else if (item.productType === "sharara") {
+          measurements = {
+            shararaMeasurements: Object.fromEntries(
+              Object.entries(item.measurements.shararaMeasurements).map(
+                ([key, { value, unit }]) => [
+                  key,
+                  {
+                    value:
+                      value === ""
+                        ? null
+                        : isNaN(Number(value))
+                          ? null
+                          : Number(value),
+                    unit: unit || "in",
+                  },
+                ]
+              )
+            ),
+          };
+        }
+
+        return {
+          productId: item.productId,
+          productType: item.productType,
+          colour: item.colour,
+          quantity: item.quantity,
+          measurements: measurements,
+        };
+      }),
     };
 
     // Log the details
     console.log("Saving Order:", orderData);
 
+    // Call the handler and reset the form
     handleAddOrder(orderData);
+
+    // Reset fields after submission
+    resetModalFields();
   };
 
   const renderMeasurementFields = () => {
@@ -516,8 +628,9 @@ const OrderModal = ({
       <p className="text-center py-4">Please select a product type first</p>
     );
   };
+
   return (
-    <Dialog open={isAddModalOpen} onOpenChange={handleCloseModal}>
+    <Dialog open={isAddModalOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl overflow-y-auto max-h-[90vh] bg-white">
         <DialogHeader>
           <DialogTitle>Create New Order</DialogTitle>
@@ -559,7 +672,40 @@ const OrderModal = ({
                       <FormItem>
                         <FormLabel>Customer *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter customer name" {...field} />
+                          <div className="search-dropdown-container">
+                            <Input
+                              placeholder="Enter at least 3 characters..."
+                              value={searchTerm}
+                              onChange={(e) => {
+                                handleInputChange(e);
+                                field.onChange(e.target.value);
+                              }}
+                              autoComplete="off"
+                            />
+
+                            {/* Loading indicator */}
+                            {isLoading && (
+                              <div className="absolute right-3 top-9">
+                                Loading...
+                              </div>
+                            )}
+
+                            {/* Custom dropdown instead of datalist for better control */}
+                            {options.length > 0 && (
+                              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto">
+                                {options.map((user) => (
+                                  <li
+                                    key={user._id}
+                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                    onClick={() => handleOptionSelect(user)}
+                                  >
+                                    {user.first_name} {user.last_name} (
+                                    {user.email})
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -631,6 +777,15 @@ const OrderModal = ({
                             }`}
                             style={{ backgroundColor: color }}
                             onClick={() => handleItemChange("colour", color)}
+                            role="button"
+                            aria-label={`Select color ${color}`}
+                            aria-pressed={currentItem.colour === color}
+                            tabIndex={0}
+                            onKeyPress={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                handleItemChange("colour", color);
+                              }
+                            }}
                           />
                         ))}
                       </div>

@@ -41,7 +41,6 @@ export default function FamilyDetailsPage() {
     name: "children",
   });
 
-  // Fetch existing family details when the component mounts
   useEffect(() => {
     if (!userId) {
       setApiError("No user ID provided. Please log in to access this page.");
@@ -63,7 +62,6 @@ export default function FamilyDetailsPage() {
         const data = await response.json();
         console.log("Fetched family details:", data);
 
-        // Prepare form data from the API response
         const formData = {
           spouse: data.spouse || {
             firstName: "",
@@ -84,7 +82,6 @@ export default function FamilyDetailsPage() {
                 ],
         };
 
-        // Reset the form with the fetched data
         reset(formData);
       } catch (error) {
         console.error("Error fetching family details:", error);
@@ -111,7 +108,6 @@ export default function FamilyDetailsPage() {
     const currentYear = new Date().getFullYear();
     if (year < 1900 || year > currentYear) return false;
 
-    // Check days in month (including leap years)
     const daysInMonth = new Date(year, month, 0).getDate();
     if (day > daysInMonth) return false;
 
@@ -151,7 +147,6 @@ export default function FamilyDetailsPage() {
       console.log("Response:", responseData);
       setIsSubmitted(true);
 
-      // Reset form submission status after 3 seconds
       setTimeout(() => {
         setIsSubmitted(false);
       }, 3000);

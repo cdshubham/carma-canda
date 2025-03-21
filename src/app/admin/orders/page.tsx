@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,34 +9,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import OrderDetailsModal from "@/components/OrderDetailsModal";
+import OrderModal from "@/components/OrderModal";
 import { useForm } from "react-hook-form";
-import useFetch from "@/hooks/useFetch";
 import { toast } from "@pheralb/toast";
 
-import OrderModal from "@/components/OrderModal";
-
-const Loader = () => (
-  <div className="flex justify-center items-center h-64 w-full">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
-  </div>
-);
-
-export default function OrdersPage() {
-  const [customers, setCustomers] = useState([]);
+const OrdersTable2 = () => {
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [customers, setCustomers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAddLoading, setIsAddLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const { fetchData: fetchCustomers } = useFetch("/api/users/getusers", {
-    method: "GET",
-  });
-  const { fetchData: fetchOrders } = useFetch("/api/getorders", {
-    method: "GET",
-  });
-  const { fetchData: addOrder } = useFetch("/api/saveorders", {
-    method: "POST",
-  });
 
   const form = useForm({
     defaultValues: {
@@ -47,191 +32,235 @@ export default function OrdersPage() {
   });
 
   useEffect(() => {
-    const getData = async () => {
-      setIsInitialLoading(true);
+    const fetchData = async () => {
       try {
-        console.log("Fetching initial data...");
-        const [ordersRes, customersRes] = await Promise.all([
-          fetchOrders(),
-          fetchCustomers(),
+        const [ordersResponse, customersResponse] = await Promise.all([
+          fetch("/api/getorders"),
+          fetch("/api/users/getusers"),
         ]);
-        console.log("Orders response:", ordersRes);
-        console.log("Customers response:", customersRes);
 
-        if (ordersRes?.success) setOrders(ordersRes.data);
-        if (customersRes?.success) setCustomers(customersRes.data);
+        const ordersResult = await ordersResponse.json();
+        const customersResult = await customersResponse.json();
+
+        if (ordersResult.success) {
+          setOrders(ordersResult.data);
+        } else {
+          setError(ordersResult.message || "Failed to fetch orders");
+        }
+
+        if (customersResult.success) {
+          setCustomers(customersResult.data);
+        } else {
+          console.error("Failed to fetch customers:", customersResult.message);
+        }
       } catch (error) {
+        setError("Error connecting to the server");
         console.error("Error fetching data:", error);
-        toast.error({ text: "Failed to load data" });
       } finally {
-        setIsInitialLoading(false);
+        setIsLoading(false);
       }
     };
-    getData();
+
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Updated Orders state:", orders);
-  }, [orders]);
+  const formatProductInfo = (order) => {
+    if (!order.products || order.products.length === 0) {
+      return "No products";
+    }
 
-  useEffect(() => {
-    console.log("Updated Customers state:", customers);
-  }, [customers]);
+    const productTypes = order.products.map((p) => p.productType);
+    const uniqueTypes = [...new Set(productTypes)];
+
+    if (uniqueTypes.length === 1) {
+      return `${order.totalItems} × ${uniqueTypes[0]}`;
+    } else {
+      return `${order.totalItems} items`;
+    }
+  };
+
+  const handleViewOrder = (orderId) => {
+    setSelectedOrderId(orderId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedOrderId(null), 300);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+    form.reset();
+  };
 
   const handleAddOrder = async (data) => {
-    setIsLoading(true);
-    console.log("Handle add order called with data:", data);
+    setIsAddLoading(true);
 
+    console.log("orderData", data);
     try {
-      // Map form field names to expected API field names
-      const orderData = {
-        userId: data.customerName, // Map customerName to userId as expected by API
+      const requestBody = {
+        userId: data.customerId,
         trackingId: data.trackingId,
         dnNumber: data.dnNumber || undefined,
         deliveryDate: data.deliveryDate,
-        items: data.items, // This comes from the OrderModal component
+        items: data.items,
       };
 
-      console.log("Prepared order data for API:", orderData);
-      const response = await addOrder(orderData);
-      console.log("API response:", response);
+      console.log("Request body:", requestBody);
 
-      if (response?.success) {
+      const response = await fetch("/api/saveorders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
         toast.success({ text: "Order added successfully" });
 
-        // Update the orders list with the new order
-        if (response.order) {
-          setOrders((prev) => [...prev, response.order]);
+        if (result.order) {
+          setOrders((prev) => [...prev, result.order]);
         } else {
           // Refetch the orders to get the updated list
-          console.log("Refetching orders...");
-          const ordersRes = await fetchOrders();
-          if (ordersRes?.success) setOrders(ordersRes.data);
+          const ordersRes = await fetch("/api/getorders");
+          const ordersResult = await ordersRes.json();
+          if (ordersResult.success) setOrders(ordersResult.data);
         }
 
         setIsAddModalOpen(false);
         form.reset();
       } else {
-        throw new Error(response?.message || "Unknown error");
+        throw new Error(result.message || "Unknown error");
       }
     } catch (error) {
       console.error("Error adding order:", error);
       toast.error({ text: error.message || "Error adding order" });
     } finally {
-      setIsLoading(false);
+      setIsAddLoading(false);
     }
   };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64 w-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
 
-  const handleCloseModal = () => {
-    console.log("Closing modal and resetting form");
-    setIsAddModalOpen(false);
-    form.reset();
-  };
-
-  // Function to format product details for display
-  const formatProductDetails = (order) => {
-    if (!order.items || order.items.length === 0) {
-      return "No products";
-    }
-
-    return order.items.map((item) => item.productType).join(", ");
-  };
-
-  // Function to get the first product's size for display (or multiple sizes)
-  const getOrderSizes = (order) => {
-    if (!order.items || order.items.length === 0) {
-      return "-";
-    }
-
-    // if (order.items.length === 1) {
-    //   const item = order.items[0];
-    //   if (item.productType === "shirt" && item.measurements?.shirtMeasurements?.bust?.value) {
-    //     return ${item.measurements.shirtMeasurements.bust.value} ${item.measurements.shirtMeasurements.bust.unit || 'in'};
-    //   } else if (item.productType === "sharara" && item.measurements?.shararaMeasurements?.shararaWaist?.value) {
-    //     return ${item.measurements.shararaMeasurements.shararaWaist.value} ${item.measurements.shararaMeasurements.shararaWaist.unit || 'in'};
-    //   }
-    //   return item.size || "-";
-    // }
-
-    // return ${order.items.length} items;
-  };
+  if (error) {
+    return (
+      <div className="p-4 text-center text-red-600">
+        <p>Error: {error}</p>
+        <Button
+          onClick={() => window.location.reload()}
+          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Orders</h1>
         <Button
-          onClick={() => {
-            console.log("Opening add modal");
-            setIsAddModalOpen(true);
-          }}
-          disabled={isLoading || isInitialLoading}
+          onClick={() => setIsAddModalOpen(true)}
+          disabled={isAddLoading}
           className="text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-md"
         >
           Add New Order
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto shadow-lg rounded-lg sm:h-[calc(100vh-200px)] h-[calc(100vh-150px)]">
-        {isInitialLoading ? (
-          <Loader />
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Products</TableHead>
-                <TableHead>Sizes</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length > 0 ? (
-                orders.map((order) => (
-                  <TableRow key={order._id || order.trackingId} className="m-4">
-                    <TableCell className="py-4 whitespace-nowrap">
-                      {order.trackingId || order._id}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      {order.userId || order.customerId}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      {formatProductDetails(order)}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      {getOrderSizes(order)}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      {order.deliveryDate
-                        ? new Date(order.deliveryDate).toLocaleDateString()
-                        : new Date(
-                            order.createdAt || Date.now()
-                          ).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4">
-                    No orders found
+      <div className="w-full overflow-x-auto shadow-lg rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order ID</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Products</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <TableRow
+                  key={order.orderId || order._id || order.trackingId}
+                  className="hover:bg-slate-50"
+                >
+                  <TableCell className="font-medium">
+                    {order.orderId || order.trackingId || order._id}
+                  </TableCell>
+                  <TableCell>
+                    {order.customerName || order.userId || order.customerId}
+                  </TableCell>
+                  <TableCell>{order.customerEmail}</TableCell>
+                  <TableCell>
+                    {order.items
+                      ? order.items.map((item) => item.productType).join(", ")
+                      : formatProductInfo(order)}
+                  </TableCell>
+                  <TableCell>
+                    {order.deliveryDate
+                      ? new Date(order.deliveryDate).toLocaleDateString()
+                      : new Date(
+                          order.date || order.createdAt || Date.now()
+                        ).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-300 rounded-md"
+                      onClick={() =>
+                        handleViewOrder(
+                          order.orderId || order._id || order.trackingId
+                        )
+                      }
+                    >
+                      View
+                    </Button>
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8">
+                  No orders found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Order Modal with multi-product support */}
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        orderId={selectedOrderId}
+      />
+
+      {/* Add Order Modal */}
       <OrderModal
         isAddModalOpen={isAddModalOpen}
-        handleCloseModal={handleCloseModal}
+        handleCloseModal={handleCloseAddModal}
         form={form}
         handleAddOrder={handleAddOrder}
-        isLoading={isLoading}
+        isLoading={isAddLoading}
         customers={customers}
       />
     </div>
   );
-}
+};
+
+export default OrdersTable2;

@@ -75,11 +75,9 @@ export default function HomePage() {
     return null;
   }
 
-  // Format the full name
   const name =
     `${userDetails.first_name || ""} ${userDetails.last_name || ""}`.trim();
 
-  // Format the address
   const address =
     userDetails.street && userDetails.city
       ? `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}, ${userDetails.country}`

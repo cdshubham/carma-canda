@@ -1,63 +1,7 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState, Suspense, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Html } from "@react-three/drei";
-import * as THREE from "three";
 
-function ShirtModel({ color, setIsHovered }) {
-  const { scene } = useGLTF("/models/mens_long_sleeve_shirt.glb");
-  console.log("color", color);
-
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-
-        if (child.material) {
-          const newMaterial = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(color),
-            roughness: 0.4,
-            metalness: 0.2,
-          });
-
-          if (child.material.map) newMaterial.map = child.material.map;
-          if (child.material.normalMap)
-            newMaterial.normalMap = child.material.normalMap;
-
-          child.material = newMaterial;
-        }
-      }
-    });
-  }, [scene, color]);
-
-  return (
-    <primitive
-      object={scene}
-      scale={5.5}
-      position={[0, -8.5, 0]} // Adjusted position to center vertically
-      rotation={[0, Math.PI / 8, 0]} // Slight rotation for better viewing angle
-      onPointerOver={() => setIsHovered(true)}
-      onPointerOut={() => setIsHovered(false)}
-    />
-  );
-}
-
-function FeaturedProductScene({ productType = "shirt" }) {
-  const [hovered, setIsHovered] = useState(false);
-  const [color, setColor] = useState("#3c4f7a");
-
-  const availableColors = [
-    "#3c4f7a", // Navy Blue
-    "#835c3b", // Brown
-    "#1d1d1d", // Black
-    "#792626", // Maroon
-    "#307428", // Green
-  ];
-
+function FeaturedProductDisplay({ productType = "shirt" }) {
   const productInfo = {
     shirt: {
       name: "Ethereal Silk Shirt",
@@ -71,104 +15,24 @@ function FeaturedProductScene({ productType = "shirt" }) {
     },
   };
 
-  const currentProduct = productInfo[productType] || productInfo.shirt;
+  const product = productInfo[productType];
 
   return (
     <div className="relative w-full h-full">
-      <Canvas
-        shadows
-        camera={{ position: [0, 0, 8], fov: 40 }} // Adjusted camera settings
-        dpr={[1, 2]}
-      >
-        <Suspense
-          fallback={
-            <Html center>
-              <div className="flex items-center justify-center p-4 bg-white bg-opacity-75 rounded-lg shadow">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mr-2"></div>
-                <div className="text-black font-medium">
-                  Loading 3D Model...
-                </div>
-              </div>
-            </Html>
-          }
-        >
-          <ambientLight intensity={50} /> {/* Increased ambient light */}
-          <spotLight
-            position={[50, 50, 10]}
-            angle={0.15}
-            penumbra={1}
-            intensity={10} // Increased intensity
-            castShadow
+      <div className="relative w-full h-full flex justify-center">
+        <div className="relative w-full h-96 overflow-hidden rounded-lg">
+          <img
+            src="https://images.pexels.com/photos/1337477/pexels-photo-1337477.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            alt={`${product.name} model`}
+            fill
+            style={{ objectFit: "cover" }}
+            priority
           />
-          <pointLight position={[-10, -10, -10]} intensity={0.8} />{" "}
-          {/* Increased intensity */}
-          <pointLight position={[5, 5, -5]} intensity={0.5} />{" "}
-          {/* Additional light source */}
-          <ShirtModel setIsHovered={setIsHovered} color={color} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            minPolarAngle={Math.PI / 4}
-            maxPolarAngle={Math.PI / 2}
-            autoRotate={!hovered}
-            autoRotateSpeed={2}
-            target={[0, 0, 0]} // Explicitly set the target to the center
-          />
-        </Suspense>
-      </Canvas>
-
-      <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
-        {availableColors.map((c) => (
-          <ColorSwatch
-            key={c}
-            color={c}
-            isSelected={color === c}
-            onClick={setColor}
-          />
-        ))}
-      </div>
-
-      <ProductInfo
-        type={currentProduct.type}
-        price={currentProduct.price}
-        name={currentProduct.name}
-        visible={hovered}
-      />
-
-      <div className="absolute top-4 right-4 bg-white bg-opacity-70 px-3 py-1 rounded text-sm">
-        Interact with model • Try different colors
+        </div>
       </div>
     </div>
   );
 }
-// Fabric Texture Swatches
-function ColorSwatch({ color, isSelected, onClick }) {
-  return (
-    <div
-      className={`w-8 h-8 rounded-full cursor-pointer transition-all transform hover:scale-110 ${isSelected ? "ring-2 ring-black ring-offset-2" : ""}`}
-      style={{ backgroundColor: color }}
-      onClick={() => onClick(color)}
-    />
-  );
-}
-
-// Info Card that appears when a product is hovered
-function ProductInfo({ type, price, name, visible }) {
-  if (!visible) return null;
-
-  return (
-    <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 p-4 rounded shadow-lg transform transition-all duration-300 ease-in-out">
-      <h3 className="text-lg font-semibold">{name}</h3>
-      <p className="text-sm text-gray-600">{type}</p>
-      <p className="text-lg font-bold mt-1">${price}</p>
-      <Button className="mt-2 w-full bg-black hover:bg-gray-800 text-white">
-        View Details
-      </Button>
-    </div>
-  );
-}
-
-useGLTF.preload("/models/mens_long_sleeve_shirt.glb");
 
 export default function Home() {
   return (
@@ -218,11 +82,12 @@ export default function Home() {
             <div className="space-y-6">
               <h1 className="text-3xl md:text-5xl font-bold leading-tight">
                 Experience Fashion in{" "}
-                <span className="text-black">3D Realism</span>
+                <span className="text-black">Stunning Detail</span>
               </h1>
               <p className="text-lg text-gray-700">
-                Interact with our premium shirts and shararas in immersive 3D.
-                Explore textures, colors and details like never before.
+                Explore our premium shirts and shararas with high-quality
+                imagery. Discover textures, colors and details like never
+                before.
               </p>
 
               <div className="flex flex-row space-x-4 mt-8">
@@ -258,7 +123,7 @@ export default function Home() {
               </div>
             </div>
             <div className="h-96">
-              <FeaturedProductScene productType="shirt" />
+              <FeaturedProductDisplay productType="shirt" />
             </div>
           </div>
         </div>

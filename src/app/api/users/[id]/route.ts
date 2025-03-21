@@ -1,71 +1,12 @@
 import { NextResponse } from "next/server";
 import User from "@/models/userModels";
-import Kid from "@/models/KidModels";
 import { connect } from "@/db/connection";
-
-// export async function GET(request, { params }) {
-//   try {
-//     await connect();
-
-//     const id = params.id;
-//     console.log("Fetching data for userId:", id);
-
-//     const user = await User.findById(id).lean();
-//     if (!user) {
-//       return NextResponse.json({ error: "User not found" }, { status: 404 });
-//     }
-
-//     const kids = await Kid.find({ userId: id });
-
-//     const userData = {
-//       id: user._id,
-//       first_name: user.first_name || "",
-//       last_name: user.last_name || "",
-//       email: user.email,
-//       phone: user.phone || "Not provided",
-//       street: user.address?.street || "Not provided",
-//       city: user.address?.city || "Not provided",
-//       state: user.address?.state || "Not provided",
-//       zipcode: user.address?.zip_code || "Not provided",
-//       country: user.address?.country || "Not provided",
-//       gender: user.gender,
-//       birthday: user.birthday
-//         ? user.birthday.toISOString().split("T")[0]
-//         : null,
-//       anniversary: user.anniversary
-//         ? user.anniversary.toISOString().split("T")[0]
-//         : null,
-//       social_media: user.social_media || [],
-//       memberSince: new Date(user.createdAt).toLocaleDateString("en-US", {
-//         year: "numeric",
-//         month: "long",
-//       }),
-//       kids: kids.map((kid) => ({
-//         id: kid._id,
-//         name: kid.name,
-//         gender: kid.gender,
-//         birthday: kid.birthday
-//           ? kid.birthday.toISOString().split("T")[0]
-//           : "N/A",
-//       })),
-//     };
-//     console.log(userData);
-
-//     return NextResponse.json(userData, { status: 200 });
-//   } catch (error) {
-//     console.error("Error fetching user and kids:", error);
-//     return NextResponse.json(
-//       { error: "Failed to fetch user and kids data" },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 export async function GET(request, { params }) {
   try {
     await connect();
 
-    const id = params.id;
+    const id = await params.id;
     console.log("Fetching data for userId:", id);
 
     const user = await User.findById(id).lean();

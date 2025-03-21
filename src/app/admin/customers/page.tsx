@@ -20,12 +20,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useFetch from "@/hooks/useFetch";
 import { toast } from "@pheralb/toast";
+import CustomerModal from "@/components/CustomerAndOrderModal";
 
 interface Customer {
   id: string;
-  name: string;
+  _id?: string;
+  name?: string;
+  username?: string;
+  first_name?: string;
+  last_name?: string;
   email: string;
-  phone: string;
+  phone?: string;
+  phoneNumber?: string;
+}
+
+interface DetailedCustomer extends Customer {
+  gender?: string;
+  birthday?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    country?: string;
+  };
+  spouse?: {
+    first_name?: string;
+    last_name?: string;
+    gender?: string;
+    birthday?: string;
+  };
+  anniversary?: string;
+  children?: Array<{
+    first_name?: string;
+    last_name?: string;
+    gender?: string;
+    birthday?: string;
+  }>;
+  social_media?: Array<{
+    platform?: string;
+    url?: string;
+  }>;
+  role?: string;
+  createdAt?: string;
 }
 
 interface ValidationError {
@@ -43,6 +80,9 @@ const Loader = () => (
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
+    null
+  );
   const [newCustomer, setNewCustomer] = useState({
     name: "",
     email: "",
@@ -74,7 +114,6 @@ export default function CustomersPage() {
         if (response && response.data) {
           setCustomers(response.data);
         } else {
-          // Use fallback data if API fails
           toast.error({ text: "Failed to fetch customers" });
         }
       } catch (error) {
@@ -179,6 +218,25 @@ export default function CustomersPage() {
     }
   };
 
+  const handleViewCustomer = (customerId: string) => {
+    setSelectedCustomerId(customerId);
+  };
+
+  const handleCloseCustomerModal = () => {
+    setSelectedCustomerId(null);
+  };
+
+  const getDisplayName = (customer: Customer): string => {
+    if (customer.first_name && customer.last_name) {
+      return `${customer.first_name} ${customer.last_name}`;
+    } else if (customer.username) {
+      return customer.username;
+    } else if (customer.name) {
+      return customer.name;
+    }
+    return "Unknown";
+  };
+
   return (
     <div className="container mx-auto px-4 pb-32 sm:pb-24 md:pb-16">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 pt-4">
@@ -205,6 +263,7 @@ export default function CustomersPage() {
                 <TableHead className="bg-gray-50 px-6 py-3">Name</TableHead>
                 <TableHead className="bg-gray-50 px-6 py-3">Email</TableHead>
                 <TableHead className="bg-gray-50 px-6 py-3">Phone</TableHead>
+                <TableHead className="bg-gray-50 px-6 py-3">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -218,19 +277,29 @@ export default function CustomersPage() {
                       {customer._id || customer.id}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      {customer.username || customer.name}
+                      {getDisplayName(customer)}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
                       {customer.email}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      {customer.phoneNumber || customer.phone}
+                      {customer.phoneNumber || customer.phone || "N/A"}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <Button
+                        onClick={() =>
+                          handleViewCustomer(customer._id || customer.id)
+                        }
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-4">
+                  <TableCell colSpan={5} className="text-center py-4">
                     No customers found
                   </TableCell>
                 </TableRow>
@@ -240,6 +309,7 @@ export default function CustomersPage() {
         )}
       </div>
 
+      {/* Add Customer Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
@@ -333,6 +403,15 @@ export default function CustomersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Replace the old view modal with CustomerModal */}
+      {selectedCustomerId && (
+        <CustomerModal
+          isOpen={!!selectedCustomerId}
+          onClose={handleCloseCustomerModal}
+          userId={selectedCustomerId}
+        />
+      )}
     </div>
   );
 }
