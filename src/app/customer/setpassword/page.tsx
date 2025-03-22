@@ -51,7 +51,8 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="w-full h-full flex items-center "><div className="
+    min-w-[400px] max-w-[400px] mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-6">Change Password</h1>
 
       {!userId && (
@@ -142,6 +143,7 @@ export default function ChangePassword() {
           {loading ? "Changing Password..." : "Change Password"}
         </button>
       </form>
-    </div>
+    </div></div>
+    
   );
 }

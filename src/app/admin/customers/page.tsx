@@ -243,27 +243,27 @@ export default function CustomersPage() {
         <h2 className="text-2xl font-bold">Customers</h2>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="text-white bg-black hover:bg-gray-600 w-full sm:w-auto"
+          className="text-white bg-black hover:bg-gray-600 w-full sm:w-auto !rounded-buttonradius"
           disabled={isInitialLoading}
         >
           Add New Customer
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto shadow rounded-lg sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+      <div className="w-full overflow-x-auto bg-white shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
         {isInitialLoading ? (
           <Loader />
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="bg-gray-50 px-6 py-3">
+          <Table className="rounded-lg">
+            <TableHeader className="bg-black text-white rounded-lg h-14">
+              <TableRow className="rounded-lg ">
+                <TableHead className=" px-6 py-3 rou  ">
                   Customer ID
                 </TableHead>
-                <TableHead className="bg-gray-50 px-6 py-3">Name</TableHead>
-                <TableHead className="bg-gray-50 px-6 py-3">Email</TableHead>
-                <TableHead className="bg-gray-50 px-6 py-3">Phone</TableHead>
-                <TableHead className="bg-gray-50 px-6 py-3">Actions</TableHead>
+                <TableHead className=" px-6 py-3">Name</TableHead>
+                <TableHead className=" px-6 py-3">Email</TableHead>
+                <TableHead className=" px-6 py-3">Phone</TableHead>
+                <TableHead className=" px-6 py-3">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -290,7 +290,7 @@ export default function CustomersPage() {
                         onClick={() =>
                           handleViewCustomer(customer._id || customer.id)
                         }
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                        className="bg-black hover:bg-blue-600 text-white  px-4 !rounded-buttonradius"
                       >
                         View
                       </Button>
@@ -311,7 +311,7 @@ export default function CustomersPage() {
 
       {/* Add Customer Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-md bg-white ">
           <DialogHeader>
             <DialogTitle>Add New Customer</DialogTitle>
           </DialogHeader>

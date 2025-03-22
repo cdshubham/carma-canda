@@ -343,6 +343,11 @@ const OrderModal = ({
     }
 
     setCurrentTab(newTab);
+    // Reset scroll position of the tab content
+    const tabContent = document.querySelector('.tab-content-scroll');
+    if (tabContent) {
+      tabContent.scrollTop = 0;
+    }
   };
 
   const handleClose = () => {
@@ -442,9 +447,9 @@ const OrderModal = ({
 
     if (productType === "shirt") {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <h3 className="font-medium">Upper Body Measurements</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-cardradius">
+          <div className="space-y-6">
+            <h3 className="text-sm font-medium text-gray-900">Upper Body Measurements</h3>
             {[
               { id: "shirtLength", label: "Shirt Length" },
               { id: "dartPoint", label: "Dart Point" },
@@ -454,8 +459,8 @@ const OrderModal = ({
               { id: "hips", label: "Hips" },
               { id: "frontNeck", label: "Front Neck" },
             ].map((field) => (
-              <div key={field.id} className="flex items-center gap-2">
-                <label className="w-1/3 text-sm">{field.label}:</label>
+              <div key={field.id} className="flex items-center gap-4">
+                <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
                 <div className="w-2/3 flex gap-2">
                   <Input
                     type="number"
@@ -470,7 +475,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="flex-1"
+                    className="flex-1 h-10"
                     disabled={!editMode && editItemIndex !== null}
                   />
                   <select
@@ -484,7 +489,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="w-20 border border-gray-300 rounded-md"
+                    className="w-20 border border-gray-300 rounded-md h-10"
                     disabled={!editMode && editItemIndex !== null}
                   >
                     {measurementUnits.map((unit) => (
@@ -497,8 +502,8 @@ const OrderModal = ({
               </div>
             ))}
           </div>
-          <div className="space-y-3">
-            <h3 className="font-medium">Sleeves & Other</h3>
+          <div className="space-y-6">
+            <h3 className="text-sm font-medium text-gray-900">Sleeves & Other</h3>
             {[
               { id: "backNeck", label: "Back Neck" },
               { id: "tira", label: "Tira" },
@@ -507,8 +512,8 @@ const OrderModal = ({
               { id: "biceps", label: "Biceps" },
               { id: "armhole", label: "Armhole" },
             ].map((field) => (
-              <div key={field.id} className="flex items-center gap-2">
-                <label className="w-1/3 text-sm">{field.label}:</label>
+              <div key={field.id} className="flex items-center gap-4">
+                <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
                 <div className="w-2/3 flex gap-2">
                   <Input
                     type="number"
@@ -523,7 +528,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="flex-1"
+                    className="flex-1 h-10"
                     disabled={!editMode && editItemIndex !== null}
                   />
                   <select
@@ -537,7 +542,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="w-20 border border-gray-300 rounded-md"
+                    className="w-20 border border-gray-300 rounded-md h-10"
                     disabled={!editMode && editItemIndex !== null}
                   >
                     {measurementUnits.map((unit) => (
@@ -550,28 +555,20 @@ const OrderModal = ({
               </div>
             ))}
           </div>
-
-          {(editMode || editItemIndex === null) && (
-            <div className="col-span-1 md:col-span-2 mt-4 flex justify-center">
-              <Button type="button" onClick={saveCurrentProduct}>
-                Save This Product
-              </Button>
-            </div>
-          )}
         </div>
       );
     } else if (productType === "sharara") {
       return (
-        <div className="space-y-3">
-          <h3 className="font-medium">Sharara Measurements</h3>
+        <div className="space-y-6">
+          <h3 className="text-sm font-medium text-gray-900">Sharara Measurements</h3>
           {[
             { id: "shararaLength", label: "Sharara Length" },
             { id: "shararaWaist", label: "Sharara Waist" },
             { id: "hips", label: "Hips" },
             { id: "thigh", label: "Thigh" },
           ].map((field) => (
-            <div key={field.id} className="flex items-center gap-2">
-              <label className="w-1/3 text-sm">{field.label}:</label>
+            <div key={field.id} className="flex items-center gap-4">
+              <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
               <div className="w-2/3 flex gap-2">
                 <Input
                   type="number"
@@ -586,7 +583,7 @@ const OrderModal = ({
                       e.target.value
                     )
                   }
-                  className="flex-1"
+                  className="flex-1 h-10"
                   disabled={!editMode && editItemIndex !== null}
                 />
                 <select
@@ -600,7 +597,7 @@ const OrderModal = ({
                       e.target.value
                     )
                   }
-                  className="w-20 border border-gray-300 rounded-md"
+                  className="w-20 border border-gray-300 rounded-md h-10"
                   disabled={!editMode && editItemIndex !== null}
                 >
                   {measurementUnits.map((unit) => (
@@ -612,14 +609,6 @@ const OrderModal = ({
               </div>
             </div>
           ))}
-
-          {(editMode || editItemIndex === null) && (
-            <div className="mt-4 flex justify-center">
-              <Button type="button" onClick={saveCurrentProduct}>
-                Save This Product
-              </Button>
-            </div>
-          )}
         </div>
       );
     }
@@ -631,89 +620,322 @@ const OrderModal = ({
 
   return (
     <Dialog open={isAddModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl overflow-y-auto max-h-[90vh] bg-white">
-        <DialogHeader>
-          <DialogTitle>Create New Order</DialogTitle>
+      <DialogContent className="max-w-4xl h-[95vh] bg-white !rounded-cardradius">
+        <DialogHeader className="border-b pb-3">
+          <DialogTitle className="text-2xl font-semibold text-gray-900">Create New Order</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <Tabs value={currentTab} onValueChange={handleTabChange}>
-              <TabsList className="grid w-full grid-cols-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <Tabs value={currentTab} onValueChange={handleTabChange} className="h-[calc(95vh-12rem)]">
+              <TabsList className="grid w-full grid-cols-4 mb-3">
                 <TabsTrigger
                   value="order"
-                  className={errors.order ? "border-red-500 border" : ""}
+                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.order ? "border-red-500 border" : ""}`}
                 >
                   Order Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="product"
-                  className={errors.product ? "border-red-500 border" : ""}
+                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.product ? "border-red-500 border" : ""}`}
                 >
                   Product Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="measurements"
                   disabled={!currentItem?.productType}
-                  className={errors.measurements ? "border-red-500 border" : ""}
+                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.measurements ? "border-red-500 border" : ""}`}
                 >
                   Measurements
                 </TabsTrigger>
-                <TabsTrigger value="saved">Saved Products</TabsTrigger>
+                <TabsTrigger
+                  value="saved"
+                  className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900"
+                >
+                  Saved Products
+                </TabsTrigger>
               </TabsList>
 
-              {/* Order Details Tab */}
-              <TabsContent value="order" className="space-y-4 py-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="customerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Customer *</FormLabel>
-                        <FormControl>
-                          <div className="search-dropdown-container">
-                            <Input
-                              placeholder="Enter at least 3 characters..."
-                              value={searchTerm}
-                              onChange={(e) => {
-                                handleInputChange(e);
-                                field.onChange(e.target.value);
-                              }}
-                              autoComplete="off"
-                            />
+              <div className="h-[calc(100%-3rem)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400 pr-4 tab-content-scroll">
+                {/* Order Details Tab */}
+                <TabsContent value="order" className="space-y-4 py-3 h-full">
+                  <div className="grid grid-cols-1 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="customerName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-900">Customer *</FormLabel>
+                          <FormControl>
+                            <div className="search-dropdown-container relative">
+                              <Input
+                                placeholder="Enter at least 3 characters..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                  handleInputChange(e);
+                                  field.onChange(e.target.value);
+                                }}
+                                autoComplete="off"
+                                className="w-full h-10"
+                              />
 
-                            {/* Loading indicator */}
-                            {isLoading && (
-                              <div className="absolute right-3 top-9">
-                                Loading...
-                              </div>
-                            )}
+                              {isLoading && (
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
+                                </div>
+                              )}
 
-                            {/* Custom dropdown instead of datalist for better control */}
-                            {options.length > 0 && (
-                              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto">
-                                {options.map((user) => (
-                                  <li
-                                    key={user._id}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => handleOptionSelect(user)}
-                                  >
-                                    {user.first_name} {user.last_name} (
-                                    {user.email})
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
+                              {options.length > 0 && (
+                                <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-md mt-1 max-h-60 overflow-auto shadow-lg [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400 pr-4">
+                                  {options.map((user) => (
+                                    <li
+                                      key={user._id}
+                                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                                      onClick={() => handleOptionSelect(user)}
+                                    >
+                                      {user.first_name} {user.last_name} ({user.email})
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </TabsContent>
+
+                {/* Product Details Tab */}
+                <TabsContent value="product" className="space-y-4 py-3 h-full">
+                  {currentItem && (
+                    <div className="space-y-6">
+                      <div className="space-y-4">
+                        <label className="text-sm font-medium text-gray-900">Product Type *</label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div
+                            className={`p-4 border rounded-lg cursor-pointer flex items-center justify-center transition-all h-10 ${currentItem.productType === "shirt"
+                              ? "bg-gray-100 border-gray-900 shadow-sm"
+                              : "bg-gray-50 hover:bg-gray-100"
+                              }`}
+                            onClick={() => handleItemChange("productType", "shirt")}
+                          >
+                            <span className="text-sm font-medium text-gray-900">Shirt</span>
                           </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                          <div
+                            className={`p-4 border rounded-lg cursor-pointer flex items-center justify-center transition-all h-10 ${currentItem.productType === "sharara"
+                              ? "bg-gray-100 border-gray-900 shadow-sm"
+                              : "bg-gray-50 hover:bg-gray-100"
+                              }`}
+                            onClick={() => handleItemChange("productType", "sharara")}
+                          >
+                            <span className="text-sm font-medium text-gray-900">Sharara</span>
+                          </div>
+                        </div>
+                      </div>
 
-                <div className="pt-4 flex justify-end">
+                      <div className="space-y-4">
+                        <label className="text-sm font-medium text-gray-900">Color *</label>
+                        <div className="flex gap-3 flex-wrap">
+                          {colorSwatches.map((color) => (
+                            <div
+                              key={color}
+                              className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all hover:scale-110 ${currentItem.colour === color
+                                ? "border-gray-900 shadow-md"
+                                : "border-transparent hover:border-gray-300"
+                                }`}
+                              style={{ backgroundColor: color }}
+                              onClick={() => handleItemChange("colour", color)}
+                              role="button"
+                              aria-label={`Select color ${color}`}
+                              aria-pressed={currentItem.colour === color}
+                              tabIndex={0}
+                              onKeyPress={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  handleItemChange("colour", color);
+                                }
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <label className="text-sm font-medium text-gray-900">Quantity *</label>
+                        <Input
+                          type="number"
+                          min="1"
+                          value={currentItem.quantity}
+                          onChange={(e) =>
+                            handleItemChange(
+                              "quantity",
+                              parseInt(e.target.value) || 1
+                            )
+                          }
+                          className="max-w-[200px] h-10"
+                        />
+                      </div>
+
+                      {errors.product && (
+                        <p className="text-sm text-red-500">
+                          Please select a product type and color
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* Measurements Tab */}
+                <TabsContent value="measurements" className="space-y-4 py-3 h-full">
+                  {renderMeasurementFields()}
+
+                  {errors.measurements && (
+                    <p className="text-sm text-red-500">
+                      Please fill out all measurement fields
+                    </p>
+                  )}
+                </TabsContent>
+
+                {/* Saved Products Tab */}
+                <TabsContent value="saved" className="space-y-4 py-3 h-full">
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">Saved Products</h3>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={createNewItem}
+                        className="border-gray-900 text-gray-900 hover:bg-gray-100 h-8"
+                      >
+                        <PlusCircle className="h-4 w-4 mr-2" />
+                        Add New Product
+                      </Button>
+                    </div>
+
+                    {savedItems.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-[calc(100%-4rem)] text-gray-500">
+                        <PlusCircle className="h-12 w-12 mb-4" />
+                        <p className="text-center">
+                          No products saved yet. Click "Add New Product" to start.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {savedItems.map((item, index) => (
+                          <Card key={item.productId} className="overflow-hidden hover:shadow-md transition-shadow">
+                            <CardHeader className="p-3 pb-1 bg-gray-50">
+                              <CardTitle className="text-sm flex justify-between items-center">
+                                <span className="font-medium text-gray-900">
+                                  {item.productType === "shirt" ? "Shirt" : "Sharara"}
+                                </span>
+                                <div className="flex gap-1">
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 hover:bg-gray-200"
+                                    onClick={() => viewProduct(index)}
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 hover:bg-gray-200"
+                                    onClick={() => editProduct(index)}
+                                  >
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 hover:bg-gray-200"
+                                    onClick={() => deleteProduct(index)}
+                                  >
+                                    <Trash className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-3">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div
+                                  className="w-4 h-4 rounded-full border border-gray-300"
+                                  style={{ backgroundColor: item.colour }}
+                                />
+                                <span className="text-xs font-medium text-gray-900">
+                                  Quantity: {item.quantity}
+                                </span>
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {item.productType === "shirt"
+                                  ? `Bust: ${item.measurements.shirtMeasurements.bust.value} ${item.measurements.shirtMeasurements.bust.unit}`
+                                  : `Waist: ${item.measurements.shararaMeasurements.shararaWaist.value} ${item.measurements.shararaMeasurements.shararaWaist.unit}`}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              </div>
+            </Tabs>
+
+            <DialogFooter className="border-t pt-3">
+              <div className="flex justify-end w-full gap-[30px]">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCloseModal}
+                  disabled={isLoading}
+                  className="hover:bg-gray-100"
+                >
+                  Cancel
+                </Button>
+                {currentTab === "product" && currentItem && (
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (validateProductTab()) {
+                        setCurrentTab("measurements");
+                      }
+                    }}
+                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                  >
+                    Continue to Measurements
+                  </Button>
+                )}
+                {currentTab === "measurements" && currentItem && (editMode || editItemIndex === null) && (
+                  <Button
+                    type="button"
+                    onClick={saveCurrentProduct}
+                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                  >
+                    Save This Product
+                  </Button>
+                )}
+                {currentTab === "saved" && (
+                  <Button
+                    type="submit"
+                    disabled={isLoading || savedItems.length === 0}
+                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Saving...
+                      </div>
+                    ) : (
+                      "Save Order"
+                    )}
+                  </Button>
+                )}
+                {currentTab === "order" && (
                   <Button
                     type="button"
                     onClick={() => {
@@ -721,231 +943,13 @@ const OrderModal = ({
                         createNewItem();
                       }
                     }}
+                    className="bg-gray-900 hover:bg-gray-800 text-white"
                   >
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Add Product
                   </Button>
-                </div>
-              </TabsContent>
-
-              {/* Product Details Tab */}
-              <TabsContent value="product" className="space-y-4 py-4">
-                {currentItem && (
-                  <div className="space-y-4">
-                    <div className="space-y-4">
-                      <label className="text-sm font-medium">
-                        Product Type *
-                      </label>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div
-                          className={`p-4 border rounded-md cursor-pointer flex items-center justify-center ${
-                            currentItem.productType === "shirt"
-                              ? "bg-blue-100 border-blue-500"
-                              : "bg-gray-50"
-                          }`}
-                          onClick={() =>
-                            handleItemChange("productType", "shirt")
-                          }
-                        >
-                          Shirt
-                        </div>
-                        <div
-                          className={`p-4 border rounded-md cursor-pointer flex items-center justify-center ${
-                            currentItem.productType === "sharara"
-                              ? "bg-blue-100 border-blue-500"
-                              : "bg-gray-50"
-                          }`}
-                          onClick={() =>
-                            handleItemChange("productType", "sharara")
-                          }
-                        >
-                          Sharara
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Color *</label>
-                      <div className="flex gap-2 flex-wrap">
-                        {colorSwatches.map((color) => (
-                          <div
-                            key={color}
-                            className={`w-10 h-10 rounded-full cursor-pointer border-2 ${
-                              currentItem.colour === color
-                                ? "border-black"
-                                : "border-transparent"
-                            }`}
-                            style={{ backgroundColor: color }}
-                            onClick={() => handleItemChange("colour", color)}
-                            role="button"
-                            aria-label={`Select color ${color}`}
-                            aria-pressed={currentItem.colour === color}
-                            tabIndex={0}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                handleItemChange("colour", color);
-                              }
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Quantity *</label>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={currentItem.quantity}
-                        onChange={(e) =>
-                          handleItemChange(
-                            "quantity",
-                            parseInt(e.target.value) || 1
-                          )
-                        }
-                      />
-                    </div>
-
-                    {errors.product && (
-                      <p className="text-sm text-red-500">
-                        Please select a product type and color
-                      </p>
-                    )}
-
-                    <div className="flex justify-end pt-2">
-                      {currentItem.productType && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            if (validateProductTab()) {
-                              setCurrentTab("measurements");
-                            }
-                          }}
-                        >
-                          Continue to Measurements
-                        </Button>
-                      )}
-                    </div>
-                  </div>
                 )}
-              </TabsContent>
-
-              {/* Measurements Tab */}
-              <TabsContent value="measurements" className="space-y-4 py-4">
-                {renderMeasurementFields()}
-
-                {errors.measurements && (
-                  <p className="text-sm text-red-500">
-                    Please fill out all measurement fields
-                  </p>
-                )}
-              </TabsContent>
-
-              {/* Saved Products Tab */}
-              <TabsContent value="saved" className="space-y-4 py-4">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium">Saved Products</h3>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={createNewItem}
-                    >
-                      <PlusCircle className="h-4 w-4 mr-2" />
-                      Add New Product
-                    </Button>
-                  </div>
-
-                  {savedItems.length === 0 ? (
-                    <p className="text-center py-4 text-muted-foreground">
-                      No products saved yet. Click "Add New Product" to start.
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {savedItems.map((item, index) => (
-                        <Card key={item.productId} className="overflow-hidden">
-                          <CardHeader className="p-3 pb-1 bg-gray-50">
-                            <CardTitle className="text-sm flex justify-between items-center">
-                              <span>
-                                {item.productType === "shirt"
-                                  ? "Shirt"
-                                  : "Sharara"}
-                              </span>
-                              <div className="flex gap-1">
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={() => viewProduct(index)}
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={() => editProduct(index)}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-6 w-6"
-                                  onClick={() => deleteProduct(index)}
-                                >
-                                  <Trash className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="p-3">
-                            <div className="flex items-center gap-2 mb-2">
-                              <div
-                                className="w-4 h-4 rounded-full border border-gray-300"
-                                style={{ backgroundColor: item.colour }}
-                              />
-                              <span className="text-xs">
-                                Quantity: {item.quantity}
-                              </span>
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {item.productType === "shirt"
-                                ? `Bust: ${item.measurements.shirtMeasurements.bust.value} ${item.measurements.shirtMeasurements.bust.unit}`
-                                : `Waist: ${item.measurements.shararaMeasurements.shararaWaist.value} ${item.measurements.shararaMeasurements.shararaWaist.unit}`}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex justify-end pt-4">
-                    <Button
-                      type="submit"
-                      disabled={isLoading || savedItems.length === 0}
-                      className="text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
-                    >
-                      {isLoading ? "Saving..." : "Save Order"}
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCloseModal}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>

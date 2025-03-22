@@ -16,12 +16,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "@pheralb/toast";
 
 const OrdersTable2 = () => {
-  const [orders, setOrders] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddLoading, setIsAddLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -64,12 +64,12 @@ const OrdersTable2 = () => {
     fetchData();
   }, []);
 
-  const formatProductInfo = (order) => {
+  const formatProductInfo = (order: any) => {
     if (!order.products || order.products.length === 0) {
       return "No products";
     }
 
-    const productTypes = order.products.map((p) => p.productType);
+    const productTypes = order.products.map((p: any) => p.productType);
     const uniqueTypes = [...new Set(productTypes)];
 
     if (uniqueTypes.length === 1) {
@@ -79,7 +79,7 @@ const OrdersTable2 = () => {
     }
   };
 
-  const handleViewOrder = (orderId) => {
+  const handleViewOrder = (orderId: string) => {
     setSelectedOrderId(orderId);
     setIsModalOpen(true);
   };
@@ -94,7 +94,7 @@ const OrdersTable2 = () => {
     form.reset();
   };
 
-  const handleAddOrder = async (data) => {
+  const handleAddOrder = async (data: any) => {
     setIsAddLoading(true);
 
     console.log("orderData", data);
@@ -136,7 +136,7 @@ const OrdersTable2 = () => {
       } else {
         throw new Error(result.message || "Unknown error");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding order:", error);
       toast.error({ text: error.message || "Error adding order" });
     } finally {
@@ -166,28 +166,28 @@ const OrdersTable2 = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Orders</h1>
+    <div className="container mx-auto px-4 pb-32 sm:pb-24 md:pb-16">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 pt-4">
+        <h2 className="text-2xl font-bold">Orders</h2>
         <Button
           onClick={() => setIsAddModalOpen(true)}
           disabled={isAddLoading}
-          className="text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-md"
+          className="text-white bg-black hover:bg-gray-600 w-full sm:w-auto !rounded-buttonradius"
         >
           Add New Order
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto shadow-lg rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Products</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+      <div className="w-full overflow-x-auto bg-white shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+        <Table className="rounded-lg">
+          <TableHeader className="bg-black text-white rounded-lg h-14">
+            <TableRow className="rounded-lg">
+              <TableHead className="px-6 py-3">Order ID</TableHead>
+              <TableHead className="px-6 py-3">Customer</TableHead>
+              <TableHead className="px-6 py-3">Email</TableHead>
+              <TableHead className="px-6 py-3">Products</TableHead>
+              <TableHead className="px-6 py-3">Date</TableHead>
+              <TableHead className="px-6 py-3 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -195,32 +195,34 @@ const OrdersTable2 = () => {
               orders.map((order) => (
                 <TableRow
                   key={order.orderId || order._id || order.trackingId}
-                  className="hover:bg-slate-50"
+                  className="border-b hover:bg-gray-50 transition-colors duration-200"
                 >
-                  <TableCell className="font-medium">
+                  <TableCell className="px-6 py-4 whitespace-nowrap font-medium">
                     {order.orderId || order.trackingId || order._id}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
                     {order.customerName || order.userId || order.customerId}
                   </TableCell>
-                  <TableCell>{order.customerEmail}</TableCell>
-                  <TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
+                    {order.customerEmail}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
                     {order.items
-                      ? order.items.map((item) => item.productType).join(", ")
+                      ? order.items.map((item: any) => item.productType).join(", ")
                       : formatProductInfo(order)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
                     {order.deliveryDate
                       ? new Date(order.deliveryDate).toLocaleDateString()
                       : new Date(
-                          order.date || order.createdAt || Date.now()
-                        ).toLocaleDateString()}
+                        order.date || order.createdAt || Date.now()
+                      ).toLocaleDateString()}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-300 rounded-md"
+                      className="bg-blue-500 hover:bg-blue-600 text-white bg-black px-4 !rounded-buttonradius"
                       onClick={() =>
                         handleViewOrder(
                           order.orderId || order._id || order.trackingId

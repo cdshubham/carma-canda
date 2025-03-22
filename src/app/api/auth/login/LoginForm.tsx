@@ -12,6 +12,7 @@ import { toast } from "@pheralb/toast";
 import useFetch from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
 import { useSession, getSession } from "next-auth/react";
+import Image from "next/image";
 interface AuthFormInputs {
   email: string;
   password: string;
@@ -50,6 +51,7 @@ export default function LoginPage() {
             console.log("👍😂", updatedSession);
 
             if (updatedSession?.user?.role === "admin") {
+              console.log("user is admin----------->");
               router.push("/admin/orders");
             } else {
               console.log("👍👍", updatedSession?.user);
@@ -65,8 +67,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
+    <div className="w-full h-full max-h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 bg-white ">
+      <div className="relative w-full h-[120px]">
+        <Image
+          src="/images/carma.jpg"
+          alt="Company"
+          fill
+          style={{ objectFit: "cover" }}
+          className="max-w-full"
+        />
+      </div>
       <div className="max-w-md w-full p-6 rounded-lg  sm:p-8">
+
         <h2 className="text-2xl font-bold text-center mb-6 text-black">
           Sign In
         </h2>
