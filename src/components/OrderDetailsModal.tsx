@@ -26,8 +26,86 @@ const Loader = () => (
   </div>
 );
 
-export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
-  const [orderDetails, setOrderDetails] = useState(null);
+interface OrderDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId: string | null;
+}
+
+interface Measurement {
+  value: string | number;
+  unit?: string;
+}
+
+interface OrderItem {
+  productId: string;
+  productType: string;
+  colour: string;
+  quantity: number;
+  measurements?: {
+    shirtMeasurements?: {
+      shirtLength?: Measurement;
+      dartPoint?: Measurement;
+      upperBust?: Measurement;
+      bust?: Measurement;
+      waist?: Measurement;
+      hips?: Measurement;
+      frontNeck?: Measurement;
+      backNeck?: Measurement;
+      tira?: Measurement;
+      sleevesLength?: Measurement;
+      moriSleeveless?: Measurement;
+      biceps?: Measurement;
+      armhole?: Measurement;
+    };
+    shararaMeasurements?: {
+      shararaLength?: Measurement;
+      shararaWaist?: Measurement;
+      hips?: Measurement;
+      thigh?: Measurement;
+    };
+  };
+}
+
+interface OrderDetails {
+  order: {
+    orderId: string;
+    trackingId?: string;
+    dnNumber?: string;
+    createdAt: string;
+    deliveryDate: string;
+    items: OrderItem[];
+  };
+  customer: {
+    name: string;
+    email: string;
+    phone?: string;
+    gender?: string;
+    birthday?: string;
+    anniversary?: string;
+    address?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      zip_code?: string;
+      country?: string;
+    };
+    spouse?: {
+      first_name: string;
+      last_name?: string;
+      birthday?: string;
+    };
+    children?: Array<{
+      first_name: string;
+      last_name?: string;
+      gender?: string;
+      birthday?: string;
+    }>;
+  };
+}
+
+export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDetailsModalProps) {
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { fetchData: fetchOrderDetails } = useFetch(
@@ -42,13 +120,13 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
         try {
           const response = await fetchOrderDetails();
           if (response?.success) {
-            setOrderDetails(response.data);
+            setOrderDetails(response.data as OrderDetails);
           } else {
             throw new Error(
               response?.message || "Failed to fetch order details"
             );
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error fetching order details:", error);
           toast.error({
             text: error.message || "Error fetching order details",
@@ -63,27 +141,27 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
   }, [isOpen, orderId]);
 
   // Format date
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | undefined) => {
     return dateString
       ? new Date(dateString).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
       : "N/A";
   };
 
   // Format measurement with unit
-  const formatMeasurement = (measurement) => {
+  const formatMeasurement = (measurement: Measurement | undefined) => {
     if (!measurement || !measurement.value) return "N/A";
     return `${measurement.value} ${measurement.unit || "in"}`;
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto bg-white text-black border-gray-200 shadow-lg">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-black">
+      <DialogContent className="max-w-4xl h-[95vh] bg-white !rounded-cardradius">
+        <DialogHeader className="border-b pb-3">
+          <DialogTitle className="text-2xl font-semibold text-gray-900">
             Order Details
             {orderDetails?.order?.trackingId && (
               <span className="ml-2 text-gray-600 text-base">
@@ -96,60 +174,60 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
         {isLoading ? (
           <Loader />
         ) : orderDetails ? (
-          <Tabs defaultValue="customer" className="w-full">
-            <TabsList className="w-full mb-4 bg-gray-100">
+          <Tabs defaultValue="customer" className="h-[calc(95vh-12rem)]">
+            <TabsList className="grid w-full grid-cols-3 mb-3 ">
               <TabsTrigger
                 value="customer"
-                className="flex-1 text-black data-[state=active]:bg-white"
+                  className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
               >
                 Customer Information
               </TabsTrigger>
               <TabsTrigger
                 value="order"
-                className="flex-1 text-black data-[state=active]:bg-white"
+                className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
               >
                 Order Details
               </TabsTrigger>
               <TabsTrigger
                 value="measurements"
-                className="flex-1 text-black data-[state=active]:bg-white"
+                className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
               >
                 Measurements
               </TabsTrigger>
             </TabsList>
 
             {/* Customer Information Tab */}
-            <TabsContent value="customer">
+            <TabsContent value="customer" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
-                  <CardTitle className="text-black">
+                  <CardTitle className="text-gray-900">
                     Customer Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 text-black">
+                <CardContent className="space-y-4 text-gray-900">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-black">Name</p>
+                      <p className="text-sm font-medium text-gray-900">Name</p>
                       <p>{orderDetails.customer.name}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">Email</p>
+                      <p className="text-sm font-medium text-gray-900">Email</p>
                       <p>{orderDetails.customer.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">Phone</p>
+                      <p className="text-sm font-medium text-gray-900">Phone</p>
                       <p>{orderDetails.customer.phone || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">Gender</p>
+                      <p className="text-sm font-medium text-gray-900">Gender</p>
                       <p>{orderDetails.customer.gender || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">Birthday</p>
+                      <p className="text-sm font-medium text-gray-900">Birthday</p>
                       <p>{formatDate(orderDetails.customer.birthday)}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">
+                      <p className="text-sm font-medium text-gray-900">
                         Anniversary
                       </p>
                       <p>{formatDate(orderDetails.customer.anniversary)}</p>
@@ -159,7 +237,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                   {/* Address Information */}
                   {orderDetails.customer.address && (
                     <div className="mt-4">
-                      <p className="text-sm font-medium mb-2 text-black">
+                      <p className="text-sm font-medium mb-2 text-gray-900">
                         Address
                       </p>
                       <p>
@@ -180,22 +258,21 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                   {orderDetails.customer.spouse &&
                     orderDetails.customer.spouse.first_name && (
                       <div className="mt-4">
-                        <p className="text-sm font-medium mb-2 text-black">
+                        <p className="text-sm font-medium mb-2 text-gray-900">
                           Spouse
                         </p>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-sm font-medium text-black">
+                            <p className="text-sm font-medium text-gray-900">
                               Name
                             </p>
                             <p>
-                              {`${orderDetails.customer.spouse.first_name} ${
-                                orderDetails.customer.spouse.last_name || ""
-                              }`.trim()}
+                              {`${orderDetails.customer.spouse.first_name} ${orderDetails.customer.spouse.last_name || ""
+                                }`.trim()}
                             </p>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-black">
+                            <p className="text-sm font-medium text-gray-900">
                               Birthday
                             </p>
                             <p>
@@ -212,7 +289,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                   {orderDetails.customer.children &&
                     orderDetails.customer.children.length > 0 && (
                       <div className="mt-4">
-                        <p className="text-sm font-medium mb-2 text-black">
+                        <p className="text-sm font-medium mb-2 text-gray-900">
                           Children
                         </p>
                         {orderDetails.customer.children.map((child, index) => (
@@ -221,7 +298,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                             className="grid grid-cols-3 gap-4 mb-2"
                           >
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Name
                               </p>
                               <p>
@@ -229,13 +306,13 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Gender
                               </p>
                               <p>{child.gender || "N/A"}</p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Birthday
                               </p>
                               <p>{formatDate(child.birthday)}</p>
@@ -249,39 +326,39 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
             </TabsContent>
 
             {/* Order Details Tab */}
-            <TabsContent value="order">
+            <TabsContent value="order" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
-                  <CardTitle className="text-black">
+                  <CardTitle className="text-gray-900">
                     Order Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 text-black">
+                <CardContent className="space-y-4 text-gray-900">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-black">Order ID</p>
+                      <p className="text-sm font-medium text-gray-900">Order ID</p>
                       <p>{orderDetails.order.orderId}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">
+                      <p className="text-sm font-medium text-gray-900">
                         Tracking ID
                       </p>
                       <p>{orderDetails.order.trackingId || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">
+                      <p className="text-sm font-medium text-gray-900">
                         DN Number
                       </p>
                       <p>{orderDetails.order.dnNumber || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">
+                      <p className="text-sm font-medium text-gray-900">
                         Created Date
                       </p>
                       <p>{formatDate(orderDetails.order.createdAt)}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-black">
+                      <p className="text-sm font-medium text-gray-900">
                         Delivery Date
                       </p>
                       <p>{formatDate(orderDetails.order.deliveryDate)}</p>
@@ -290,7 +367,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
 
                   {/* Products Information */}
                   <div className="mt-4">
-                    <p className="text-sm font-medium mb-2 text-black">
+                    <p className="text-sm font-medium mb-2 text-gray-900">
                       Products
                     </p>
                     <div className="border border-gray-200 rounded-md overflow-hidden">
@@ -314,16 +391,16 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                         <tbody className="bg-white divide-y divide-gray-200">
                           {orderDetails.order.items.map((item, index) => (
                             <tr key={index}>
-                              <td className="px-4 py-2 whitespace-nowrap text-black">
+                              <td className="px-4 py-2 whitespace-nowrap text-gray-900">
                                 {item.productId}
                               </td>
-                              <td className="px-4 py-2 whitespace-nowrap capitalize text-black">
+                              <td className="px-4 py-2 whitespace-nowrap capitalize text-gray-900">
                                 {item.productType}
                               </td>
-                              <td className="px-4 py-2 whitespace-nowrap text-black">
+                              <td className="px-4 py-2 whitespace-nowrap text-gray-900">
                                 {item.colour}
                               </td>
-                              <td className="px-4 py-2 whitespace-nowrap text-black">
+                              <td className="px-4 py-2 whitespace-nowrap text-gray-900">
                                 {item.quantity}
                               </td>
                             </tr>
@@ -337,21 +414,21 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
             </TabsContent>
 
             {/* Measurements Tab */}
-            <TabsContent value="measurements">
+            <TabsContent value="measurements" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
-                  <CardTitle className="text-black">
+                  <CardTitle className="text-gray-900">
                     Product Measurements
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-black">
+                <CardContent className="text-gray-900">
                   {orderDetails.order.items.map((item, index) => (
                     <div
                       key={index}
                       className="mb-6 pb-6 border-b border-gray-200 last:border-0"
                     >
                       <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold capitalize text-black">
+                        <h3 className="text-lg font-semibold capitalize text-gray-900">
                           {item.productType} ({item.colour})
                         </h3>
                         <p className="text-sm text-gray-600">
@@ -363,7 +440,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                         item.measurements?.shirtMeasurements && (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Shirt Length
                               </p>
                               <p>
@@ -374,7 +451,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Dart Point
                               </p>
                               <p>
@@ -384,7 +461,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Upper Bust
                               </p>
                               <p>
@@ -394,7 +471,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Bust
                               </p>
                               <p>
@@ -404,7 +481,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Waist
                               </p>
                               <p>
@@ -414,7 +491,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Hips
                               </p>
                               <p>
@@ -424,7 +501,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Front Neck
                               </p>
                               <p>
@@ -434,7 +511,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Back Neck
                               </p>
                               <p>
@@ -444,7 +521,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Tira
                               </p>
                               <p>
@@ -454,7 +531,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Sleeves Length
                               </p>
                               <p>
@@ -465,7 +542,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Mori Sleeveless
                               </p>
                               <p>
@@ -476,7 +553,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Biceps
                               </p>
                               <p>
@@ -486,7 +563,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Armhole
                               </p>
                               <p>
@@ -502,7 +579,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                         item.measurements?.shararaMeasurements && (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Sharara Length
                               </p>
                               <p>
@@ -513,7 +590,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Sharara Waist
                               </p>
                               <p>
@@ -524,7 +601,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Hips
                               </p>
                               <p>
@@ -534,7 +611,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-black">
+                              <p className="text-sm font-medium text-gray-900">
                                 Thigh
                               </p>
                               <p>
@@ -551,10 +628,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }) {
                           !item.measurements.shirtMeasurements) ||
                         (item.productType === "sharara" &&
                           !item.measurements.shararaMeasurements)) && (
-                        <p className="text-sm text-gray-600">
-                          No measurement data available
-                        </p>
-                      )}
+                          <p className="text-sm text-gray-600">
+                            No measurement data available
+                          </p>
+                        )}
                     </div>
                   ))}
                 </CardContent>

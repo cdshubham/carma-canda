@@ -27,10 +27,28 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-const CustomerModal = ({ isOpen, onClose, userId }) => {
+interface CustomerData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  birthday: string;
+  anniversary: string;
+  gender: string;
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+  social_media: {
+    platform: string;
+    url: string;
+  }[];
+}
+const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: () => void, userId: string }) => {
   const [activeTab, setActiveTab] = useState("details");
-  const [customerData, setCustomerData] = useState(null);
-  const [orders, setOrders] = useState([]);
+  const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const [orders, setOrders] = useState<any[]>([]);
   const [expandedOrders, setExpandedOrders] = useState({});
   const [loading, setLoading] = useState(true);
   const [orderStatistics, setOrderStatistics] = useState({
@@ -41,7 +59,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
   });
   const [expandedMeasurements, setExpandedMeasurements] = useState({});
 
-  const toggleMeasurementsExpand = (orderId, itemIndex, e) => {
+  const toggleMeasurementsExpand = (orderId: string, itemIndex: number, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const key = `${orderId}-${itemIndex}`;
     setExpandedMeasurements((prev) => ({
@@ -50,7 +68,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     }));
   };
 
-  const formatMeasurementName = (name) => {
+  const formatMeasurementName = (name: string) => {
     return name.replace(/([A-Z])/g, " $1").trim();
   };
 
@@ -71,14 +89,14 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
 
       fetchCustomerData()
         .then((data) => {
-          setCustomerData(data);
+          setCustomerData(data as CustomerData);
         })
         .catch((error) => {
           console.error("Error fetching customer details:", error);
         });
 
       fetchOrderData()
-        .then((response) => {
+        .then((response: any) => {
           if (response.success) {
             const orderData = response.data || [];
             setOrders(orderData);
@@ -94,7 +112,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     }
   }, [isOpen]);
 
-  const calculateOrderStatistics = (orderData) => {
+  const calculateOrderStatistics = (orderData: any) => {
     if (!orderData || orderData.length === 0) {
       return;
     }
@@ -103,9 +121,9 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     let itemCounts = {};
     let latestOrderDate = new Date(0);
 
-    orderData.forEach((order) => {
+    orderData.forEach((order: any) => {
       if (order.items && order.items.length > 0) {
-        order.items.forEach((item) => {
+        order.items.forEach((item: any) => {
           const itemPrice = item.price || 0;
           const quantity = item.quantity || 1;
           totalSpent += itemPrice * quantity;
@@ -141,14 +159,14 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     });
   };
 
-  const toggleOrderExpand = (orderId) => {
-    setExpandedOrders((prev) => ({
+  const toggleOrderExpand = (orderId: string) => {
+    setExpandedOrders((prev: any) => ({
       ...prev,
       [orderId]: !prev[orderId],
     }));
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -157,19 +175,19 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     });
   };
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(amount);
   };
 
-  const getTimeSince = (dateString) => {
+  const getTimeSince = (dateString: string | undefined) => {
     if (!dateString) return "N/A";
 
     const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now - date);
+    const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 1) return "Today";
@@ -181,7 +199,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl bg-white text-black max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="sm:max-w-4xl bg-white text-black max-h-[90vh] overflow-hidden flex flex-col custom-scrollbar !rounded-cardradius">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-2xl font-bold">
             {customerData
@@ -212,7 +230,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
-            className="w-full overflow-hidden flex flex-col flex-1"
+            className="w-full overflow-hidden flex flex-col flex-1 custom-scrollbar"
           >
             <TabsList className="grid w-full grid-cols-2 mb-6 flex-shrink-0">
               <TabsTrigger value="details" className="text-black">
@@ -227,12 +245,12 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
               </TabsTrigger>
             </TabsList>
 
-            <div className="overflow-y-auto flex-1">
-              <TabsContent value="details" className="space-y-6">
+              <div className="overflow-y-auto flex-1 custom-scrollbar  ">
+              <TabsContent value="details" className="space-y-6 ">
                 {customerData && (
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-6">
-                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100">
+                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
                         <h3 className="font-bold mb-4 flex items-center">
                           <User className="h-5 w-5 mr-2" />
                           Personal Information
@@ -276,7 +294,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                     </div>
 
                     <div className="space-y-6">
-                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100">
+                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
                         <h3 className="font-bold mb-4 flex items-center">
                           <MapPin className="h-5 w-5 mr-2" />
                           Address
@@ -299,7 +317,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
 
                       {customerData.social_media &&
                         customerData.social_media.length > 0 && (
-                          <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100">
+                          <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
                             <h3 className="font-bold mb-4 flex items-center">
                               <Globe className="h-5 w-5 mr-2" />
                               Social Media
@@ -308,7 +326,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                               {customerData.social_media.map((account, idx) => (
                                 <div
                                   key={idx}
-                                  className="flex items-center gap-3 p-2 bg-white rounded border border-gray-100 overflow-auto"
+                                  className="flex items-center gap-3 p-2 bg-white rounded shadow-sm overflow-auto"
                                 >
                                   <span className="font-medium flex-shrink-0">
                                     {account.platform}:
@@ -326,9 +344,9 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                 )}
               </TabsContent>
 
-              <TabsContent value="orders" className="space-y-6">
+              <TabsContent value="orders" className="space-y-6 min-h-[800px]  max-h-full">
                 {orders.length === 0 ? (
-                  <div className="text-center p-8 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="text-center p-8 bg-gray-50 rounded-lg shadow-md">
                     <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-xl font-medium mb-2">
                       No Orders Found
@@ -338,14 +356,14 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 flex flex-col ">
                     {orders.map((order) => (
                       <div
                         key={order._id}
-                        className="border rounded-lg overflow-hidden shadow-sm"
+                        className="border-0 rounded-lg overflow-hidden shadow-md min-h-[80px]"
                       >
                         <div
-                          className="flex justify-between items-center p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                          className="flex justify-between items-center p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors h-full"
                           onClick={() => toggleOrderExpand(order._id)}
                         >
                           <div className="flex items-center gap-3">
@@ -428,13 +446,13 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                                         ? item.measurements.shirtMeasurements
                                         : item.productType === "sharara"
                                           ? item.measurements
-                                              .shararaMeasurements
+                                            .shararaMeasurements
                                           : null);
 
                                     return (
                                       <div
                                         key={idx}
-                                        className="border rounded-lg overflow-hidden"
+                                        className="border-0 rounded-lg overflow-hidden shadow-sm"
                                       >
                                         {/* Item header */}
                                         <div className="bg-gray-50 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
@@ -517,8 +535,8 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                                                 Measurements
                                               </h5>
 
-                                              <div className="overflow-x-auto">
-                                                <table className="min-w-full divide-y divide-gray-200 border rounded-lg">
+                                              <div className="overflow-x-auto custom-scrollbar">
+                                                <table className="min-w-full divide-y divide-gray-200 rounded-lg shadow-sm">
                                                   <thead className="bg-gray-50">
                                                     <tr>
                                                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

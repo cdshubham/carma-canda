@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, X, Pencil, Eye, Trash } from "lucide-react";
 import debounce from "lodash/debounce";
+import { colorIndices } from "@/app/data/colourindex";
 
 const OrderModal = ({
   isAddModalOpen,
@@ -41,14 +42,10 @@ const OrderModal = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [colorSearchTerm, setColorSearchTerm] = useState("");
+  const [colorOptions, setColorOptions] = useState(colorIndices);
 
-  const colorSwatches = [
-    "#FF5733", // Red-Orange
-    "#33FF57", // Green
-    "#3357FF", // Blue
-    "#F3FF33", // Yellow
-    "#FF33F3", // Pink
-  ];
+
 
   // Function to reset all modal fields
   const resetModalFields = () => {
@@ -184,7 +181,7 @@ const OrderModal = ({
     const newItem = {
       productId: Math.random().toString(36).substring(2, 9),
       productType: "",
-      colour: colorSwatches[0],
+      colour: colorIndices[0],
       quantity: 1,
       measurements: getEmptyMeasurements(),
     };
@@ -475,7 +472,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="flex-1 h-10"
+                    className="flex-1 h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 transition-colors"
                     disabled={!editMode && editItemIndex !== null}
                   />
                   <select
@@ -489,7 +486,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="w-20 border border-gray-300 rounded-md h-10"
+                    className="w-20 border-0 rounded-md h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-colors"
                     disabled={!editMode && editItemIndex !== null}
                   >
                     {measurementUnits.map((unit) => (
@@ -528,7 +525,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="flex-1 h-10"
+                    className="flex-1 h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 transition-colors"
                     disabled={!editMode && editItemIndex !== null}
                   />
                   <select
@@ -542,7 +539,7 @@ const OrderModal = ({
                         e.target.value
                       )
                     }
-                    className="w-20 border border-gray-300 rounded-md h-10"
+                    className="w-20 border-0 rounded-md h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-colors"
                     disabled={!editMode && editItemIndex !== null}
                   >
                     {measurementUnits.map((unit) => (
@@ -583,7 +580,7 @@ const OrderModal = ({
                       e.target.value
                     )
                   }
-                  className="flex-1 h-10"
+                  className="flex-1 h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 transition-colors"
                   disabled={!editMode && editItemIndex !== null}
                 />
                 <select
@@ -597,7 +594,7 @@ const OrderModal = ({
                       e.target.value
                     )
                   }
-                  className="w-20 border border-gray-300 rounded-md h-10"
+                  className="w-20 border-0 rounded-md h-10 bg-gray-50 hover:bg-gray-100 focus:bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-colors"
                   disabled={!editMode && editItemIndex !== null}
                 >
                   {measurementUnits.map((unit) => (
@@ -618,6 +615,85 @@ const OrderModal = ({
     );
   };
 
+  // Add new function to handle color search
+  const handleColorSearch = (searchValue) => {
+    setColorSearchTerm(searchValue);
+    if (!searchValue) {
+      setColorOptions(colorIndices); // Show all colors when input is empty
+      return;
+    }
+    const filteredColors = colorIndices.filter(color =>
+      color.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setColorOptions(filteredColors); // Show all matching colors without limit
+  };
+
+  // Replace the color swatches section with this new JSX
+  const renderColorSelection = () => (
+    <div className="space-y-4">
+      <label className="text-sm font-medium text-gray-900">Color Code *</label>
+      <div className="relative">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Input
+              type="text"
+              value={colorSearchTerm}
+              onChange={(e) => handleColorSearch(e.target.value)}
+              onFocus={() => setColorOptions(colorIndices)}
+              placeholder="Search or click to view colors..."
+              className="w-full h-10 !rounded-buttonradius pr-10 hover:cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 bg-gray-50 hover:bg-gray-100 focus:bg-white transition-colors"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="absolute right-0 top-0 h-full px-3 hover:bg-transparent hover:cursor-pointer"
+              onClick={() => {
+                if (colorOptions.length === 0) {
+                  setColorOptions(colorIndices); // Show all colors when opening dropdown
+                } else {
+                  setColorOptions([]); // Close dropdown
+                }
+              }}
+            >
+              <svg
+                className={`h-4 w-4 transition-transform ${colorOptions.length > 0 ? 'rotate-180' : ''}`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </Button>
+          </div>
+        </div>
+        {colorOptions.length > 0 && (
+          <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-md mt-1 max-h-[300px] overflow-auto shadow-lg [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:cursor-pointer">
+            {colorOptions.map((color) => (
+              <li
+                key={color}
+                className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${currentItem?.colour === color ? 'bg-gray-100' : ''}`}
+                onClick={() => {
+                  handleItemChange("colour", color);
+                  setColorSearchTerm(color);
+                  setColorOptions([]);
+                }}
+              >
+                {color}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {currentItem?.colour && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Selected Color:</span>
+          <span className="text-sm font-medium">{currentItem.colour}</span>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <Dialog open={isAddModalOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl h-[95vh] bg-white !rounded-cardradius">
@@ -631,26 +707,26 @@ const OrderModal = ({
               <TabsList className="grid w-full grid-cols-4 mb-3">
                 <TabsTrigger
                   value="order"
-                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.order ? "border-red-500 border" : ""}`}
+                  className={`data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius ${errors.order ? "border-red-500 border" : ""}`}
                 >
                   Order Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="product"
-                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.product ? "border-red-500 border" : ""}`}
+                  className={`data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius ${errors.product ? "border-red-500 border" : ""}`}
                 >
                   Product Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="measurements"
                   disabled={!currentItem?.productType}
-                  className={`data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 ${errors.measurements ? "border-red-500 border" : ""}`}
+                  className={`data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius ${errors.measurements ? "border-red-500 border" : ""}`}
                 >
                   Measurements
                 </TabsTrigger>
                 <TabsTrigger
                   value="saved"
-                  className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900"
+                  className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
                 >
                   Saved Products
                 </TabsTrigger>
@@ -667,7 +743,7 @@ const OrderModal = ({
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-900">Customer *</FormLabel>
                           <FormControl>
-                            <div className="search-dropdown-container relative">
+                            <div className="search-dropdown-container relative rounded-buttonradius">
                               <Input
                                 placeholder="Enter at least 3 characters..."
                                 value={searchTerm}
@@ -676,7 +752,7 @@ const OrderModal = ({
                                   field.onChange(e.target.value);
                                 }}
                                 autoComplete="off"
-                                className="w-full h-10"
+                                className="w-full h-10 !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 bg-gray-50 hover:bg-gray-100 focus:bg-white transition-colors"
                               />
 
                               {isLoading && (
@@ -715,51 +791,27 @@ const OrderModal = ({
                         <label className="text-sm font-medium text-gray-900">Product Type *</label>
                         <div className="grid grid-cols-2 gap-4">
                           <div
-                            className={`p-4 border rounded-lg cursor-pointer flex items-center justify-center transition-all h-10 ${currentItem.productType === "shirt"
-                              ? "bg-gray-100 border-gray-900 shadow-sm"
-                              : "bg-gray-50 hover:bg-gray-100"
+                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${currentItem.productType === "shirt"
+                              ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                              : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
                               }`}
                             onClick={() => handleItemChange("productType", "shirt")}
                           >
-                            <span className="text-sm font-medium text-gray-900">Shirt</span>
+                            <span className={`text-sm font-medium ${currentItem.productType === "shirt" ? "text-white" : "text-gray-900"}`}>Shirt</span>
                           </div>
                           <div
-                            className={`p-4 border rounded-lg cursor-pointer flex items-center justify-center transition-all h-10 ${currentItem.productType === "sharara"
-                              ? "bg-gray-100 border-gray-900 shadow-sm"
-                              : "bg-gray-50 hover:bg-gray-100"
+                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${currentItem.productType === "sharara"
+                              ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                              : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
                               }`}
                             onClick={() => handleItemChange("productType", "sharara")}
                           >
-                            <span className="text-sm font-medium text-gray-900">Sharara</span>
+                            <span className={`text-sm font-medium ${currentItem.productType === "sharara" ? "text-white" : "text-gray-900"}`}>Sharara</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="space-y-4">
-                        <label className="text-sm font-medium text-gray-900">Color *</label>
-                        <div className="flex gap-3 flex-wrap">
-                          {colorSwatches.map((color) => (
-                            <div
-                              key={color}
-                              className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all hover:scale-110 ${currentItem.colour === color
-                                ? "border-gray-900 shadow-md"
-                                : "border-transparent hover:border-gray-300"
-                                }`}
-                              style={{ backgroundColor: color }}
-                              onClick={() => handleItemChange("colour", color)}
-                              role="button"
-                              aria-label={`Select color ${color}`}
-                              aria-pressed={currentItem.colour === color}
-                              tabIndex={0}
-                              onKeyPress={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                  handleItemChange("colour", color);
-                                }
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
+                      {renderColorSelection()}
 
                       <div className="space-y-4">
                         <label className="text-sm font-medium text-gray-900">Quantity *</label>
@@ -773,7 +825,7 @@ const OrderModal = ({
                               parseInt(e.target.value) || 1
                             )
                           }
-                          className="max-w-[200px] h-10"
+                          className="max-w-[200px] h-10 !rounded-buttonradius hover:cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 bg-gray-50 hover:bg-gray-100 focus:bg-white transition-colors"
                         />
                       </div>
 
@@ -807,7 +859,7 @@ const OrderModal = ({
                         variant="outline"
                         size="sm"
                         onClick={createNewItem}
-                        className="border-gray-900 text-gray-900 hover:bg-gray-100 h-8"
+                        className="border-gray-900 text-gray-900 hover:bg-gray-100 h-8 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
                       >
                         <PlusCircle className="h-4 w-4 mr-2" />
                         Add New Product
@@ -867,7 +919,7 @@ const OrderModal = ({
                                   className="w-4 h-4 rounded-full border border-gray-300"
                                   style={{ backgroundColor: item.colour }}
                                 />
-                                <span className="text-xs font-medium text-gray-900">
+                                <span className="text-xs font-medium text-gray-900 rounded-buttonradius">
                                   Quantity: {item.quantity}
                                 </span>
                               </div>
@@ -893,7 +945,7 @@ const OrderModal = ({
                   variant="outline"
                   onClick={handleCloseModal}
                   disabled={isLoading}
-                  className="hover:bg-gray-100"
+                  className="hover:bg-gray-100 !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
                 >
                   Cancel
                 </Button>
@@ -905,7 +957,7 @@ const OrderModal = ({
                         setCurrentTab("measurements");
                       }
                     }}
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                    className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius bt shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
                   >
                     Continue to Measurements
                   </Button>
@@ -914,7 +966,7 @@ const OrderModal = ({
                   <Button
                     type="button"
                     onClick={saveCurrentProduct}
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                    className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
                   >
                     Save This Product
                   </Button>
@@ -923,7 +975,7 @@ const OrderModal = ({
                   <Button
                     type="submit"
                     disabled={isLoading || savedItems.length === 0}
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                    className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius "
                   >
                     {isLoading ? (
                       <div className="flex items-center">
@@ -943,7 +995,7 @@ const OrderModal = ({
                         createNewItem();
                       }
                     }}
-                    className="bg-gray-900 hover:bg-gray-800 text-white"
+                    className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
                   >
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Add Product

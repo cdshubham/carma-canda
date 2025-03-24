@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="flex h-screen  flex-col-reverse md:flex-row">
      <AdminSidebar />
-      <main className="flex-1 p-4 md:p-6 bg-white shadow-md rounded-lg overflow-auto">
+      <main className="flex-1 p-4 md:p-6 bg-white rounded-lg overflow-auto">
         {children}
       </main>
     </div>

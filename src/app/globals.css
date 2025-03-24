@@ -1,0 +1,81 @@
+/* Custom Scrollbar */
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 100vh;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 100vh;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f1f1f1;
+} 
+
+
+.btnbg {
+    background-image: url('/goldBackground.png');
+    background-size: 150%;
+    border-radius: 16px;
+    color: inherit;
+    padding: 8px 25px;
+    color: #29341B;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 500;
+    animation: MoveBackgroundPosition 40s ease-in-out infinite;
+}
+
+
+.btnbg:hover {
+    background-image: none;
+    background-color: var(--primary);
+    color: white;
+}
+
+.btnbghover {
+    background-image: none;
+    background-color: var(--primary);
+    color: white;
+}
+
+@keyframes MoveBackgroundPosition {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animated-background {
+    background-size: 200% auto; /* This allows the background to scroll horizontally */
+    background-repeat: no-repeat;
+    
+    /* Apply the animation */
+    animation: MoveBackgroundPosition 5s ease-in-out infinite; /* Customize timing as needed */
+  }
+  
+
+.gradientText {
+    background: linear-gradient(to right, #C0A062, #F0D89E ,#C0A062); /* Adjust colors for your gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent; 
+}

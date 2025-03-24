@@ -172,14 +172,14 @@ const OrdersTable2 = () => {
         <Button
           onClick={() => setIsAddModalOpen(true)}
           disabled={isAddLoading}
-          className="text-white bg-black hover:bg-gray-600 w-full sm:w-auto !rounded-buttonradius"
+          className="text-white bg-black  w-full sm:w-auto !rounded-buttonradius btnbg"
         >
           Add New Order
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto bg-white shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
-        <Table className="rounded-lg">
+      <div className="w-full overflow-x-auto bg-gray-50 shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+        <Table className="rounded-lg ">
           <TableHeader className="bg-black text-white rounded-lg h-14">
             <TableRow className="rounded-lg">
               <TableHead className="px-6 py-3">Order ID</TableHead>
@@ -192,10 +192,11 @@ const OrdersTable2 = () => {
           </TableHeader>
           <TableBody>
             {orders.length > 0 ? (
-              orders.map((order) => (
+              orders.map((order, index) => (
                 <TableRow
                   key={order.orderId || order._id || order.trackingId}
-                  className="border-b hover:bg-gray-50 transition-colors duration-200"
+                  className={`border-b  duration-200 ${index % 2 === 0 ? "bg-white hover:bg-white" : "bg-gray-200 hover:bg-gray-200"}`}
+
                 >
                   <TableCell className="px-6 py-4 whitespace-nowrap font-medium">
                     {order.orderId || order.trackingId || order._id}
@@ -222,7 +223,7 @@ const OrdersTable2 = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-blue-500 hover:bg-blue-600 text-white bg-black px-4 !rounded-buttonradius"
+                      className="bg-blue-500  text-white bg-black px-4 !rounded-buttonradius btnhover"
                       onClick={() =>
                         handleViewOrder(
                           order.orderId || order._id || order.trackingId
