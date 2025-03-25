@@ -1,0 +1,93 @@
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 100vh;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 100vh;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f1f1f1;
+} 
+
+
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.btnbg {
+    background-image: url('/goldBackground.png');
+    background-size: 150%;
+    border-radius: 16px;
+    color: #29341B;
+    padding: 8px 25px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 500;
+    background-position: 0% 50%;
+    animation: MoveBackgroundPosition 30s linear infinite;
+    opacity: 0.8;
+}
+
+.btnbg:hover {
+    background-image: url('/goldBackground.png');
+    opacity: 1;
+    color: #29341B;
+}
+
+.btnbghover {
+    background-image: url('/goldBackground.png');
+    opacity: 1;
+    color: #29341B;
+}
+
+@keyframes MoveBackgroundPosition {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 5% 50%;
+    }
+    50% {
+        background-position: 10% 50%;
+    }
+    75% {
+        background-position: 5% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animated-background {
+    background-size: 200% auto;
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    animation: MoveBackgroundPosition 40s linear infinite;
+}
+  
+
+.gradientText {
+    background: linear-gradient(to right, #C0A062, #F0D89E ,#C0A062); /* Adjust colors for your gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent; 
+}

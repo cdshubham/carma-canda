@@ -29,6 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await connect();
 
         const user = await User.findOne({ email });
+        console.log(" 🎶🎶", user);
 
         if (!user) {
           throw new CredentialsSignin("Invalid email or password");
@@ -39,15 +40,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!valid) {
           throw new CredentialsSignin("Invalid email or password");
         }
+
         console.log("😶😶‍🌫️😶‍🌫️", user);
 
+        // Use first_name and last_name
         const userData = {
           id: user._id,
-          name: user.username,
+          name: `${user.first_name} ${user.last_name}`, // Updated here
           email: user.email,
           role: user.role,
           memberSince: user.createdAt,
         };
+
         return userData;
       },
     }),
@@ -66,7 +70,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         console.log("chlo ji", token, user);
-
         token.role = user.role;
       }
       return token;
@@ -86,7 +89,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (path === "/") {
         if (auth?.user?.role === "admin") {
           console.log("Hello");
-
           return Response.redirect(new URL("/admin/orders", request.url));
         }
         if (auth?.user?.role === "user") {

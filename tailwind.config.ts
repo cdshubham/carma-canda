@@ -10,6 +10,7 @@ export default {
   theme: {
   	extend: {
   		colors: {
+           pprimary: '#000000',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -54,7 +55,11 @@ export default {
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+        buttonradius: '16px',
+		inputradius:"8px",
+        cardradius: '16px',
+		badgeradius:"3px",
   		}
   	}
   },

@@ -2,19 +2,28 @@ import { connect } from "@/db/connection";
 import User from "@/models/userModels";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import { UserRequestBody } from "@/types/userSchema.types";
 import axios from "axios";
 
 export async function POST(request: NextRequest) {
   await connect();
   try {
-    console.log(request);
-
     const req = await request.json();
-    console.log(req);
+    const {
+      username,
+      email,
+      password,
+    }: {
+      username: string;
+      email: string;
+      password: string;
+    } = req;
 
-    const { username, email, password }: UserRequestBody = req;
-    console.log(username);
+    // Split username into first and last name
+    const nameParts = username.trim().split(" ");
+    const first_name = nameParts[0] || "";
+    const last_name = nameParts.slice(1).join(" ") || ""; // Handle multiple words as last name
+
+    // Check if user already exists
     const user = await User.findOne({ email });
     if (user) {
       return NextResponse.json(
@@ -22,16 +31,23 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Hash the password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
+
+    // Create and save new user
     const newUser = new User({
-      username,
+      first_name,
+      last_name,
       email,
       password: hashedPassword,
     });
+
     const savedUser = await newUser.save();
     console.log(savedUser);
-    //TODO:
+
+    // Send a welcome email
     try {
       await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
         sendTo: email,
@@ -40,8 +56,9 @@ export async function POST(request: NextRequest) {
     } catch (emailError) {
       console.error("Error sending email:", emailError);
     }
+
     return NextResponse.json({
-      message: "User registered successfully saved",
+      message: "User registered successfully",
       success: true,
       savedUser,
     });

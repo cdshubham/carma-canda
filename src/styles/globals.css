@@ -2,10 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   overflow-y: auto;
 }
+
 
 
 
@@ -20,4 +23,106 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+.btnbg {
+    background-image: url('/goldBackground.jpg');
+    background-size: 150%;
+    border-radius: 12px;
+    color: inherit;
+    padding: 8px 25px;
+    color: #29341B;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 500;
+    animation: MoveBackgroundPosition 40s ease-in-out infinite;
+}
+
+.btnhover:hover {
+   background-image: url('/goldBackground.jpg');
+    background-size: 150%;
+    border-radius: 12px;
+    color: inherit;
+    padding: 8px 25px;
+    color: #29341B;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 500;
+    animation: MoveBackgroundPosition 40s ease-in-out infinite;
+}
+
+.btnhover {
+   
+    background-size: 150%;
+    border-radius: 12px;
+    color: inherit;
+    padding: 8px 25px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 600;
+    animation: MoveBackgroundPosition 40s ease-in-out infinite;
+}
+
+
+.btnbg:hover {
+    background-image: linear-gradient(to right, #C0A062, #F0D89E, #C0A062);
+    background-size: 200% auto;
+    border-radius: 12px;
+    color: #29341B;
+    padding: 8px 25px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-repeat: no-repeat;
+    font-weight: 500;
+    animation: MoveBackgroundPosition 5s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+@keyframes MoveBackgroundPosition {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animated-background {
+    background-size: 200% auto; /* This allows the background to scroll horizontally */
+    background-repeat: no-repeat;
+    
+    /* Apply the animation */
+    animation: MoveBackgroundPosition 15s ease-in-out infinite; /* Customize timing as needed */
+  }
+
+  .animated-background:hover {
+    background-size: 200% auto; /* This allows the background to scroll horizontally */
+    background-repeat: no-repeat;
+    
+    /* Apply the animation */
+    animation: MoveBackgroundPosition 5s ease-in-out infinite; /* Customize timing as needed */
+  }
+  
+
+.gradientText {
+    background: linear-gradient(to right, #C0A062, #F0D89E ,#C0A062); /* Adjust colors for your gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent; 
 }

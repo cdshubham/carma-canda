@@ -12,6 +12,7 @@ import { toast } from "@pheralb/toast";
 import useFetch from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
 import { useSession, getSession } from "next-auth/react";
+import Image from "next/image";
 interface AuthFormInputs {
   email: string;
   password: string;
@@ -50,6 +51,7 @@ export default function LoginPage() {
             console.log("👍😂", updatedSession);
 
             if (updatedSession?.user?.role === "admin") {
+              console.log("user is admin----------->");
               router.push("/admin/orders");
             } else {
               console.log("👍👍", updatedSession?.user);
@@ -65,8 +67,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
+    <div className="w-full h-full max-h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 bg-white ">
+      <div className="relative w-full h-[120px]">
+        <Image
+          src="/images/carma.jpg"
+          alt="Company"
+          fill
+          style={{ objectFit: "cover" }}
+          className="max-w-full"
+        />
+      </div>
       <div className="max-w-md w-full p-6 rounded-lg  sm:p-8">
+
         <h2 className="text-2xl font-bold text-center mb-6 text-black">
           Sign In
         </h2>
@@ -78,7 +90,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Email"
                 {...register("email", { required: "Email is required" })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 !rounded-inputradius focus:ring-black focus:border-black text-black"
               />
             </div>
             {errors.email && (
@@ -94,7 +106,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 {...register("password", { required: "Password is required" })}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black text-sm sm:text-base"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 !rounded-inputradius focus:ring-black focus:border-black text-black text-sm sm:text-base"
               />
               <span
                 onClick={togglePasswordVisibility}
@@ -116,7 +128,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
+            className="w-full bg-black text-white py-2 !rounded-inputradius hover:bg-gray-800 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
           >
             {loading ? "loading ..." : "Login"}
           </button>

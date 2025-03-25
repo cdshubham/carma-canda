@@ -70,7 +70,7 @@ export default function TrackingPage() {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-start p-6 bg-white text-black h-screen overflow-y-auto">
+    <div className=" flex flex-col items-center justify-start p-6 bg-white text-black h-screen overflow-y-auto mt-8">
       <div className="w-full max-w-3xl mx-auto">
         <div className="mb-12 text-center">
           <h2 className="text-3xl font-bold mb-2 text-black">
@@ -98,15 +98,14 @@ export default function TrackingPage() {
             </svg>
           </div>
           <Input
-            className="bg-white border border-gray-300 focus:border-black text-black pl-10 pr-20 py-4 rounded-lg w-full shadow-md focus:ring-2 focus:ring-black/20 transition-all duration-300"
+            className="bg-white border border-gray-300 focus:border-black text-black pl-10 pr-20 py-4 !rounded-buttonradius w-full shadow-md focus:ring-2 focus:ring-black/20 transition-all duration-300"
             placeholder="Enter your tracking number"
             value={trackingNumber}
             onChange={(e) => setTrackingNumber(e.target.value)}
           />
           <Button
-            className={`absolute right-0 top-0 bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-md shadow-md transition-all duration-300 ${
-              isLoading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className={`absolute right-0 top-0 bg-black hover:bg-gray-800 text-white px-4 py-2 !rounded-inputradius shadow-md transition-all duration-300 ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             onClick={fetchTrackingInfo}
             disabled={isLoading || !trackingNumber.trim()}
           >
@@ -147,7 +146,7 @@ export default function TrackingPage() {
             transition={{ duration: 0.5 }}
             className="w-full"
           >
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-md relative overflow-hidden">
+            <div className="bg-white border border-gray-200 !rounded-cardradius p-6 mb-6 shadow-md relative overflow-hidden">
               <div className="absolute top-0 left-0 h-1 w-full bg-black"></div>
 
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -160,22 +159,20 @@ export default function TrackingPage() {
 
                 <div className="mt-4 md:mt-0">
                   <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
-                      trackingInfo.status === "Delivered"
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${trackingInfo.status === "Delivered"
+                      ? "bg-black text-white"
+                      : trackingInfo.status === "In Transit"
                         ? "bg-black text-white"
-                        : trackingInfo.status === "In Transit"
-                          ? "bg-black text-white"
-                          : "bg-black text-white"
-                    }`}
+                        : "bg-black text-white"
+                      }`}
                   >
                     <span
-                      className={`h-2 w-2 rounded-full mr-2 ${
-                        trackingInfo.status === "Delivered"
+                      className={`h-2 w-2 rounded-full mr-2 ${trackingInfo.status === "Delivered"
+                        ? "bg-white"
+                        : trackingInfo.status === "In Transit"
                           ? "bg-white"
-                          : trackingInfo.status === "In Transit"
-                            ? "bg-white"
-                            : "bg-white"
-                      }`}
+                          : "bg-white"
+                        }`}
                     ></span>
                     {trackingInfo.status}
                   </span>
@@ -183,26 +180,26 @@ export default function TrackingPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="bg-gray-100 p-4 !rounded-cardradius">
                   <h3 className="text-sm text-gray-600 mb-1">Shipped Via</h3>
                   <p className="font-medium">DHL Express</p>
                 </div>
 
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="bg-gray-100 p-4 !rounded-cardradius">
                   <h3 className="text-sm text-gray-600 mb-1">
                     Estimated Delivery
                   </h3>
                   <p className="font-medium">March 5, 2025</p>
                 </div>
 
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="bg-gray-100 p-4 !rounded-cardradius">
                   <h3 className="text-sm text-gray-600 mb-1">Last Updated</h3>
                   <p className="font-medium">Today, 15:35</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <div className="bg-white border border-gray-200 !rounded-cardradius p-6 shadow-md">
               <h3 className="text-lg font-semibold mb-6 flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -225,16 +222,14 @@ export default function TrackingPage() {
                 {trackingInfo.history.map((item, index) => (
                   <li
                     key={index}
-                    className={`mb-6 ml-6 ${
-                      index === trackingInfo.history.length - 1 ? "" : ""
-                    }`}
+                    className={`mb-6 ml-6 ${index === trackingInfo.history.length - 1 ? "" : ""
+                      }`}
                   >
                     <span
-                      className={`absolute flex items-center justify-center w-6 h-6 rounded-full -left-3 ${
-                        item.isCompleted === false
-                          ? "bg-white border border-gray-300"
-                          : "bg-black"
-                      }`}
+                      className={`absolute flex items-center justify-center w-6 h-6 rounded-full -left-3 ${item.isCompleted === false
+                        ? "bg-white border border-gray-300"
+                        : "bg-black"
+                        }`}
                     >
                       {item.isCompleted === false ? (
                         <svg
@@ -273,33 +268,30 @@ export default function TrackingPage() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className={`p-4 rounded-lg ${
-                        item.isCompleted === false
-                          ? "bg-white border border-gray-200"
-                          : item.date === "Today"
-                            ? "bg-black text-white"
-                            : "bg-gray-100"
-                      }`}
+                      className={`p-4 !rounded-cardradius ${item.isCompleted === false
+                        ? "bg-white border border-gray-200"
+                        : item.date === "Today"
+                          ? "bg-black text-white"
+                          : "bg-gray-100"
+                        }`}
                     >
                       <time
-                        className={`mb-1 text-sm font-normal ${
-                          item.date === "Today" && item.isCompleted === false
-                            ? "text-gray-600 "
-                            : item.date === "Estimated Delivery"
-                              ? "text-gray-600"
-                              : "text-gray-500"
-                        }`}
+                        className={`mb-1 text-sm font-normal ${item.date === "Today" && item.isCompleted === false
+                          ? "text-gray-600 "
+                          : item.date === "Estimated Delivery"
+                            ? "text-gray-600"
+                            : "text-gray-500"
+                          }`}
                       >
                         {item.date}
                       </time>
                       <h4
-                        className={`text-base font-semibold ${
-                          item.isCompleted === false && item.date === "Today"
-                            ? "text-black"
-                            : item.isCompleted === false
-                              ? "text-gray-800"
-                              : "text-black"
-                        }`}
+                        className={`text-base font-semibold ${item.isCompleted === false && item.date === "Today"
+                          ? "text-black"
+                          : item.isCompleted === false
+                            ? "text-gray-800"
+                            : "text-black"
+                          }`}
                       >
                         {item.event}
                       </h4>
