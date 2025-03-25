@@ -90,7 +90,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Email"
                 {...register("email", { required: "Email is required" })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 !rounded-buttonradius focus:ring-black focus:border-black text-black"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 !rounded-inputradius focus:ring-black focus:border-black text-black"
               />
             </div>
             {errors.email && (
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 {...register("password", { required: "Password is required" })}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black text-sm sm:text-base"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 !rounded-inputradius focus:ring-black focus:border-black text-black text-sm sm:text-base"
               />
               <span
                 onClick={togglePasswordVisibility}
@@ -128,7 +128,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 !rounded-buttonradius hover:bg-gray-800 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
+            className="w-full bg-black text-white py-2 !rounded-inputradius hover:bg-gray-800 transition flex items-center justify-center gap-2 text-sm sm:text-base md:text-lg"
           >
             {loading ? "loading ..." : "Login"}
           </button>

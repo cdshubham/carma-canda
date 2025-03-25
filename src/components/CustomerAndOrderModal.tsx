@@ -44,6 +44,18 @@ interface CustomerData {
     platform: string;
     url: string;
   }[];
+  spouse?: {
+    first_name: string;
+    last_name?: string;
+    gender?: string;
+    birthday?: string;
+  };
+  children?: {
+    first_name: string;
+    last_name?: string;
+    gender?: string;
+    birthday?: string;
+  }[];
 }
 const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: () => void, userId: string }) => {
   const [activeTab, setActiveTab] = useState("details");
@@ -209,9 +221,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
           {customerData && (
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <Badge variant="outline" className="bg-black text-white rounded-full border-0">
-                {customerData.memberSince
-                  ? `Member since ${customerData.memberSince}`
-                  : "Customer"}
+                Customer
               </Badge>
               {orders.length > 0 && (
                 <Badge variant="outline" className="bg-gray-100 text-black rounded-full border-0">
@@ -235,7 +245,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
             <TabsList className="grid w-full grid-cols-2 mb-6 flex-shrink-0 gap-4">
               <TabsTrigger
                 value="details"
-                className="data-[state=active]:bg-black data-[state=active]:text-white rounded-full text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
               >
                 <User className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Profile</span>
@@ -243,7 +253,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
               </TabsTrigger>
               <TabsTrigger
                 value="orders"
-                className="data-[state=active]:bg-black data-[state=active]:text-white rounded-full text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
               >
                 <Package className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Orders</span>
@@ -252,10 +262,10 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
             </TabsList>
 
             <div className="overflow-y-auto flex-1 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-300 pr-4">
-              <TabsContent value="details" className="space-y-6 !h-[500px] !max-h-[500px] overflow-y-auto">
+              <TabsContent value="details" className="space-y-6 mt-0">
                 {customerData && (
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-6">
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
                       <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                         <h3 className="font-bold mb-4 flex items-center">
                           <User className="h-5 w-5 mr-2" />
@@ -297,9 +307,79 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                           </div>
                         </div>
                       </div>
+
+                      {/* Spouse Information */}
+                      {customerData.spouse && customerData.spouse.first_name && (
+                        <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
+                          <h3 className="font-bold mb-4 flex items-center">
+                            <Heart className="h-5 w-5 mr-2" />
+                            Spouse Information
+                          </h3>
+                          <div className="grid gap-4">
+                            <div className="flex items-center gap-3">
+                              <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                              <span>
+                                {`${customerData.spouse.first_name} ${customerData.spouse.last_name || ""}`}
+                              </span>
+                            </div>
+                            {customerData.spouse.gender && (
+                              <div className="flex items-center gap-3">
+                                <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                <span>Gender: {customerData.spouse.gender}</span>
+                              </div>
+                            )}
+                            {customerData.spouse.birthday && (
+                              <div className="flex items-center gap-3">
+                                <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                <span>
+                                  Birthday: {formatDate(customerData.spouse.birthday)}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Children Information */}
+                      {customerData.children && customerData.children.length > 0 && (
+                        <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
+                          <h3 className="font-bold mb-4 flex items-center">
+                            <Users className="h-5 w-5 mr-2" />
+                            Children Information ({customerData.children.length})
+                          </h3>
+                          <div className="grid gap-4">
+                            {customerData.children.map((child, index) => (
+                              <div key={index} className="bg-white p-4 rounded-[15px] shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <div className="grid gap-3">
+                                  <div className="flex items-center gap-3">
+                                    <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                    <span>
+                                      {`${child.first_name} ${child.last_name || ""}`}
+                                    </span>
+                                  </div>
+                                  {child.gender && (
+                                    <div className="flex items-center gap-3">
+                                      <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                      <span>Gender: {child.gender}</span>
+                                    </div>
+                                  )}
+                                  {child.birthday && (
+                                    <div className="flex items-center gap-3">
+                                      <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                      <span>
+                                        Birthday: {formatDate(child.birthday)}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                         <h3 className="font-bold mb-4 flex items-center">
                           <MapPin className="h-5 w-5 mr-2" />
@@ -350,7 +430,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                 )}
               </TabsContent>
 
-              <TabsContent value="orders" className="space-y-6 !h-[500px] !max-h-[500px] overflow-y-auto">
+                <TabsContent value="orders" className="space-y-6 !h-[600px] !max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-300 pr-4">
                 {orders.length === 0 ? (
                   <div className="text-center p-8 bg-gray-50/50 rounded-[20px] shadow-sm">
                     <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
@@ -362,7 +442,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 flex flex-col">
+                  <div className="space-y-4 flex flex-col overflow-hidden">
                     {orders.map((order) => (
                       <div
                         key={order._id}

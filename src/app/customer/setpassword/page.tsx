@@ -88,7 +88,7 @@ export default function ChangePassword() {
               {...register("currentPassword", {
                 required: "Current password is required",
               })}
-              className={`w-full px-3 py-2 border !rounded-buttonradius ${errors.currentPassword
+              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.currentPassword
                 ? "border-red-500 focus:ring-red-500/10"
                 : "border-gray-300 focus:border-black focus:ring-black/10"
                 }`}
@@ -115,7 +115,7 @@ export default function ChangePassword() {
                   message: "Password must be at least 8 characters",
                 },
               })}
-              className={`w-full px-3 py-2 border !rounded-buttonradius ${errors.newPassword
+              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.newPassword
                 ? "border-red-500 focus:ring-red-500/10"
                 : "border-gray-300 focus:border-black focus:ring-black/10"
                 }`}
@@ -140,7 +140,7 @@ export default function ChangePassword() {
                 validate: (value) =>
                   value === watch("newPassword") || "Passwords do not match",
               })}
-              className={`w-full px-3 py-2 border !rounded-buttonradius ${errors.confirmPassword
+              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.confirmPassword
                 ? "border-red-500 focus:ring-red-500/10"
                 : "border-gray-300 focus:border-black focus:ring-black/10"
                 }`}
@@ -156,7 +156,7 @@ export default function ChangePassword() {
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 px-4 !rounded-buttonradius hover:bg-gray-800 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-black text-white py-2 px-4 !rounded-inputradius hover:bg-gray-800 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || !userId}
           >
             {loading ? (

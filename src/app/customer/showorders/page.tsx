@@ -170,9 +170,9 @@ export default function OrdersPage() {
                       <td className="py-4 px-6 border-b border-gray-100 text-center">
                         <button
                           onClick={() => handleViewDetails(order)}
-                          className="inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-800 text-white text-sm font-medium rounded-md"
+                          className="bg-black text-white px-4 !rounded-cardradius btnhover"
                         >
-                          View Details
+                          View
                         </button>
                       </td>
                     </tr>
@@ -250,7 +250,7 @@ export default function OrdersPage() {
                   {selectedOrder.items.map((item, index) => (
                     <div
                       key={item.productId || index}
-                      className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                      className="bg-gray-50 rounded-cardradius p-4 border border-gray-200"
                     >
                       <div className="flex justify-between items-start mb-4">
                         <div>
@@ -338,7 +338,7 @@ export default function OrdersPage() {
               <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="px-6 py-2 bg-black hover:bg-gray-800 text-white font-medium rounded-md"
+                  className="px-6 py-2 bg-black hover:bg-gray-800 text-white font-medium !rounded-buttonradius"
                 >
                   Close
                 </button>

@@ -243,7 +243,7 @@ export default function CustomersPage() {
         <h2 className="text-2xl font-bold">Customers</h2>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="btnbg btnbg-hover text-white bg-black hover:bg-gray-600 w-full sm:w-auto !rounded-buttonradius"
+          className="btnbg btnbg-hover text-white bg-black hover:bg-gray-600 w-full sm:w-auto !rounded-buttonradius animated-background"
           disabled={isInitialLoading}
         >
           Add New Customer

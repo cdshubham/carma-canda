@@ -39,7 +39,7 @@ const UserSidebar = () => {
                     <Link href="/customer" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -51,7 +51,7 @@ const UserSidebar = () => {
                     <Link href="/customer/set-details" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer/set-details"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer/set-details"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -63,7 +63,7 @@ const UserSidebar = () => {
                     <Link href="/customer/set-kids-detail" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer/set-kids-detail"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer/set-kids-detail"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -75,7 +75,7 @@ const UserSidebar = () => {
                     <Link href="/customer/tracking" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer/tracking"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer/tracking"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -87,7 +87,7 @@ const UserSidebar = () => {
                     <Link href="/customer/showorders" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer/showorders"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer/showorders"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -99,7 +99,7 @@ const UserSidebar = () => {
                     <Link href="/customer/setpassword" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${pathname === "/customer/setpassword"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${pathname === "/customer/setpassword"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -110,10 +110,10 @@ const UserSidebar = () => {
                     </Link>
                 </nav>
 
-                <div className="mt-auto">
+                <div className="mt-auto w-full items-center justify-center">
                     <Button
                         variant="ghost"
-                        className="flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius text-black hover:bg-white/10 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 !rounded-cardradius text-black hover:bg-white/10 hover:shadow-md hover:scale-[1.02] transition-all duration-200 "
                         onClick={() => signOut({ callbackUrl: "/", redirect: true })}
                     >
                         <FaDoorOpen size={20} className="shrink-0" />
@@ -130,7 +130,7 @@ const UserSidebar = () => {
             <div className="md:hidden fixed top-4 left-4 z-50">
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button variant="outline" size="icon" className="bg-white !rounded-buttonradius">
+                        <Button variant="outline" size="icon" className="bg-white !rounded-cardradius">
                             <Menu className="h-4 w-4 " />
                         </Button>
                     </SheetTrigger>

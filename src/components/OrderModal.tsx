@@ -44,6 +44,8 @@ const OrderModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [colorSearchTerm, setColorSearchTerm] = useState("");
   const [colorOptions, setColorOptions] = useState(colorIndices);
+  const [selectedColor, setSelectedColor] = useState(colorIndices[0]);
+  const [showOptions, setShowOptions] = useState(false);
 
 
 
@@ -181,11 +183,12 @@ const OrderModal = ({
     const newItem = {
       productId: Math.random().toString(36).substring(2, 9),
       productType: "",
-      colour: colorIndices[0],
+      colour: selectedColor,
       quantity: 1,
       measurements: getEmptyMeasurements(),
     };
     setCurrentItem(newItem);
+    setColorSearchTerm(selectedColor);
     setCurrentTab("product");
     setEditMode(false);
     setEditItemIndex(null);
@@ -242,7 +245,10 @@ const OrderModal = ({
     }
 
     setSavedItems(updatedItems);
+    // Clear form data only after successfully saving
     setCurrentItem(null);
+    setColorSearchTerm("");
+    setSelectedColor(colorIndices[0]);
     setCurrentTab("saved");
     setEditMode(false);
     setEditItemIndex(null);
@@ -321,6 +327,7 @@ const OrderModal = ({
   };
 
   const handleTabChange = (newTab) => {
+    // Validate current tab before allowing switch
     if (currentTab === "order" && newTab !== "order") {
       if (!validateOrderTab()) return;
     }
@@ -334,12 +341,15 @@ const OrderModal = ({
       if (!validateMeasurementsTab()) return;
     }
 
-    if (newTab === "product" && currentTab !== "product" && !currentItem) {
+    // Only create new item if coming from order tab and no current item exists
+    if (newTab === "product" && currentTab === "order" && !currentItem) {
       createNewItem();
       return;
     }
 
+    // Preserve the current item state when switching tabs
     setCurrentTab(newTab);
+
     // Reset scroll position of the tab content
     const tabContent = document.querySelector('.tab-content-scroll');
     if (tabContent) {
@@ -348,6 +358,7 @@ const OrderModal = ({
   };
 
   const handleClose = () => {
+    // Clear all form data when modal is closed
     resetModalFields();
     handleCloseModal();
   };
@@ -618,6 +629,7 @@ const OrderModal = ({
   // Add new function to handle color search
   const handleColorSearch = (searchValue) => {
     setColorSearchTerm(searchValue);
+    setShowOptions(true); // Show options when searching
     if (!searchValue) {
       setColorOptions(colorIndices); // Show all colors when input is empty
       return;
@@ -639,7 +651,7 @@ const OrderModal = ({
               type="text"
               value={colorSearchTerm}
               onChange={(e) => handleColorSearch(e.target.value)}
-              onFocus={() => setColorOptions(colorIndices)}
+              onFocus={() => setShowOptions(true)}
               placeholder="Search or click to view colors..."
               className="w-full h-10 !rounded-buttonradius pr-10 hover:cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.1)] focus:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0 focus:border-0 bg-gray-50 hover:bg-gray-100 focus:bg-white transition-colors"
             />
@@ -648,15 +660,14 @@ const OrderModal = ({
               variant="ghost"
               className="absolute right-0 top-0 h-full px-3 hover:bg-transparent hover:cursor-pointer"
               onClick={() => {
-                if (colorOptions.length === 0) {
-                  setColorOptions(colorIndices); // Show all colors when opening dropdown
-                } else {
-                  setColorOptions([]); // Close dropdown
+                setShowOptions(!showOptions);
+                if (!showOptions) {
+                  setColorOptions(colorIndices);
                 }
               }}
             >
               <svg
-                className={`h-4 w-4 transition-transform ${colorOptions.length > 0 ? 'rotate-180' : ''}`}
+                className={`h-4 w-4 transition-transform ${showOptions ? 'rotate-180' : ''}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -667,16 +678,17 @@ const OrderModal = ({
             </Button>
           </div>
         </div>
-        {colorOptions.length > 0 && (
+        {showOptions && (
           <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-md mt-1 max-h-[300px] overflow-auto shadow-lg [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:cursor-pointer">
             {colorOptions.map((color) => (
               <li
                 key={color}
-                className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${currentItem?.colour === color ? 'bg-gray-100' : ''}`}
+                className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${selectedColor === color ? 'bg-gray-100' : ''}`}
                 onClick={() => {
+                  setSelectedColor(color);
                   handleItemChange("colour", color);
                   setColorSearchTerm(color);
-                  setColorOptions([]);
+                  setShowOptions(false);
                 }}
               >
                 {color}
@@ -685,10 +697,10 @@ const OrderModal = ({
           </ul>
         )}
       </div>
-      {currentItem?.colour && (
+      {selectedColor && (
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Selected Color:</span>
-          <span className="text-sm font-medium">{currentItem.colour}</span>
+          <span className="text-sm font-medium">{selectedColor}</span>
         </div>
       )}
     </div>
@@ -915,10 +927,9 @@ const OrderModal = ({
                             </CardHeader>
                             <CardContent className="p-3">
                               <div className="flex items-center gap-2 mb-2">
-                                <div
-                                  className="w-4 h-4 rounded-full border border-gray-300"
-                                  style={{ backgroundColor: item.colour }}
-                                />
+                                <span className="text-xs font-medium text-gray-900 rounded-buttonradius">
+                                  Color Index: {item.colour}
+                                </span>
                                 <span className="text-xs font-medium text-gray-900 rounded-buttonradius">
                                   Quantity: {item.quantity}
                                 </span>

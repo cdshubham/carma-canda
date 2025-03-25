@@ -341,13 +341,14 @@ export default function SetDetailsPage() {
   }
 
   return (
-    <div className="space-y-6 mb-4  h-[calc(100vh-4rem)] overflow-y-auto px-4 rounded-cardradius bg-gray-50">
-      <h1 className="text-3xl font-bold tracking-tight text-black sticky top-0  z-10 py-2 pt-4 rounded-t-cardradius bg-gray-50">
+    <div className="space-y-6 mb-4   h-[calc(100vh-4rem)] overflow-y-auto px-4 rounded-cardradius ">
+      
+      <h1 className="text-3xl font-bold tracking-tight text-black absolute top-4  z-10  pt-4 rounded-t-cardradius bg-gray-50 w-full py-4">
         Customer Details
       </h1>
       <p className="text-gray-600">Update your personal information</p>
 
-      <Card className="border border-gray-200 shadow-sm bg-white text-black">
+      <Card className="border border-gray-200 shadow-sm bg-white text-black mt-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader className="border-b border-gray-100 bg-gray-50 rounded-t-cardradius">
             <CardTitle className="text-xl font-semibold">
@@ -729,7 +730,7 @@ export default function SetDetailsPage() {
                 key={field.id}
                 className="p-4 border border-gray-200  bg-gray-50 !rounded-cardradius"
               >
-                <div className="flex justify-between items-center mb-4 rounded-cardradius">
+                <div className="flex justify-between items-center mb-4 ">
                   <Label className="font-medium">
                     Social Profile #{index + 1}
                   </Label>
@@ -754,7 +755,7 @@ export default function SetDetailsPage() {
                     </Label>
                     <Controller
                       name={`social_media.${index}.platform`}
-                      className="!rounded-buttonradius"
+                      className="!rounded-inputradius"
                       control={control}
                       rules={{ required: "Platform is required" }}
                       render={({ field }) => (
@@ -769,16 +770,16 @@ export default function SetDetailsPage() {
                         >
                           <SelectTrigger
                             id={`platform-${index}`}
-                            className="border-gray-300 focus:border-black focus:ring-black !rounded-buttonradius"
+                            className="border-gray-300 focus:border-black focus:ring-black !rounded-inputradius mt-2"
                           >
-                            <SelectValue placeholder="Select platform" className="!rounded-buttonradius" />
+                            <SelectValue placeholder="Select platform" className="!rounded-inputradius" />
                           </SelectTrigger>
-                          <SelectContent className="!rounded-buttonradius">
+                          <SelectContent className="!rounded-buttonradius bg-white z-30">
                             {platformOptions.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
-                                className="!rounded-buttonradius"
+                                className="!rounded-buttonradius hover:bg-gray-200 hover:cursor-pointer hover:scale-102 "
                               >
                                 {option.label}
                               </SelectItem>
@@ -852,7 +853,7 @@ export default function SetDetailsPage() {
               type="button"
               variant="outline"
               onClick={() => append({ platform: "", handle: "", url: "" })}
-              className="w-full border-dashed border-gray-300 hover:border-black hover:bg-gray-50 flex items-center justify-center py-3 !rounded-buttonradius"
+              className="w-full border-dashed border-gray-300 hover:border-black hover:bg-gray-50 flex items-center justify-center py-3 !rounded-inputradius"
             >
               <PlusCircle size={16} className="mr-2" />
               Add Social Media Profile

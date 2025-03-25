@@ -104,7 +104,7 @@ export default function TrackingPage() {
             onChange={(e) => setTrackingNumber(e.target.value)}
           />
           <Button
-            className={`absolute right-0 top-0 bg-black hover:bg-gray-800 text-white px-4 py-2 !rounded-buttonradius shadow-md transition-all duration-300 ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+            className={`absolute right-0 top-0 bg-black hover:bg-gray-800 text-white px-4 py-2 !rounded-inputradius shadow-md transition-all duration-300 ${isLoading ? "opacity-70 cursor-not-allowed" : ""
               }`}
             onClick={fetchTrackingInfo}
             disabled={isLoading || !trackingNumber.trim()}

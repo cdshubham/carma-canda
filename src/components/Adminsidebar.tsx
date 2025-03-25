@@ -3,7 +3,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { BsPeople } from "react-icons/bs";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { FaDoorOpen } from "react-icons/fa";
+import { FaDoorOpen, FaKey } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useState } from "react";
@@ -36,7 +36,7 @@ const AdminSidebar = () => {
                     <Link href="/admin/orders" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${activeTab === "orders"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${activeTab === "orders"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -49,7 +49,7 @@ const AdminSidebar = () => {
                     <Link href="/admin/customers" className="w-full" passHref>
                         <Button
                             variant="ghost"
-                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius transition-all duration-200 ${activeTab === "customers"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${activeTab === "customers"
                                 ? "btnbg hover:btnbg animated-background text-black shadow-md"
                                 : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
                                 }`}
@@ -59,12 +59,25 @@ const AdminSidebar = () => {
                             <span className="font-medium whitespace-nowrap">Customers</span>
                         </Button>
                     </Link>
+                    <Link href="/admin/password" className="w-full" passHref>
+                        <Button
+                            variant="ghost"
+                            className={`flex items-center justify-start gap-2 w-full px-4 py-2.5 !rounded-cardradius transition-all duration-200 ${activeTab === "password"
+                                ? "btnbg hover:btnbg animated-background text-black shadow-md"
+                                : "hover:btnbg hover:shadow-md hover:scale-[1.02]"
+                                }`}
+                            onClick={() => setActiveTab("password")}
+                        >
+                            <FaKey size={20} className="shrink-0" />
+                            <span className="font-medium whitespace-nowrap">Change Password</span>
+                        </Button>
+                    </Link>
                 </nav>
 
                 <div className="mt-auto ">
                     <Button
                         variant="ghost"
-                        className="flex flex-row items-center w-full gap-3 px-4 py-2.5 rounded-buttonradius text-black hover:bg-white/10 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+                        className="flex flex-row items-center w-full gap-3 px-4 py-2.5 !rounded-cardradius text-black hover:bg-white/10 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
                         onClick={() => signOut({ redirectTo: "/" })}
                     >
                         <FaDoorOpen size={20} />
@@ -81,7 +94,7 @@ const AdminSidebar = () => {
             <div className="md:hidden fixed top-4 left-4 z-50">
                 <Sheet>
                     <SheetTrigger asChild>
-                        <div className="w-full flex justify-start items-center"><Button variant="outline" size="icon" className="bg-white">
+                        <div className="w-full flex justify-start items-center"><Button variant="outline" size="icon" className="bg-white !rounded-cardradius">
                             <Menu className="h-4 w-4" />
                         </Button></div>
 

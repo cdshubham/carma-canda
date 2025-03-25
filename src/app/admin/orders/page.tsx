@@ -172,7 +172,7 @@ const OrdersTable2 = () => {
         <Button
           onClick={() => setIsAddModalOpen(true)}
           disabled={isAddLoading}
-          className="text-white bg-black w-full sm:w-auto !rounded-buttonradius btnbg"
+          className="text-white bg-black w-full sm:w-auto !rounded-buttonradius btnbg animated-background "
         >
           Add New Order
         </Button>
@@ -220,9 +220,7 @@ const OrdersTable2 = () => {
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-black text-white px-4 !rounded-buttonradius btnhover"
+                      className="bg-black text-white px-4 !rounded-cardradius btnhover"
                       onClick={() =>
                         handleViewOrder(
                           order.orderId || order._id || order.trackingId
@@ -231,6 +229,7 @@ const OrdersTable2 = () => {
                     >
                       View
                     </Button>
+
                   </TableCell>
                 </TableRow>
               ))

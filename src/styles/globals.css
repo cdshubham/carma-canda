@@ -108,6 +108,14 @@ body {
     background-repeat: no-repeat;
     
     /* Apply the animation */
+    animation: MoveBackgroundPosition 15s ease-in-out infinite; /* Customize timing as needed */
+  }
+
+  .animated-background:hover {
+    background-size: 200% auto; /* This allows the background to scroll horizontally */
+    background-repeat: no-repeat;
+    
+    /* Apply the animation */
     animation: MoveBackgroundPosition 5s ease-in-out infinite; /* Customize timing as needed */
   }
   

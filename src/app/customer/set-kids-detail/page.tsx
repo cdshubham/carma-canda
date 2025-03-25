@@ -252,7 +252,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.firstName", {
                   required: "First name is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 placeholder="Enter first name"
               />
               {errors.spouse?.firstName && (
@@ -270,7 +270,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.lastName", {
                   required: "Last name is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 placeholder="Enter last name"
               />
               {errors.spouse?.lastName && (
@@ -288,7 +288,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.gender", {
                   required: "Gender is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
               >
                 <option value="">Select gender</option>
                 <option value="male">Male</option>
@@ -316,7 +316,7 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(0?[1-9]|[12][0-9]|3[01])$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
                 <div>
@@ -328,7 +328,7 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(0?[1-9]|1[012])$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
                 <div>
@@ -340,7 +340,7 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(19|20)\d{2}$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.firstName`, {
                         required: "First name is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                       placeholder="Enter first name"
                     />
                     {errors.children?.[index]?.firstName && (
@@ -459,7 +459,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.lastName`, {
                         required: "Last name is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                       placeholder="Enter last name"
                     />
                     {errors.children?.[index]?.lastName && (
@@ -477,7 +477,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.gender`, {
                         required: "Gender is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                     >
                       <option value="">Select gender</option>
                       <option value="male">Male</option>
@@ -505,7 +505,7 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(0?[1-9]|[12][0-9]|3[01])$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                            className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius !focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                         />
                       </div>
                       <div>
@@ -517,7 +517,7 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(0?[1-9]|1[012])$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                          className="w-full px-3 py-2 border border-gray-300 !rounded-inputradius !focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                         />
                       </div>
                       <div>
@@ -529,7 +529,7 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(19|20)\d{2}$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                          className="w-full px-3 py-2 border border-gray-300   !focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center !rounded-inputradius"
                         />
                       </div>
                     </div>
