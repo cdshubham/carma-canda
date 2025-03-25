@@ -34,7 +34,9 @@ export default function RegisterPage() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onSubmit = async (Formdata: RegisterFormInputs) => {
-    const fetchPromise = fetchData(Formdata);
+    const fetchPromise = fetchData(
+      Formdata as unknown as Record<string, unknown>
+    );
 
     toast.loading({
       text: "Loading...",

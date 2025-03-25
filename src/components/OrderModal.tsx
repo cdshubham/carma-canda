@@ -18,15 +18,40 @@ import {
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, X, Pencil, Eye, Trash } from "lucide-react";
+import { PlusCircle, Pencil, Eye, Trash } from "lucide-react";
 import debounce from "lodash/debounce";
+import { UseFormReturn } from "react-hook-form";
 
-const OrderModal = ({
+interface OrderFormData {
+  customerId: string;
+  customerName: string;
+  trackingId: string;
+  dnNumber?: string;
+  deliveryDate: string;
+  items: Array<{
+    productType: string;
+    // Add other item properties that your form includes
+  }>;
+}
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  // Add other customer properties as needed
+}
+interface OrderModalProps {
+  isAddModalOpen: boolean;
+  handleCloseModal: () => void;
+  form: UseFormReturn<OrderFormData, undefined>; // Adjust this type based on your form implementation
+  handleAddOrder: (data: OrderFormData) => Promise<void>;
+  customers?: Customer[]; // Uncomment and define the `Customer` type if needed
+}
+const OrderModal: React.FC<OrderModalProps> = ({
   isAddModalOpen,
   handleCloseModal,
   form,
   handleAddOrder,
-  customers = [],
+  // customers = [],
 }) => {
   const [savedItems, setSavedItems] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
@@ -859,7 +884,8 @@ const OrderModal = ({
 
                   {savedItems.length === 0 ? (
                     <p className="text-center py-4 text-muted-foreground">
-                      No products saved yet. Click "Add New Product" to start.
+                      {/* No products saved yet. Click "Add New Product" to start. */}
+                      {`No products saved yet. Click "Add New Product" to start.`}
                     </p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

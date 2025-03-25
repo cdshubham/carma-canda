@@ -78,10 +78,10 @@ export default function HomePage() {
   const name =
     `${userDetails.first_name || ""} ${userDetails.last_name || ""}`.trim();
 
-  const address =
-    userDetails.street && userDetails.city
-      ? `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}, ${userDetails.country}`
-      : "Not provided";
+  // const address =
+  //   userDetails.street && userDetails.city
+  //     ? `${userDetails.street}, ${userDetails.city}, ${userDetails.state} ${userDetails.zipcode}, ${userDetails.country}`
+  //     : "Not provided";
 
   const initials = name
     ? name
@@ -102,6 +102,8 @@ export default function HomePage() {
         day: "numeric",
       });
     } catch (e) {
+      console.log(e);
+
       return "Invalid date";
     }
   };
@@ -149,6 +151,8 @@ export default function HomePage() {
       const years = currentDate.getFullYear() - anniversaryDate.getFullYear();
       return years;
     } catch (e) {
+      console.log(e);
+
       return null;
     }
   };

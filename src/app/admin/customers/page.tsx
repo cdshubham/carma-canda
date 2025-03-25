@@ -34,36 +34,36 @@ interface Customer {
   phoneNumber?: string;
 }
 
-interface DetailedCustomer extends Customer {
-  gender?: string;
-  birthday?: string;
-  address?: {
-    street?: string;
-    city?: string;
-    state?: string;
-    zip_code?: string;
-    country?: string;
-  };
-  spouse?: {
-    first_name?: string;
-    last_name?: string;
-    gender?: string;
-    birthday?: string;
-  };
-  anniversary?: string;
-  children?: Array<{
-    first_name?: string;
-    last_name?: string;
-    gender?: string;
-    birthday?: string;
-  }>;
-  social_media?: Array<{
-    platform?: string;
-    url?: string;
-  }>;
-  role?: string;
-  createdAt?: string;
-}
+// interface DetailedCustomer extends Customer {
+//   gender?: string;
+//   birthday?: string;
+//   address?: {
+//     street?: string;
+//     city?: string;
+//     state?: string;
+//     zip_code?: string;
+//     country?: string;
+//   };
+//   spouse?: {
+//     first_name?: string;
+//     last_name?: string;
+//     gender?: string;
+//     birthday?: string;
+//   };
+//   anniversary?: string;
+//   children?: Array<{
+//     first_name?: string;
+//     last_name?: string;
+//     gender?: string;
+//     birthday?: string;
+//   }>;
+//   social_media?: Array<{
+//     platform?: string;
+//     url?: string;
+//   }>;
+//   role?: string;
+//   createdAt?: string;
+// }
 
 interface ValidationError {
   name: string;
@@ -103,16 +103,20 @@ export default function CustomersPage() {
   const { fetchData: fetchCustomers } = useFetch("/api/users/getusers", {
     method: "GET",
   });
+  interface CustomerResponse {
+    data: Customer[];
+  }
 
   useEffect(() => {
     const getCustomers = async () => {
       setIsInitialLoading(true);
       try {
-        const response = await fetchCustomers();
+        // const response = await fetchCustomers();
+        const response = (await fetchCustomers()) as CustomerResponse;
         console.log(response);
 
-        if (response && response.data) {
-          setCustomers(response.data);
+        if (response && response?.data) {
+          setCustomers(response?.data);
         } else {
           toast.error({ text: "Failed to fetch customers" });
         }
@@ -181,6 +185,14 @@ export default function CustomersPage() {
       toast.error({ text: "Please correct the form errors" });
       return;
     }
+    interface CustomerDataResponse {
+      savedUser: {
+        _id: string;
+        username?: string;
+        email?: string;
+        phone?: string;
+      };
+    }
 
     const randomPassword = Math.random().toString(36).slice(-8);
     const customerData = {
@@ -193,7 +205,9 @@ export default function CustomersPage() {
     setIsLoading(true);
 
     try {
-      const response = await addCustomer(customerData);
+      const response = (await addCustomer(
+        customerData
+      )) as CustomerDataResponse;
       if (response && response.savedUser) {
         const formattedCustomer: Customer = {
           id: response.savedUser._id,

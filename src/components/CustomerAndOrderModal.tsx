@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useFetch } from "@/hooks/useFetch";
 import {
@@ -19,12 +19,12 @@ import {
   MapPin,
   Globe,
   User,
-  Users,
+  // Users,
   Heart,
   Ruler,
-  Clock,
-  CreditCard,
-  TrendingUp,
+  // Clock,
+  // CreditCard,
+  // TrendingUp,
 } from "lucide-react";
 
 const CustomerModal = ({ isOpen, onClose, userId }) => {
@@ -39,6 +39,8 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     mostPurchased: "",
     lastPurchase: null,
   });
+  console.log("orderStatistics", orderStatistics);
+
   const [expandedMeasurements, setExpandedMeasurements] = useState({});
 
   const toggleMeasurementsExpand = (orderId, itemIndex, e) => {
@@ -100,7 +102,7 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     }
 
     let totalSpent = 0;
-    let itemCounts = {};
+    const itemCounts = {};
     let latestOrderDate = new Date(0);
 
     orderData.forEach((order) => {
@@ -157,12 +159,12 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
     });
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
+  // const formatCurrency = (amount) => {
+  //   return new Intl.NumberFormat("en-US", {
+  //     style: "currency",
+  //     currency: "USD",
+  //   }).format(amount);
+  // };
 
   const getTimeSince = (dateString) => {
     if (!dateString) return "N/A";
@@ -334,7 +336,8 @@ const CustomerModal = ({ isOpen, onClose, userId }) => {
                       No Orders Found
                     </h3>
                     <p className="text-gray-500">
-                      This customer hasn't placed any orders yet.
+                      {/* This customer hasn't placed any orders yet. */}
+                      This customer hasn&#39;t placed any orders yet.
                     </p>
                   </div>
                 ) : (

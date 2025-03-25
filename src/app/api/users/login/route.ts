@@ -1,27 +1,36 @@
-import { connect } from "@/db/connection";
 import { NextRequest, NextResponse } from "next/server";
-
 import { signIn } from "@/auth";
 
 export async function POST(request: NextRequest) {
-  await connect();
   try {
-    const reqBody = await request.json();
-    const { email, password } = reqBody;
-    console.log(reqBody);
+    const { email, password } = await request.json();
 
-    await signIn("credentials", {
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password are required." },
+        { status: 400 }
+      );
+    }
+
+    const result = await signIn("credentials", {
       redirect: false,
-      callbackUrl: "/",
       email,
       password,
     });
+
+    if (result?.error) {
+      return NextResponse.json({ error: result.error }, { status: 401 });
+    }
 
     return NextResponse.json({
       message: "Login successful",
       success: true,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    console.error("Login error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
