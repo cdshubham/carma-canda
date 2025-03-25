@@ -250,30 +250,28 @@ export default function CustomersPage() {
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto bg-white shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+      <div className="w-full overflow-x-auto bg-gray-50 shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
         {isInitialLoading ? (
           <Loader />
         ) : (
           <Table className="rounded-lg">
             <TableHeader className="bg-black text-white rounded-lg h-14">
-              <TableRow className="rounded-lg ">
-                <TableHead className=" px-6 py-3 rou  ">
-                  Customer ID
-                </TableHead>
-                <TableHead className=" px-6 py-3">Name</TableHead>
-                <TableHead className=" px-6 py-3">Email</TableHead>
-                <TableHead className=" px-6 py-3">Phone</TableHead>
-                <TableHead className=" px-6 py-3">Actions</TableHead>
+              <TableRow className="rounded-lg">
+                <TableHead className="px-6 py-3">Customer ID</TableHead>
+                <TableHead className="px-6 py-3">Name</TableHead>
+                <TableHead className="px-6 py-3">Email</TableHead>
+                <TableHead className="px-6 py-3">Phone</TableHead>
+                <TableHead className="px-6 py-3 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {customers.length > 0 ? (
-                customers.map((customer) => (
+                customers.map((customer, index) => (
                   <TableRow
                     key={customer._id || customer.id}
-                    className="border-b"
+                    className={`border-b border-gray-100 duration-200 ${index % 2 === 0 ? "bg-gray-50 hover:bg-gray-50" : "bg-white hover:bg-white"}`}
                   >
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-600">
                       {customer._id || customer.id}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -285,12 +283,12 @@ export default function CustomersPage() {
                     <TableCell className="px-6 py-4 whitespace-nowrap">
                       {customer.phoneNumber || customer.phone || "N/A"}
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                       <Button
                         onClick={() =>
                           handleViewCustomer(customer._id || customer.id)
                         }
-                        className="bg-black  text-white  px-4 !rounded-buttonradius px-4  btnhover "
+                        className="bg-black text-white px-4 !rounded-buttonradius btnhover"
                       >
                         View
                       </Button>
@@ -299,7 +297,7 @@ export default function CustomersPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4">
+                  <TableCell colSpan={5} className="text-center py-8">
                     No customers found
                   </TableCell>
                 </TableRow>
@@ -311,94 +309,110 @@ export default function CustomersPage() {
 
       {/* Add Customer Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-md bg-white ">
-          <DialogHeader>
-            <DialogTitle>Add New Customer</DialogTitle>
+        <DialogContent className="sm:max-w-[550px] p-7 bg-white !rounded-cardradius border-0 shadow-lg">
+          <DialogHeader className="mb-7 space-y-1.5">
+            <DialogTitle className="text-2xl font-bold tracking-tight">Add New Customer</DialogTitle>
+            <p className="text-gray-500 text-[15px]">Fill in the customer details below</p>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
+          <div className="grid gap-7 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="block font-medium text-gray-700">
                 Name
               </Label>
-              <div className="col-span-3">
+              <div>
                 <Input
                   id="name"
                   name="name"
                   value={newCustomer.name}
                   onChange={handleInputChange}
-                  className={`w-full ${errors.name ? "border-red-500" : ""}`}
+                  className={`w-full h-11 px-4 transition-all duration-200 focus:ring-2 focus:ring-black/10 !rounded-buttonradius ${errors.name
+                    ? "border-red-500 focus:ring-red-500/10"
+                    : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  placeholder="Enter customer name"
                   onBlur={() => {
                     const nameError = validateField("name", newCustomer.name);
                     setErrors((prev) => ({ ...prev, name: nameError }));
                   }}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  <p className="text-red-500 text-[13px] mt-1.5">{errors.name}</p>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="block font-medium text-gray-700">
                 Email
               </Label>
-              <div className="col-span-3">
+              <div>
                 <Input
                   id="email"
                   name="email"
                   type="email"
                   value={newCustomer.email}
                   onChange={handleInputChange}
-                  className={`w-full ${errors.email ? "border-red-500" : ""}`}
+                  className={`w-full h-11 px-4 transition-all duration-200 focus:ring-2 focus:ring-black/10 !rounded-buttonradius ${errors.email
+                    ? "border-red-500 focus:ring-red-500/10"
+                    : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  placeholder="customer@example.com"
                   onBlur={() => {
-                    const emailError = validateField(
-                      "email",
-                      newCustomer.email
-                    );
+                    const emailError = validateField("email", newCustomer.email);
                     setErrors((prev) => ({ ...prev, email: emailError }));
                   }}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  <p className="text-red-500 text-[13px] mt-1.5">{errors.email}</p>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
+            <div className="space-y-1.5">
+              <Label htmlFor="phone" className="block font-medium text-gray-700">
                 Phone
               </Label>
-              <div className="col-span-3">
+              <div>
                 <Input
                   id="phone"
                   name="phone"
                   value={newCustomer.phone}
                   onChange={handleInputChange}
-                  className={`w-full ${errors.phone ? "border-red-500" : ""}`}
+                  className={`w-full h-11 px-4 transition-all duration-200 focus:ring-2 focus:ring-black/10 !rounded-buttonradius ${errors.phone
+                    ? "border-red-500 focus:ring-red-500/10"
+                    : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  placeholder="+1 (555) 000-0000"
                   onBlur={() => {
-                    const phoneError = validateField(
-                      "phone",
-                      newCustomer.phone
-                    );
+                    const phoneError = validateField("phone", newCustomer.phone);
                     setErrors((prev) => ({ ...prev, phone: phoneError }));
                   }}
                 />
                 {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                  <p className="text-red-500 text-[13px] mt-1.5">{errors.phone}</p>
                 )}
               </div>
             </div>
           </div>
-          <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-3 mt-8 pt-5 border-t border-gray-100">
+            <Button
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              className="w-full sm:w-auto h-11 px-6 border-2 hover:bg-gray-50 transition-colors duration-200 !rounded-buttonradius font-medium"
+            >
               Cancel
             </Button>
             <Button
               onClick={handleAddCustomer}
-              disabled={
-                isLoading || !!errors.name || !!errors.email || !!errors.phone
-              }
-              className="bg-black text-white hover:bg-gray-700 disabled:bg-gray-300"
+              disabled={isLoading || !!errors.name || !!errors.email || !!errors.phone}
+              className="w-full sm:w-auto h-11 px-6 bg-black text-white hover:bg-gray-800 disabled:bg-gray-300 disabled:text-black disabled:cursor-not-allowed transition-colors duration-200 !rounded-buttonradius font-medium"
             >
-              {isLoading ? "Adding..." : "Add Customer"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Adding...</span>
+                </div>
+              ) : (
+                "Add Customer"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

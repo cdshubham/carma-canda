@@ -24,13 +24,13 @@ const UserSidebar = () => {
 
     const SidebarContent = () => (
         <div className="flex flex-col h-full w-full relative gap-5">
-            <div className="mb-4 h-[100px]">
+            <div className="relative h-20 my-6">
                 <Image
-                    src="/images/carma.jpg"
+                    src="/images/carma2.jpg"
                     alt="Company"
-                    width={200}
-                    height={80}
-                    className="object-cover ring-2 ring-white/10 hover:ring-white/20 transition-all duration-200"
+                    fill
+                    className="object-cover ring-2 ring-white/10 hover:ring-white/20 transition-all duration-200 px-2"
+                    priority
                 />
             </div>
 
@@ -110,14 +110,14 @@ const UserSidebar = () => {
                     </Link>
                 </nav>
 
-                <div className="absolute bottom-0 left-0 w-full">
+                <div className="mt-auto">
                     <Button
                         variant="ghost"
                         className="flex items-center justify-start gap-2 w-full px-4 py-2.5 rounded-buttonradius text-black hover:bg-white/10 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
                         onClick={() => signOut({ callbackUrl: "/", redirect: true })}
                     >
                         <FaDoorOpen size={20} className="shrink-0" />
-                        <span className="font-medium whitespace-nowrap">Sign Out</span>
+                        <span className="font-medium">Sign Out</span>
                     </Button>
                 </div>
             </div>

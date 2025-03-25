@@ -199,8 +199,8 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl bg-white text-black max-h-[90vh] overflow-hidden flex flex-col custom-scrollbar !rounded-cardradius">
-        <DialogHeader className="flex-shrink-0">
+      <DialogContent className="sm:max-w-4xl bg-white text-black max-h-[90vh] overflow-hidden flex flex-col !rounded-[20px]">
+        <DialogHeader className="flex-shrink-0 pb-4">
           <DialogTitle className="text-2xl font-bold">
             {customerData
               ? `${customerData.first_name} ${customerData.last_name}`
@@ -208,13 +208,13 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
           </DialogTitle>
           {customerData && (
             <div className="flex flex-wrap items-center gap-2 mt-1">
-              <Badge variant="outline" className="bg-black text-white">
+              <Badge variant="outline" className="bg-black text-white rounded-full border-0">
                 {customerData.memberSince
                   ? `Member since ${customerData.memberSince}`
                   : "Customer"}
               </Badge>
               {orders.length > 0 && (
-                <Badge variant="outline" className="bg-gray-100 text-black">
+                <Badge variant="outline" className="bg-gray-100 text-black rounded-full border-0">
                   {orders.length} {orders.length === 1 ? "Order" : "Orders"}
                 </Badge>
               )}
@@ -230,32 +230,38 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
-            className="w-full overflow-hidden flex flex-col flex-1 custom-scrollbar"
+            className="w-full overflow-hidden flex flex-col flex-1"
           >
-            <TabsList className="grid w-full grid-cols-2 mb-6 flex-shrink-0">
-              <TabsTrigger value="details" className="text-black">
+            <TabsList className="grid w-full grid-cols-2 mb-6 flex-shrink-0 gap-4">
+              <TabsTrigger
+                value="details"
+                className="data-[state=active]:bg-black data-[state=active]:text-white rounded-full text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+              >
                 <User className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Profile</span>
                 <span className="sm:hidden">Profile</span>
               </TabsTrigger>
-              <TabsTrigger value="orders" className="text-black">
+              <TabsTrigger
+                value="orders"
+                className="data-[state=active]:bg-black data-[state=active]:text-white rounded-full text-black bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+              >
                 <Package className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Orders</span>
                 <span className="sm:hidden">Orders</span> ({orders.length})
               </TabsTrigger>
             </TabsList>
 
-              <div className="overflow-y-auto flex-1 custom-scrollbar  ">
-              <TabsContent value="details" className="space-y-6 ">
+            <div className="overflow-y-auto flex-1 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-300 pr-4">
+              <TabsContent value="details" className="space-y-6 !h-[500px] !max-h-[500px] overflow-y-auto">
                 {customerData && (
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-6">
-                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
+                      <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                         <h3 className="font-bold mb-4 flex items-center">
                           <User className="h-5 w-5 mr-2" />
                           Personal Information
                         </h3>
-                        <div className="grid gap-3">
+                        <div className="grid gap-4">
                           <div className="flex items-center gap-3">
                             <Mail className="h-4 w-4 text-gray-500 flex-shrink-0" />
                             <span className="break-all">
@@ -294,12 +300,12 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                     </div>
 
                     <div className="space-y-6">
-                      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
+                      <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                         <h3 className="font-bold mb-4 flex items-center">
                           <MapPin className="h-5 w-5 mr-2" />
                           Address
                         </h3>
-                        <div className="grid gap-3">
+                        <div className="grid gap-4">
                           <div className="flex items-start gap-3">
                             <div>
                               <p className="font-medium">
@@ -317,16 +323,16 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
 
                       {customerData.social_media &&
                         customerData.social_media.length > 0 && (
-                          <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-md">
+                          <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                             <h3 className="font-bold mb-4 flex items-center">
                               <Globe className="h-5 w-5 mr-2" />
                               Social Media
                             </h3>
-                            <div className="grid gap-3">
+                            <div className="grid gap-4">
                               {customerData.social_media.map((account, idx) => (
                                 <div
                                   key={idx}
-                                  className="flex items-center gap-3 p-2 bg-white rounded shadow-sm overflow-auto"
+                                  className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm overflow-auto"
                                 >
                                   <span className="font-medium flex-shrink-0">
                                     {account.platform}:
@@ -344,9 +350,9 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                 )}
               </TabsContent>
 
-              <TabsContent value="orders" className="space-y-6 min-h-[800px]  max-h-full">
+              <TabsContent value="orders" className="space-y-6 !h-[500px] !max-h-[500px] overflow-y-auto">
                 {orders.length === 0 ? (
-                  <div className="text-center p-8 bg-gray-50 rounded-lg shadow-md">
+                  <div className="text-center p-8 bg-gray-50/50 rounded-[20px] shadow-sm">
                     <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-xl font-medium mb-2">
                       No Orders Found
@@ -356,18 +362,18 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 flex flex-col ">
+                  <div className="space-y-4 flex flex-col">
                     {orders.map((order) => (
                       <div
                         key={order._id}
-                        className="border-0 rounded-lg overflow-hidden shadow-md min-h-[80px]"
+                        className="rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
                       >
                         <div
-                          className="flex justify-between items-center p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors h-full"
+                          className="flex justify-between items-center p-4 bg-gray-50/50 cursor-pointer hover:bg-gray-100/80 transition-colors h-full"
                           onClick={() => toggleOrderExpand(order._id)}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="bg-black text-white p-2 rounded-full flex-shrink-0">
+                            <div className="bg-black text-white p-2.5 rounded-full flex-shrink-0">
                               <Package className="h-5 w-5" />
                             </div>
                             <div className="min-w-0">
@@ -387,7 +393,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                           <div className="flex items-center flex-shrink-0 ml-2">
                             <Badge
                               variant="outline"
-                              className="mr-3 hidden sm:inline-flex"
+                              className="mr-3 hidden sm:inline-flex rounded-full border-0 bg-gray-100/80"
                             >
                               {order.items?.length || 0} items
                             </Badge>
@@ -400,9 +406,9 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                         </div>
 
                         {expandedOrders[order._id] && (
-                          <div className="p-4 sm:p-6 border-t">
+                          <div className="p-6 border-t border-gray-100">
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
-                              <div className="bg-gray-50 p-4 rounded">
+                              <div className="bg-gray-50/50 p-4 rounded-xl">
                                 <p className="text-sm text-gray-600 mb-1">
                                   Order ID
                                 </p>
@@ -410,7 +416,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                                   {order._id}
                                 </p>
                               </div>
-                              <div className="bg-gray-50 p-4 rounded">
+                              <div className="bg-gray-50/50 p-4 rounded-xl">
                                 <p className="text-sm text-gray-600 mb-1">
                                   Order Date
                                 </p>
@@ -418,7 +424,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                                   {formatDate(order.createdAt)}
                                 </p>
                               </div>
-                              <div className="bg-gray-50 p-4 rounded">
+                              <div className="bg-gray-50/50 p-4 rounded-xl">
                                 <p className="text-sm text-gray-600 mb-1">
                                   User ID
                                 </p>
@@ -433,7 +439,6 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                                 <Package className="h-4 w-4 mr-2" />
                                 Order Items
                               </h4>
-                              {/* Inside the order items mapping section, modify the measurements rendering logic */}
                               {order.items && order.items.length > 0 ? (
                                 <div className="space-y-4">
                                   {order.items.map((item, idx) => {
@@ -452,10 +457,9 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                                     return (
                                       <div
                                         key={idx}
-                                        className="border-0 rounded-lg overflow-hidden shadow-sm"
+                                        className="rounded-[20px] overflow-hidden shadow-sm"
                                       >
-                                        {/* Item header */}
-                                        <div className="bg-gray-50 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+                                        <div className="bg-gray-50/50 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 rounded-xl">
                                           <div className="flex flex-col w-full sm:flex-row sm:items-center gap-2 sm:gap-6">
                                             <div>
                                               <span className="text-sm font-medium text-gray-500">
@@ -498,7 +502,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
 
                                           {hasMeasurements && (
                                             <button
-                                              className="text-blue-600 hover:text-blue-800 underline flex items-center mt-2 sm:mt-0"
+                                              className="text-blue-600 hover:text-blue-800 underline flex items-center mt-2 sm:mt-0 hover:bg-blue-50/50 px-3 py-1.5 rounded-full transition-colors"
                                               onClick={(e) =>
                                                 toggleMeasurementsExpand(
                                                   order._id,
@@ -520,10 +524,9 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                                           )}
                                         </div>
 
-                                        {/* Measurements accordion section */}
                                         {isMeasurementsExpanded &&
                                           hasMeasurements && (
-                                            <div className="p-4 border-t bg-white">
+                                            <div className="p-4 border-t border-gray-100 bg-white rounded-xl">
                                               <h5 className="font-medium mb-3 text-gray-700 flex items-center">
                                                 <Ruler className="h-4 w-4 mr-2" />
                                                 {item.productType

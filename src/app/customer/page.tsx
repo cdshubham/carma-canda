@@ -179,13 +179,13 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-2">
                 <Badge
                   variant="outline"
-                  className="bg-blue-50 text-xs sm:text-sm"
+                  className="bg-blue-50 text-xs sm:text-sm !rounded-badgeradius"
                 >
                   Member since {userDetails.memberSince || "N/A"}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="bg-gray-50 text-xs sm:text-sm"
+                  className="bg-gray-50 text-xs sm:text-sm !rounded-badgeradius"
                 >
                   {userDetails.gender || "Not specified"}
                 </Badge>
@@ -388,7 +388,7 @@ export default function HomePage() {
                               <span className="flex items-center">
                                 <Badge
                                   variant="outline"
-                                  className="text-xs px-1 py-0 sm:px-2"
+                                  className="text-xs px-1 py-0 sm:px-2 !rounded-badgeradius"
                                 >
                                   {kid.gender || "Unknown"}
                                 </Badge>

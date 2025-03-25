@@ -325,7 +325,7 @@ export default function SetDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 overflow-hidden">
+      <div className="space-y-6 overflow-hidden ">
         <h1 className="text-3xl font-bold tracking-tight">Customer Details</h1>
         <p className="text-muted-foreground">Loading your information...</p>
         <Card className=" text-white">
@@ -341,15 +341,15 @@ export default function SetDetailsPage() {
   }
 
   return (
-    <div className="space-y-6 mb-4 bg-gray-100 min-h-screen p-4">
-      <h1 className="text-3xl font-bold tracking-tight text-black">
+    <div className="space-y-6 mb-4  h-[calc(100vh-4rem)] overflow-y-auto px-4 rounded-cardradius bg-gray-50">
+      <h1 className="text-3xl font-bold tracking-tight text-black sticky top-0  z-10 py-2 pt-4 rounded-t-cardradius bg-gray-50">
         Customer Details
       </h1>
       <p className="text-gray-600">Update your personal information</p>
 
       <Card className="border border-gray-200 shadow-sm bg-white text-black">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <CardHeader className="border-b border-gray-100 bg-gray-50">
+          <CardHeader className="border-b border-gray-100 bg-gray-50 rounded-t-cardradius">
             <CardTitle className="text-xl font-semibold">
               Personal Information
             </CardTitle>
@@ -727,9 +727,9 @@ export default function SetDetailsPage() {
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="p-4 border border-gray-200 rounded-md bg-gray-50"
+                className="p-4 border border-gray-200  bg-gray-50 !rounded-cardradius"
               >
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4 rounded-cardradius">
                   <Label className="font-medium">
                     Social Profile #{index + 1}
                   </Label>
@@ -754,6 +754,7 @@ export default function SetDetailsPage() {
                     </Label>
                     <Controller
                       name={`social_media.${index}.platform`}
+                      className="!rounded-buttonradius"
                       control={control}
                       rules={{ required: "Platform is required" }}
                       render={({ field }) => (
@@ -768,15 +769,16 @@ export default function SetDetailsPage() {
                         >
                           <SelectTrigger
                             id={`platform-${index}`}
-                            className="border-gray-300 focus:border-black focus:ring-black"
+                            className="border-gray-300 focus:border-black focus:ring-black !rounded-buttonradius"
                           >
-                            <SelectValue placeholder="Select platform" />
+                            <SelectValue placeholder="Select platform" className="!rounded-buttonradius" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="!rounded-buttonradius">
                             {platformOptions.map((option) => (
                               <SelectItem
                                 key={option.value}
                                 value={option.value}
+                                className="!rounded-buttonradius"
                               >
                                 {option.label}
                               </SelectItem>
@@ -832,14 +834,14 @@ export default function SetDetailsPage() {
                       />
                       {(errors.social_media?.[index]?.handle ||
                         errors.social_media?.[index]?.url) && (
-                        <p className="text-sm text-red-500">
-                          {getFieldTypeForPlatform(
-                            watchSocialMedia[index].platform
-                          ) === "handle"
-                            ? errors.social_media?.[index]?.handle?.message
-                            : errors.social_media?.[index]?.url?.message}
-                        </p>
-                      )}
+                          <p className="text-sm text-red-500">
+                            {getFieldTypeForPlatform(
+                              watchSocialMedia[index].platform
+                            ) === "handle"
+                              ? errors.social_media?.[index]?.handle?.message
+                              : errors.social_media?.[index]?.url?.message}
+                          </p>
+                        )}
                     </div>
                   )}
                 </div>
@@ -850,27 +852,27 @@ export default function SetDetailsPage() {
               type="button"
               variant="outline"
               onClick={() => append({ platform: "", handle: "", url: "" })}
-              className="w-full border-dashed border-gray-300 hover:border-black hover:bg-gray-50 flex items-center justify-center py-3"
+              className="w-full border-dashed border-gray-300 hover:border-black hover:bg-gray-50 flex items-center justify-center py-3 !rounded-buttonradius"
             >
               <PlusCircle size={16} className="mr-2" />
               Add Social Media Profile
             </Button>
           </CardContent>
 
-          <CardFooter className="flex justify-end space-x-4 py-6 border-t border-gray-100 bg-gray-50">
+          <CardFooter className="flex justify-end space-x-4 py-6 border-t border-gray-100 bg-gray-50 rounded-b-cardradius">
             <Button
               type="button"
               variant="outline"
               onClick={handleCancel}
               disabled={isSubmitting || !isDirty}
-              className="border-gray-300 hover:bg-gray-100 hover:text-black"
+              className="border-gray-300 hover:bg-gray-100 hover:text-black !rounded-buttonradius"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || !isDirty}
-              className="bg-black hover:bg-gray-800 text-white"
+              className="bg-black hover:bg-gray-800 text-white !rounded-buttonradius"
             >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>

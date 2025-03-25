@@ -12,7 +12,7 @@ import Link from "next/link";
 import { toast } from "@pheralb/toast";
 import useFetch from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 interface RegisterFormInputs {
   username: string;
   email: string;
@@ -55,8 +55,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
+    <div className=" flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
+     
       <div className="max-w-md w-full p-6 rounded-lg  sm:p-8">
+        <div className="relative w-full h-[120px]">
+          <Image
+            src="/images/carma.jpg"
+            alt="Company"
+            fill
+            style={{ objectFit: "cover" }}
+            className="max-w-full"
+          />
+        </div>
         <h2 className="text-2xl font-bold text-center mb-6 text-black">
           Sign Up
         </h2>
@@ -68,7 +78,7 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Username"
                 {...register("username", { required: "Username is required" })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 !rounded-buttonradius focus:ring-black focus:border-black text-black"
               />
             </div>
             {errors.username && (
@@ -85,7 +95,7 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Email"
                 {...register("email", { required: "Email is required" })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 !rounded-buttonradius focus:ring-black focus:border-black text-black"
               />
             </div>
             {errors.email && (
@@ -101,7 +111,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 {...register("password", { required: "Password is required" })}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black text-black"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 !rounded-buttonradius focus:ring-black focus:border-black text-black"
               />
               <span
                 onClick={togglePasswordVisibility}
@@ -122,7 +132,7 @@ export default function RegisterPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+              className="w-full bg-black text-white py-2 !rounded-buttonradius hover:bg-gray-800 transition"
           >
             {loading ? "loading..." : "Sign Up"}
           </button>

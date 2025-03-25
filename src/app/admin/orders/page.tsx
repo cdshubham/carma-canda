@@ -153,11 +153,11 @@ const OrdersTable2 = () => {
 
   if (error) {
     return (
-      <div className="p-4 text-center text-red-600">
+      <div className="p-4 text-center text-red-600 !rounded-cardradius">
         <p>Error: {error}</p>
         <Button
           onClick={() => window.location.reload()}
-          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white !rounded-buttonradius"
         >
           Retry
         </Button>
@@ -172,16 +172,16 @@ const OrdersTable2 = () => {
         <Button
           onClick={() => setIsAddModalOpen(true)}
           disabled={isAddLoading}
-          className="text-white bg-black  w-full sm:w-auto !rounded-buttonradius btnbg"
+          className="text-white bg-black w-full sm:w-auto !rounded-buttonradius btnbg"
         >
           Add New Order
         </Button>
       </div>
 
-      <div className="w-full overflow-x-auto bg-gray-50 shadow-lg rounded-xl sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
-        <Table className="rounded-lg ">
-          <TableHeader className="bg-black text-white rounded-lg h-14">
-            <TableRow className="rounded-lg">
+      <div className="w-full overflow-x-auto bg-gray-50 shadow-lg !rounded-cardradius sm:h-[calc(100vh-200px)] h-[calc(100vh-250px)]">
+        <Table className="!rounded-cardradius">
+          <TableHeader className="bg-black text-white !rounded-cardradius h-14">
+            <TableRow className="!rounded-cardradius">
               <TableHead className="px-6 py-3">Order ID</TableHead>
               <TableHead className="px-6 py-3">Customer</TableHead>
               <TableHead className="px-6 py-3">Email</TableHead>
@@ -195,10 +195,9 @@ const OrdersTable2 = () => {
               orders.map((order, index) => (
                 <TableRow
                   key={order.orderId || order._id || order.trackingId}
-                  className={`border-b  duration-200 ${index % 2 === 0 ? "bg-white hover:bg-white" : "bg-gray-200 hover:bg-gray-200"}`}
-
+                  className={`border-b border-gray-100 duration-200 ${index % 2 === 0 ? "bg-gray-50 hover:bg-gray-50" : "bg-white hover:bg-white"}`}
                 >
-                  <TableCell className="px-6 py-4 whitespace-nowrap font-medium">
+                  <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-600">
                     {order.orderId || order.trackingId || order._id}
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -223,7 +222,7 @@ const OrdersTable2 = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-blue-500  text-white bg-black px-4 !rounded-buttonradius btnhover"
+                      className="bg-black text-white px-4 !rounded-buttonradius btnhover"
                       onClick={() =>
                         handleViewOrder(
                           order.orderId || order._id || order.trackingId

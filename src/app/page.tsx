@@ -20,13 +20,14 @@ function FeaturedProductDisplay({ productType = "shirt" }) {
   return (
     <div className="relative w-full h-full">
       <div className="relative w-full h-full flex justify-center">
-        <div className="relative w-full h-96 overflow-hidden rounded-lg">
+        <div className="relative w-full h-96 overflow-hidden rounded-cardradius">
           <img
             src="https://images.pexels.com/photos/1337477/pexels-photo-1337477.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             alt={`${product.name} model`}
             fill
             style={{ objectFit: "cover" }}
             priority
+            className="rounded-cardradius"
           />
         </div>
       </div>
@@ -129,7 +130,7 @@ export default function Home() {
         </div>
 
         <section id="collections" className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-7xl mx-auto px-6 ">
             <h2 className="text-3xl font-bold mb-12 text-center">
               Our Featured Collections
             </h2>
@@ -156,9 +157,9 @@ export default function Home() {
               ].map((collection, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-cardradius overflow-hidden shadow-sm hover:shadow-md transition-shadow "
                 >
-                  <div className="h-64 overflow-hidden">
+                  <div className="h-64 overflow-hidden rounded-t-cardradius ">
                     <img
                       src={collection.image}
                       alt={collection.title}
@@ -172,7 +173,7 @@ export default function Home() {
                     <p className="text-gray-600 mb-4">
                       {collection.description}
                     </p>
-                    <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                    <Button className="w-full bg-black hover:bg-gray-800 text-white !rounded-buttonradius">
                       Explore Collection
                     </Button>
                   </div>

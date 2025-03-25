@@ -73,13 +73,13 @@ export default function FamilyDetailsPage() {
             data.children && data.children.length > 0
               ? data.children
               : [
-                  {
-                    firstName: "",
-                    lastName: "",
-                    gender: "",
-                    birthday: { day: "", month: "", year: "" },
-                  },
-                ],
+                {
+                  firstName: "",
+                  lastName: "",
+                  gender: "",
+                  birthday: { day: "", month: "", year: "" },
+                },
+              ],
         };
 
         reset(formData);
@@ -169,20 +169,20 @@ export default function FamilyDetailsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+    <div className="max-w-4xl mx-auto p-6 bg-white !rounded-cardradius shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-black text-center">
         Family Details
       </h1>
 
       {apiError && (
-        <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-200">
+        <div className="mb-6 p-4 bg-red-100 text-red-700 !rounded-cardradius border border-red-200">
           <p className="font-medium">Error</p>
           <p>{apiError}</p>
         </div>
       )}
 
       {isLoading && !isSubmitting && (
-        <div className="mb-6 p-4 bg-gray-100 text-black rounded-md border border-gray-200 flex items-center justify-center">
+        <div className="mb-6 p-4 bg-gray-100 text-black !rounded-cardradius border border-gray-200 flex items-center justify-center">
           <svg
             className="animate-spin h-5 w-5 mr-3 text-black"
             xmlns="http://www.w3.org/2000/svg"
@@ -208,7 +208,7 @@ export default function FamilyDetailsPage() {
       )}
 
       {isSubmitted && (
-        <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-md border border-green-200 flex items-center">
+        <div className="mb-6 p-4 bg-green-100 text-green-700 !rounded-cardradius border border-green-200 flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 mr-2"
@@ -227,7 +227,7 @@ export default function FamilyDetailsPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Spouse Details Section */}
-        <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-gray-50 p-6 !rounded-cardradius shadow-sm border border-gray-200">
           <h2 className="text-xl font-semibold mb-4 text-black flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -252,7 +252,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.firstName", {
                   required: "First name is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 placeholder="Enter first name"
               />
               {errors.spouse?.firstName && (
@@ -270,7 +270,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.lastName", {
                   required: "Last name is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 placeholder="Enter last name"
               />
               {errors.spouse?.lastName && (
@@ -288,7 +288,7 @@ export default function FamilyDetailsPage() {
                 {...register("spouse.gender", {
                   required: "Gender is required",
                 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
               >
                 <option value="">Select gender</option>
                 <option value="male">Male</option>
@@ -316,7 +316,7 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(0?[1-9]|[12][0-9]|3[01])$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
                 <div>
@@ -328,7 +328,7 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(0?[1-9]|1[012])$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
                 <div>
@@ -340,23 +340,23 @@ export default function FamilyDetailsPage() {
                       required: true,
                       pattern: /^(19|20)\d{2}$/,
                     })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                    className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                   />
                 </div>
               </div>
               {(errors.spouse?.birthday?.day ||
                 errors.spouse?.birthday?.month ||
                 errors.spouse?.birthday?.year) && (
-                <p className="mt-1 text-sm text-red-600">
-                  Please enter a valid date
-                </p>
-              )}
+                  <p className="mt-1 text-sm text-red-600">
+                    Please enter a valid date
+                  </p>
+                )}
             </div>
           </div>
         </div>
 
         {/* Children Details Section */}
-        <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-gray-50 p-6 !rounded-cardradius shadow-sm border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-black flex items-center">
               <svg
@@ -379,7 +379,7 @@ export default function FamilyDetailsPage() {
                   birthday: { day: "", month: "", year: "" },
                 })
               }
-              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors duration-200 flex items-center"
+              className="px-4 py-2 bg-black text-white !rounded-buttonradius hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors duration-200 flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -398,14 +398,14 @@ export default function FamilyDetailsPage() {
           </div>
 
           {fields.length === 0 ? (
-            <div className="mb-6 p-4 bg-gray-100 text-gray-700 rounded-md">
+            <div className="mb-6 p-4 bg-gray-100 text-gray-700 !rounded-cardradius">
               No children added yet. Click 'Add Child' to add a child.
             </div>
           ) : (
             fields.map((field, index) => (
               <div
                 key={field.id}
-                className="mb-6 p-4 border border-gray-200 rounded-lg bg-white shadow-sm"
+                className="mb-6 p-4 border border-gray-200 !rounded-cardradius bg-white shadow-sm"
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium text-black">
@@ -441,7 +441,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.firstName`, {
                         required: "First name is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                       placeholder="Enter first name"
                     />
                     {errors.children?.[index]?.firstName && (
@@ -459,7 +459,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.lastName`, {
                         required: "Last name is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                       placeholder="Enter last name"
                     />
                     {errors.children?.[index]?.lastName && (
@@ -477,7 +477,7 @@ export default function FamilyDetailsPage() {
                       {...register(`children.${index}.gender`, {
                         required: "Gender is required",
                       })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                     >
                       <option value="">Select gender</option>
                       <option value="male">Male</option>
@@ -505,7 +505,7 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(0?[1-9]|[12][0-9]|3[01])$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                         />
                       </div>
                       <div>
@@ -517,7 +517,7 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(0?[1-9]|1[012])$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                         />
                       </div>
                       <div>
@@ -529,17 +529,17 @@ export default function FamilyDetailsPage() {
                             required: true,
                             pattern: /^(19|20)\d{2}$/,
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
+                          className="w-full px-3 py-2 border border-gray-300 !rounded-buttonradius focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-center"
                         />
                       </div>
                     </div>
                     {(errors.children?.[index]?.birthday?.day ||
                       errors.children?.[index]?.birthday?.month ||
                       errors.children?.[index]?.birthday?.year) && (
-                      <p className="mt-1 text-sm text-red-600">
-                        Please enter a valid date
-                      </p>
-                    )}
+                        <p className="mt-1 text-sm text-red-600">
+                          Please enter a valid date
+                        </p>
+                      )}
                   </div>
                 </div>
               </div>
@@ -551,9 +551,8 @@ export default function FamilyDetailsPage() {
           <button
             type="submit"
             disabled={isLoading || isSubmitting}
-            className={`px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors duration-200 font-medium flex items-center ${
-              isLoading || isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className={`px-4 py-2 bg-black text-white !rounded-buttonradius hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors duration-200 font-medium flex items-center ${isLoading || isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+              }`}
           >
             {isSubmitting ? (
               <>
