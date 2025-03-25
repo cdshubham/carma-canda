@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 function FeaturedProductDisplay({ productType = "shirt" }) {
   const productInfo = {
     shirt: {

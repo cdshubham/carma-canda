@@ -1,20 +1,20 @@
-import { NextRequest } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { jwtVerify, type JWTPayload } from 'jose';
+import { NextRequest } from 'next/server';
 
-export const getDataFromToken = (request: NextRequest): string | null => {
+export async function getDataFromToken(request: NextRequest): Promise<string | null> {
   try {
     const token = request.cookies.get("token")?.value || "";
     if (!token) throw new Error("Token not found");
 
-    const decodedToken = jwt.verify(
-      token,
-      process.env.TOKEN_SECRET!
-    ) as JwtPayload;
-    return decodedToken.id as string;
+    // Use jose's jwtVerify to decode and verify the JWT
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(process.env.TOKEN_SECRET!));
+
+    // Assuming the payload contains the 'id' field as a string, return it.
+    return payload.id as string;
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(error.message);
     }
     throw new Error("An unknown error occurred");
   }
-};
+}
