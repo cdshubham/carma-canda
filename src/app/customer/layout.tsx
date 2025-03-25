@@ -26,10 +26,10 @@ export default function RootLayout({
 
   return (
     <div className="bg-slate-50 flex flex-col h-screen max-h-screen overflow-hidden">
-      <div className="flex flex-1">
+      <div className="flex md:flex-row flex-col-reverse  flex-1 h-scren max-h-screen overflow-hidden">
 
         <UserSidebar />
-        <main className="max-h-screen  flex-grow p-6 overflow-y-auto  ">
+        <main className="h-full max-h-full overflow-y-auto  flex-grow p-6  mt-8 md:mt-0  ">
           <SessionProvider>{children}</SessionProvider>
         </main>
 

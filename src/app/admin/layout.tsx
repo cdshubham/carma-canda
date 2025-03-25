@@ -23,7 +23,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [activeTab, setActiveTab] = useState(wordAfterAdmin);
 
   return (
-    <div className="flex h-screen  flex-col-reverse md:flex-row">
+    <div className="flex h-screen  flex-col-reverse md:flex-row mt-8 md:mt-0">
      <AdminSidebar />
       <main className="flex-1 p-4 md:p-6 bg-white rounded-lg overflow-auto">
         {children}

@@ -290,7 +290,7 @@ export default function CustomersPage() {
                         onClick={() =>
                           handleViewCustomer(customer._id || customer.id)
                         }
-                        className="bg-black hover:bg-blue-600 text-white  px-4 !rounded-buttonradius "
+                        className="bg-black  text-white  px-4 !rounded-buttonradius px-4  btnhover "
                       >
                         View
                       </Button>
