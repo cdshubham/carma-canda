@@ -125,7 +125,8 @@ export default function OrdersPage() {
               No Orders Found
             </h2>
             <p className="text-gray-500 mt-2">
-              You haven't placed any orders yet.
+              {/* You haven't placed any orders yet. */}
+              <p>{`You haven't placed any orders yet.`}</p>
             </p>
           </div>
         ) : (

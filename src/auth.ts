@@ -1,63 +1,44 @@
-import NextAuth, { CredentialsSignin } from "next-auth";
-
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { connect } from "./db/connection";
-import User from "./models/userModels";
-import { compare } from "bcryptjs";
+import { NextResponse } from "next/server";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-        },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials.email as string | undefined;
-        const password = credentials.password as string | undefined;
-
-        if (!email || !password) {
-          throw new CredentialsSignin("All fields are required.");
-        }
-        await connect();
-
-        const user = await User.findOne({ email });
-        console.log(" 🎶🎶", user);
-
-        if (!user) {
-          throw new CredentialsSignin("Invalid email or password");
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("All fields are required.");
         }
 
-        const valid = await compare(password, user.password);
+        const response = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/user/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          }
+        );
 
-        if (!valid) {
-          throw new CredentialsSignin("Invalid email or password");
+        const user = await response.json();
+
+        if (!response.ok) {
+          throw new Error(user.error || "Login failed");
         }
 
-        console.log("😶😶‍🌫️😶‍🌫️", user);
-
-        // Use first_name and last_name
-        const userData = {
-          id: user._id,
-          name: `${user.first_name} ${user.last_name}`, // Updated here
-          email: user.email,
-          role: user.role,
-          memberSince: user.createdAt,
-        };
-
-        return userData;
+        return user;
       },
     }),
   ],
   pages: {
-    signIn: "/api/auth/login",
+    signIn: "/login", // Keep it as a frontend login page
   },
   callbacks: {
     async session({ session, token }) {
@@ -69,45 +50,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
-        console.log("chlo ji", token, user);
         token.role = user.role;
       }
       return token;
     },
-
     async signIn({ user, account }) {
-      if (account?.provider === "credentials") {
-        return true;
-      } else {
-        return false;
-      }
+      console.log("user", user);
+      return account?.provider === "credentials";
     },
     async authorized({ request, auth }) {
-      const path = request.nextUrl.pathname;
-      console.log("😊💥", path);
+      const { pathname } = request.nextUrl;
 
-      if (path === "/") {
+      if (pathname === "/") {
         if (auth?.user?.role === "admin") {
-          console.log("Hello");
-          return Response.redirect(new URL("/admin/orders", request.url));
+          return NextResponse.redirect(new URL("/admin/orders", request.url));
         }
         if (auth?.user?.role === "user") {
-          return Response.redirect(new URL("/customer", request.url));
+          return NextResponse.redirect(new URL("/customer", request.url));
         }
       }
 
-      if (path.includes("/admin") && auth?.user?.role !== "admin") {
-        console.log("chal haatt 🔫");
-        return false;
+      if (pathname.includes("/admin") && auth?.user?.role !== "admin") {
+        return NextResponse.json({ error: "Access Denied" }, { status: 403 });
       }
 
-      if (
-        path.includes("/customer") &&
-        !path.includes("/admin") &&
-        auth?.user?.role !== "user"
-      ) {
-        console.log("chal haatt 🤡");
-        return false;
+      if (pathname.includes("/customer") && auth?.user?.role !== "user") {
+        return NextResponse.json({ error: "Access Denied" }, { status: 403 });
       }
 
       return true;

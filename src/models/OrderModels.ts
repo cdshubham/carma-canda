@@ -38,19 +38,22 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
-const orderSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-    required: true,
+const orderSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    trackingId: { type: String, unique: true }, // Use UUID for unique tracking ID
+    dnNumber: { type: String },
+    deliveryDate: { type: Date },
+    items: [itemSchema],
   },
-  trackingId: { type: String, unique: true },
-  dnNumber: { type: String },
-  deliveryDate: { type: Date },
-  items: [itemSchema],
-  createdAt: { type: Date, default: Date.now },
-});
+  { timestamps: true } // Automatically adds `createdAt` & `updatedAt`
+);
 
-const Order = mongoose.models?.orders || mongoose.model("orders", orderSchema);
+// Prevent model recompilation in Next.js & Vercel
+const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
 export default Order;

@@ -5,6 +5,7 @@ import { connect } from "@/db/connection";
 export async function GET(request) {
   await connect();
 
+  console.log(request);
   try {
     const allUsers = await User.find({ role: { $ne: "admin" } });
 

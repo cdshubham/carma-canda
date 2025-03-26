@@ -31,12 +31,16 @@ export default function LoginPage() {
   const { data, fetchData, loading } = useFetch("/api/users/login", {
     method: "POST",
   });
+  console.log("data", data);
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onSubmit = async (Formdata: AuthFormInputs) => {
-    const fetchPromise = fetchData(Formdata);
+    const fetchPromise = fetchData(
+      Formdata as unknown as Record<string, unknown>
+    );
+
     toast.loading({
       text: "Loading...",
       options: {
@@ -50,8 +54,7 @@ export default function LoginPage() {
 
             console.log("👍😂", updatedSession);
 
-            if (updatedSession?.user?.role === "admin") {
-              console.log("user is admin----------->");
+            if ((updatedSession?.user as { role?: string })?.role === "admin") {
               router.push("/admin/orders");
             } else {
               console.log("👍👍", updatedSession?.user);
@@ -134,7 +137,8 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="text-xs sm:text-sm text-center mt-3 sm:mt-4 text-black">
-          Don't have an account?{" "}
+          {/* Don't have an account?{" "} */}
+          Don&apos;t have an account?{" "}
           <Link href="/api/auth/signup" className="text-black font-bold">
             Sign Up
           </Link>

@@ -1,21 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { connect } from "@/db/connection";
 import Order from "@/models/OrderModels";
 import mongoose from "mongoose";
 
-export async function GET(request, { params }) {
+type OrderRouteContext = {
+  params: {
+    orderId: string;
+  };
+};
+
+export async function GET(request: NextRequest, context: OrderRouteContext) {
   try {
     await connect();
-    const { orderId } = params;
+    const { orderId } = context.params;
 
-    // Find the order and populate with full customer details
     const orderResults = await Order.aggregate([
       {
         $match: { _id: new mongoose.Types.ObjectId(orderId) },
       },
       {
         $lookup: {
-          from: "users", // The collection name in MongoDB
+          from: "users",
           localField: "userId",
           foreignField: "_id",
           as: "userDetails",
@@ -29,7 +34,6 @@ export async function GET(request, { params }) {
       },
     ]);
 
-    // Aggregation returns an array, so check if it's empty
     if (!orderResults || orderResults.length === 0) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
@@ -37,11 +41,9 @@ export async function GET(request, { params }) {
       );
     }
 
-    // Get the first (and should be only) result
     const order = orderResults[0];
     const userDetails = order.userDetails || {};
 
-    // Transform the data to include both order and customer details
     const formattedResponse = {
       order: {
         orderId: order._id.toString(),
@@ -60,7 +62,9 @@ export async function GET(request, { params }) {
       customer: userDetails
         ? {
             id: userDetails._id ? userDetails._id.toString() : null,
-            name: `${userDetails.first_name || ""} ${userDetails.last_name || ""}`.trim(),
+            name: `${userDetails.first_name || ""} ${
+              userDetails.last_name || ""
+            }`.trim(),
             email: userDetails.email || "",
             phone: userDetails.phone || "",
             gender: userDetails.gender || "",

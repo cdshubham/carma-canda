@@ -3,6 +3,12 @@ import User from "@/models/userModels";
 // import { connectToDB } from "@/lib/mongoose";
 import { connect } from "@/db/connection";
 
+interface IChild {
+  first_name: string;
+  last_name?: string;
+  gender: "male" | "female" | "other";
+  birthday?: Date;
+}
 // GET handler to fetch user's family details
 export async function GET(req: NextRequest) {
   try {
@@ -48,7 +54,8 @@ export async function GET(req: NextRequest) {
           },
       children:
         user.children && user.children.length > 0
-          ? user.children.map((child: any) => ({
+          ? // ? user.children.map((child: any) => ({
+            user.children.map((child: IChild) => ({
               firstName: child.first_name || "",
               lastName: child.last_name || "",
               gender: child.gender || "",
@@ -64,7 +71,7 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(formattedData, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching family details:", error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch family details" },
@@ -73,7 +80,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST handler to update family details
 export async function POST(req: NextRequest) {
   try {
     const { userId, spouse, children } = await req.json();
@@ -94,9 +100,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Format spouse data
     if (spouse) {
-      // Only create the date if all parts are provided
       let spouseBirthday = null;
       if (
         spouse.birthday &&
@@ -111,7 +115,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Update spouse directly in the user document
       user.spouse = {
         first_name: spouse.firstName,
         last_name: spouse.lastName,
@@ -120,11 +123,8 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    // Format children data
     if (children && Array.isArray(children)) {
-      // Map the children array to the format expected by the model
       const formattedChildren = children.map((child) => {
-        // Only create the date if all parts are provided
         let childBirthday = null;
         if (
           child.birthday &&
@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
       { message: "Family details updated successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating family details:", error.message, error.stack);
     return NextResponse.json(
       { error: error.message || "Failed to update family details" },

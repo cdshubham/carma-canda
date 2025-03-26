@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useFetch } from "@/hooks/useFetch";
 import {
@@ -19,12 +19,12 @@ import {
   MapPin,
   Globe,
   User,
-  Users,
+  // Users,
   Heart,
   Ruler,
-  Clock,
-  CreditCard,
-  TrendingUp,
+  // Clock,
+  // CreditCard,
+  // TrendingUp,
 } from "lucide-react";
 
 interface CustomerData {
@@ -69,6 +69,8 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
     mostPurchased: "",
     lastPurchase: null,
   });
+  console.log("orderStatistics", orderStatistics);
+
   const [expandedMeasurements, setExpandedMeasurements] = useState({});
 
   const toggleMeasurementsExpand = (orderId: string, itemIndex: number, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -130,7 +132,7 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
     }
 
     let totalSpent = 0;
-    let itemCounts = {};
+    const itemCounts = {};
     let latestOrderDate = new Date(0);
 
     orderData.forEach((order: any) => {
@@ -438,7 +440,8 @@ const CustomerModal = ({ isOpen, onClose, userId }: { isOpen: boolean, onClose: 
                       No Orders Found
                     </h3>
                     <p className="text-gray-500">
-                      This customer hasn't placed any orders yet.
+                      {/* This customer hasn't placed any orders yet. */}
+                      This customer hasn&#39;t placed any orders yet.
                     </p>
                   </div>
                 ) : (

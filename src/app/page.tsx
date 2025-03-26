@@ -1,7 +1,7 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-
+import GoogleReviewsWidget from "@/components/GoogleReviewsWidget";
 function FeaturedProductDisplay({ productType = "shirt" }) {
   const productInfo = {
     shirt: {
@@ -183,6 +183,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <GoogleReviewsWidget />
       </div>
 
       <footer className="bg-gray-100 text-black py-12 border-t border-gray-200">
