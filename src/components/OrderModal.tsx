@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Pencil, Eye, Trash } from "lucide-react";
 import debounce from "lodash/debounce";
 import { UseFormReturn } from "react-hook-form";
+import { colorIndices } from "@/app/data/colourindex";
 
 interface OrderFormData {
   customerId: string;
