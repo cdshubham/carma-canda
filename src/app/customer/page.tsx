@@ -28,6 +28,7 @@ import useFetch from "../../hooks/useFetch";
 export default function HomePage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  console.log(session);
 
   const {
     data: userDetails,
