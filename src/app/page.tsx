@@ -19,7 +19,7 @@ function FeaturedProductDisplay({ productType = "shirt" }) {
   const product = productInfo[productType];
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full ">
       <div className="relative w-full h-full flex justify-center">
         <div className="relative w-full h-96 overflow-hidden rounded-cardradius">
           <img
