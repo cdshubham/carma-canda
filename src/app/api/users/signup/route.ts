@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Send a welcome email
     try {
-      await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/email`, {
         sendTo: email,
       });
       console.log("Welcome email sent successfully.");

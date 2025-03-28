@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     console.log(savedUser);
 
     try {
-      await axios.post(`${process.env.PUBLIC_BASE_URL}/api/email`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/email`, {
         sendTo: email,
         password,
       });
