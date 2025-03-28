@@ -369,7 +369,7 @@ const CustomerModal = ({
                         customerData.children.length > 0 && (
                           <div className="bg-gray-50/50 p-6 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-200">
                             <h3 className="font-bold mb-4 flex items-center">
-                              <Users className="h-5 w-5 mr-2" />
+                              <User className="h-5 w-5 mr-2" />
                               Children Information (
                               {customerData.children.length})
                             </h3>
