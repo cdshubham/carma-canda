@@ -15,7 +15,7 @@ export const authOptions = {
           console.log("adadsa", process.env.NEXTAUTH_URL);
 
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/users/login`,
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/login`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
