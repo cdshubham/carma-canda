@@ -34,7 +34,7 @@ const sendEmail = async (to, subject, text, imageUrl) => {
 
 // API Route
 export async function GET() {
-  connect();
+  await connect();
 
   const today = new Date();
   const formattedToday = `${today.getMonth() + 1}-${today.getDate()}`;
