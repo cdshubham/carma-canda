@@ -9,7 +9,7 @@ export async function GET() {
     const orders = await Order.aggregate([
       {
         $lookup: {
-          from: "users", // The collection name in MongoDB (not the model name)
+          from: "users",
           localField: "userId",
           foreignField: "_id",
           as: "userDetails",

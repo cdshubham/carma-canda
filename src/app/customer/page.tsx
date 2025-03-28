@@ -28,7 +28,7 @@ import useFetch from "../../hooks/useFetch";
 export default function HomePage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  console.log(session);
+  console.log("hehehhehee", session);
 
   const {
     data: userDetails,
@@ -42,6 +42,7 @@ export default function HomePage() {
   useEffect(() => {
     if (userId) {
       fetchData();
+      console.log("tutututu", userDetails);
     }
   }, [error]);
 

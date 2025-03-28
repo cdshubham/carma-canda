@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   await connect();
 
   try {
-    // Parse request body
     const { userId, items } = await req.json();
     console.log("📩 Received Order Data:", { userId, items });
 
@@ -51,7 +50,7 @@ export async function POST(req: Request) {
           customerId: user._id,
           customerEmail: user.email,
           items: newOrder.items,
-          createdAt: newOrder.createdAt.toISOString(), // Standard date format
+          createdAt: newOrder.createdAt.toISOString(),
         },
       },
       { status: 201 }

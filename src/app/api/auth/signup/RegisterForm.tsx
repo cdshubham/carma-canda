@@ -26,7 +26,7 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormInputs>();
   const router = useRouter();
-  const { fetchData, loading } = useFetch("/api/users/signup", {
+  const { fetchData, loading } = useFetch(`/api/users/signup`, {
     method: "POST",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +58,6 @@ export default function RegisterPage() {
 
   return (
     <div className=" flex items-center justify-center px-4 sm:px-6 lg:px-8 ">
-
       <div className="max-w-md w-full p-6 rounded-lg  sm:p-8">
         <div className="relative w-full h-[120px]">
           <Image

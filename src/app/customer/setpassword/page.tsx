@@ -23,7 +23,7 @@ export default function ChangePassword() {
   } = useForm<FormData>();
 
   const { data, loading, error, fetchData } = useFetch(
-    "/api/auth/changepassword",
+    `/api/auth/changepassword`,
     {
       method: "POST",
     }
@@ -88,10 +88,11 @@ export default function ChangePassword() {
               {...register("currentPassword", {
                 required: "Current password is required",
               })}
-              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.currentPassword
-                ? "border-red-500 focus:ring-red-500/10"
-                : "border-gray-300 focus:border-black focus:ring-black/10"
-                }`}
+              className={`w-full px-3 py-2 border !rounded-inputradius ${
+                errors.currentPassword
+                  ? "border-red-500 focus:ring-red-500/10"
+                  : "border-gray-300 focus:border-black focus:ring-black/10"
+              }`}
               disabled={loading || !userId}
               placeholder="Enter your current password"
             />
@@ -115,10 +116,11 @@ export default function ChangePassword() {
                   message: "Password must be at least 8 characters",
                 },
               })}
-              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.newPassword
-                ? "border-red-500 focus:ring-red-500/10"
-                : "border-gray-300 focus:border-black focus:ring-black/10"
-                }`}
+              className={`w-full px-3 py-2 border !rounded-inputradius ${
+                errors.newPassword
+                  ? "border-red-500 focus:ring-red-500/10"
+                  : "border-gray-300 focus:border-black focus:ring-black/10"
+              }`}
               disabled={loading || !userId}
               placeholder="Enter your new password"
             />
@@ -140,10 +142,11 @@ export default function ChangePassword() {
                 validate: (value) =>
                   value === watch("newPassword") || "Passwords do not match",
               })}
-              className={`w-full px-3 py-2 border !rounded-inputradius ${errors.confirmPassword
-                ? "border-red-500 focus:ring-red-500/10"
-                : "border-gray-300 focus:border-black focus:ring-black/10"
-                }`}
+              className={`w-full px-3 py-2 border !rounded-inputradius ${
+                errors.confirmPassword
+                  ? "border-red-500 focus:ring-red-500/10"
+                  : "border-gray-300 focus:border-black focus:ring-black/10"
+              }`}
               disabled={loading || !userId}
               placeholder="Confirm your new password"
             />

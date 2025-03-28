@@ -33,7 +33,7 @@ export default function LoginPage() {
   // Function to get updated session data
   const fetchSession = async () => {
     try {
-      const response = await fetch("/api/auth/session");
+      const response = await fetch(`/api/auth/session`);
       if (!response.ok) throw new Error("Failed to fetch session");
       const session = await response.json();
       console.log("Updated Session:", session);

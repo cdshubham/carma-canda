@@ -72,8 +72,6 @@ const OrderModal: React.FC<OrderModalProps> = ({
   const [selectedColor, setSelectedColor] = useState(colorIndices[0]);
   const [showOptions, setShowOptions] = useState(false);
 
-
-
   // Function to reset all modal fields
   const resetModalFields = () => {
     setSavedItems([]);
@@ -376,7 +374,7 @@ const OrderModal: React.FC<OrderModalProps> = ({
     setCurrentTab(newTab);
 
     // Reset scroll position of the tab content
-    const tabContent = document.querySelector('.tab-content-scroll');
+    const tabContent = document.querySelector(".tab-content-scroll");
     if (tabContent) {
       tabContent.scrollTop = 0;
     }
@@ -482,7 +480,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-cardradius">
           <div className="space-y-6">
-            <h3 className="text-sm font-medium text-gray-900">Upper Body Measurements</h3>
+            <h3 className="text-sm font-medium text-gray-900">
+              Upper Body Measurements
+            </h3>
             {[
               { id: "shirtLength", label: "Shirt Length" },
               { id: "dartPoint", label: "Dart Point" },
@@ -493,7 +493,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
               { id: "frontNeck", label: "Front Neck" },
             ].map((field) => (
               <div key={field.id} className="flex items-center gap-4">
-                <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
+                <label className="w-1/3 text-sm text-gray-900">
+                  {field.label}:
+                </label>
                 <div className="w-2/3 flex gap-2">
                   <Input
                     type="number"
@@ -536,7 +538,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
             ))}
           </div>
           <div className="space-y-6">
-            <h3 className="text-sm font-medium text-gray-900">Sleeves & Other</h3>
+            <h3 className="text-sm font-medium text-gray-900">
+              Sleeves & Other
+            </h3>
             {[
               { id: "backNeck", label: "Back Neck" },
               { id: "tira", label: "Tira" },
@@ -546,7 +550,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
               { id: "armhole", label: "Armhole" },
             ].map((field) => (
               <div key={field.id} className="flex items-center gap-4">
-                <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
+                <label className="w-1/3 text-sm text-gray-900">
+                  {field.label}:
+                </label>
                 <div className="w-2/3 flex gap-2">
                   <Input
                     type="number"
@@ -593,7 +599,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
     } else if (productType === "sharara") {
       return (
         <div className="space-y-6">
-          <h3 className="text-sm font-medium text-gray-900">Sharara Measurements</h3>
+          <h3 className="text-sm font-medium text-gray-900">
+            Sharara Measurements
+          </h3>
           {[
             { id: "shararaLength", label: "Sharara Length" },
             { id: "shararaWaist", label: "Sharara Waist" },
@@ -601,7 +609,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
             { id: "thigh", label: "Thigh" },
           ].map((field) => (
             <div key={field.id} className="flex items-center gap-4">
-              <label className="w-1/3 text-sm text-gray-900">{field.label}:</label>
+              <label className="w-1/3 text-sm text-gray-900">
+                {field.label}:
+              </label>
               <div className="w-2/3 flex gap-2">
                 <Input
                   type="number"
@@ -659,7 +669,7 @@ const OrderModal: React.FC<OrderModalProps> = ({
       setColorOptions(colorIndices); // Show all colors when input is empty
       return;
     }
-    const filteredColors = colorIndices.filter(color =>
+    const filteredColors = colorIndices.filter((color) =>
       color.toLowerCase().includes(searchValue.toLowerCase())
     );
     setColorOptions(filteredColors); // Show all matching colors without limit
@@ -692,13 +702,18 @@ const OrderModal: React.FC<OrderModalProps> = ({
               }}
             >
               <svg
-                className={`h-4 w-4 transition-transform ${showOptions ? 'rotate-180' : ''}`}
+                className={`h-4 w-4 transition-transform ${showOptions ? "rotate-180" : ""}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </Button>
           </div>
@@ -708,7 +723,7 @@ const OrderModal: React.FC<OrderModalProps> = ({
             {colorOptions.map((color) => (
               <li
                 key={color}
-                className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${selectedColor === color ? 'bg-gray-100' : ''}`}
+                className={`px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors ${selectedColor === color ? "bg-gray-100" : ""}`}
                 onClick={() => {
                   setSelectedColor(color);
                   handleItemChange("colour", color);
@@ -735,12 +750,18 @@ const OrderModal: React.FC<OrderModalProps> = ({
     <Dialog open={isAddModalOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl h-[95vh] bg-white !rounded-cardradius">
         <DialogHeader className="border-b pb-3">
-          <DialogTitle className="text-2xl font-semibold text-gray-900">Create New Order</DialogTitle>
+          <DialogTitle className="text-2xl font-semibold text-gray-900">
+            Create New Order
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <Tabs value={currentTab} onValueChange={handleTabChange} className="h-[calc(95vh-12rem)]">
+            <Tabs
+              value={currentTab}
+              onValueChange={handleTabChange}
+              className="h-[calc(95vh-12rem)]"
+            >
               <TabsList className="grid w-full grid-cols-4 mb-3">
                 <TabsTrigger
                   value="order"
@@ -778,7 +799,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
                       name="customerName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-900">Customer *</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-900">
+                            Customer *
+                          </FormLabel>
                           <FormControl>
                             <div className="search-dropdown-container relative rounded-buttonradius">
                               <Input
@@ -806,7 +829,8 @@ const OrderModal: React.FC<OrderModalProps> = ({
                                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors"
                                       onClick={() => handleOptionSelect(user)}
                                     >
-                                      {user.first_name} {user.last_name} ({user.email})
+                                      {user.first_name} {user.last_name} (
+                                      {user.email})
                                     </li>
                                   ))}
                                 </ul>
@@ -825,25 +849,41 @@ const OrderModal: React.FC<OrderModalProps> = ({
                   {currentItem && (
                     <div className="space-y-6">
                       <div className="space-y-4">
-                        <label className="text-sm font-medium text-gray-900">Product Type *</label>
+                        <label className="text-sm font-medium text-gray-900">
+                          Product Type *
+                        </label>
                         <div className="grid grid-cols-2 gap-4">
                           <div
-                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${currentItem.productType === "shirt"
-                              ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
-                              : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
-                              }`}
-                            onClick={() => handleItemChange("productType", "shirt")}
+                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${
+                              currentItem.productType === "shirt"
+                                ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                                : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                            }`}
+                            onClick={() =>
+                              handleItemChange("productType", "shirt")
+                            }
                           >
-                            <span className={`text-sm font-medium ${currentItem.productType === "shirt" ? "text-white" : "text-gray-900"}`}>Shirt</span>
+                            <span
+                              className={`text-sm font-medium ${currentItem.productType === "shirt" ? "text-white" : "text-gray-900"}`}
+                            >
+                              Shirt
+                            </span>
                           </div>
                           <div
-                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${currentItem.productType === "sharara"
-                              ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
-                              : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
-                              }`}
-                            onClick={() => handleItemChange("productType", "sharara")}
+                            className={`p-4 cursor-pointer flex items-center justify-center transition-all h-10 rounded-buttonradius ${
+                              currentItem.productType === "sharara"
+                                ? "bg-gray-900 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                                : "bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                            }`}
+                            onClick={() =>
+                              handleItemChange("productType", "sharara")
+                            }
                           >
-                            <span className={`text-sm font-medium ${currentItem.productType === "sharara" ? "text-white" : "text-gray-900"}`}>Sharara</span>
+                            <span
+                              className={`text-sm font-medium ${currentItem.productType === "sharara" ? "text-white" : "text-gray-900"}`}
+                            >
+                              Sharara
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -851,7 +891,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
                       {renderColorSelection()}
 
                       <div className="space-y-4">
-                        <label className="text-sm font-medium text-gray-900">Quantity *</label>
+                        <label className="text-sm font-medium text-gray-900">
+                          Quantity *
+                        </label>
                         <Input
                           type="number"
                           min="1"
@@ -876,7 +918,10 @@ const OrderModal: React.FC<OrderModalProps> = ({
                 </TabsContent>
 
                 {/* Measurements Tab */}
-                <TabsContent value="measurements" className="space-y-4 py-3 h-full">
+                <TabsContent
+                  value="measurements"
+                  className="space-y-4 py-3 h-full"
+                >
                   {renderMeasurementFields()}
 
                   {errors.measurements && (
@@ -890,7 +935,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
                 <TabsContent value="saved" className="space-y-4 py-3 h-full">
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-900">Saved Products</h3>
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Saved Products
+                      </h3>
                       <Button
                         type="button"
                         variant="outline"
@@ -907,17 +954,23 @@ const OrderModal: React.FC<OrderModalProps> = ({
                       <div className="flex flex-col items-center justify-center h-[calc(100%-4rem)] text-gray-500">
                         <PlusCircle className="h-12 w-12 mb-4" />
                         <p className="text-center">
-                          No products saved yet. Click "Add New Product" to start.
+                          No products saved yet. Click "Add New Product" to
+                          start.
                         </p>
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {savedItems.map((item, index) => (
-                          <Card key={item.productId} className="overflow-hidden hover:shadow-md transition-shadow">
+                          <Card
+                            key={item.productId}
+                            className="overflow-hidden hover:shadow-md transition-shadow"
+                          >
                             <CardHeader className="p-3 pb-1 bg-gray-50">
                               <CardTitle className="text-sm flex justify-between items-center">
                                 <span className="font-medium text-gray-900">
-                                  {item.productType === "shirt" ? "Shirt" : "Sharara"}
+                                  {item.productType === "shirt"
+                                    ? "Shirt"
+                                    : "Sharara"}
                                 </span>
                                 <div className="flex gap-1">
                                   <Button
@@ -998,15 +1051,17 @@ const OrderModal: React.FC<OrderModalProps> = ({
                     Continue to Measurements
                   </Button>
                 )}
-                {currentTab === "measurements" && currentItem && (editMode || editItemIndex === null) && (
-                  <Button
-                    type="button"
-                    onClick={saveCurrentProduct}
-                    className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
-                  >
-                    Save This Product
-                  </Button>
-                )}
+                {currentTab === "measurements" &&
+                  currentItem &&
+                  (editMode || editItemIndex === null) && (
+                    <Button
+                      type="button"
+                      onClick={saveCurrentProduct}
+                      className="bg-gray-900 hover:bg-gray-800 text-white !rounded-buttonradius shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] border-0"
+                    >
+                      Save This Product
+                    </Button>
+                  )}
                 {currentTab === "saved" && (
                   <Button
                     type="submit"

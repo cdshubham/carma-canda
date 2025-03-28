@@ -104,7 +104,11 @@ interface OrderDetails {
   };
 }
 
-export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDetailsModalProps) {
+export default function OrderDetailsModal({
+  isOpen,
+  onClose,
+  orderId,
+}: OrderDetailsModalProps) {
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -144,10 +148,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
   const formatDate = (dateString: string | undefined) => {
     return dateString
       ? new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
       : "N/A";
   };
 
@@ -178,7 +182,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
             <TabsList className="grid w-full grid-cols-3 mb-3 ">
               <TabsTrigger
                 value="customer"
-                  className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
+                className="data-[state=active]:bg-black data-[state=active]:text-white !rounded-buttonradius"
               >
                 Customer Information
               </TabsTrigger>
@@ -197,7 +201,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
             </TabsList>
 
             {/* Customer Information Tab */}
-            <TabsContent value="customer" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
+            <TabsContent
+              value="customer"
+              className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400"
+            >
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
                   <CardTitle className="text-gray-900">
@@ -219,11 +226,15 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                       <p>{orderDetails.customer.phone || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Gender</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Gender
+                      </p>
                       <p>{orderDetails.customer.gender || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Birthday</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Birthday
+                      </p>
                       <p>{formatDate(orderDetails.customer.birthday)}</p>
                     </div>
                     <div>
@@ -267,8 +278,9 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                               Name
                             </p>
                             <p>
-                              {`${orderDetails.customer.spouse.first_name} ${orderDetails.customer.spouse.last_name || ""
-                                }`.trim()}
+                              {`${orderDetails.customer.spouse.first_name} ${
+                                orderDetails.customer.spouse.last_name || ""
+                              }`.trim()}
                             </p>
                           </div>
                           <div>
@@ -326,7 +338,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
             </TabsContent>
 
             {/* Order Details Tab */}
-            <TabsContent value="order" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
+            <TabsContent
+              value="order"
+              className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400"
+            >
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
                   <CardTitle className="text-gray-900">
@@ -336,7 +351,9 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                 <CardContent className="space-y-4 text-gray-900">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Order ID</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Order ID
+                      </p>
                       <p>{orderDetails.order.orderId}</p>
                     </div>
                     <div>
@@ -414,7 +431,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
             </TabsContent>
 
             {/* Measurements Tab */}
-            <TabsContent value="measurements" className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
+            <TabsContent
+              value="measurements"
+              className="space-y-4 py-3 h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-gray-400"
+            >
               <Card className="border border-gray-200 bg-white">
                 <CardHeader className="bg-white">
                   <CardTitle className="text-gray-900">
@@ -628,10 +648,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                           !item.measurements.shirtMeasurements) ||
                         (item.productType === "sharara" &&
                           !item.measurements.shararaMeasurements)) && (
-                          <p className="text-sm text-gray-600">
-                            No measurement data available
-                          </p>
-                        )}
+                        <p className="text-sm text-gray-600">
+                          No measurement data available
+                        </p>
+                      )}
                     </div>
                   ))}
                 </CardContent>

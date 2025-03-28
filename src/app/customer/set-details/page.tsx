@@ -342,7 +342,6 @@ export default function SetDetailsPage() {
 
   return (
     <div className="space-y-6 mb-4   h-[calc(100vh-4rem)] overflow-y-auto px-4 rounded-cardradius ">
-      
       <h1 className="text-3xl font-bold tracking-tight text-black absolute top-4  z-10  pt-4 rounded-t-cardradius bg-gray-50 w-full py-4">
         Customer Details
       </h1>
@@ -772,7 +771,10 @@ export default function SetDetailsPage() {
                             id={`platform-${index}`}
                             className="border-gray-300 focus:border-black focus:ring-black !rounded-inputradius mt-2"
                           >
-                            <SelectValue placeholder="Select platform" className="!rounded-inputradius" />
+                            <SelectValue
+                              placeholder="Select platform"
+                              className="!rounded-inputradius"
+                            />
                           </SelectTrigger>
                           <SelectContent className="!rounded-buttonradius bg-white z-30">
                             {platformOptions.map((option) => (
@@ -835,14 +837,14 @@ export default function SetDetailsPage() {
                       />
                       {(errors.social_media?.[index]?.handle ||
                         errors.social_media?.[index]?.url) && (
-                          <p className="text-sm text-red-500">
-                            {getFieldTypeForPlatform(
-                              watchSocialMedia[index].platform
-                            ) === "handle"
-                              ? errors.social_media?.[index]?.handle?.message
-                              : errors.social_media?.[index]?.url?.message}
-                          </p>
-                        )}
+                        <p className="text-sm text-red-500">
+                          {getFieldTypeForPlatform(
+                            watchSocialMedia[index].platform
+                          ) === "handle"
+                            ? errors.social_media?.[index]?.handle?.message
+                            : errors.social_media?.[index]?.url?.message}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

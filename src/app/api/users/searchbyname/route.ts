@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ users: [] });
     }
 
-    // Search for users where first_name or last_name matches the query (case-insensitive)
     const users = await User.find({
       $or: [
         { first_name: { $regex: query, $options: "i" } },

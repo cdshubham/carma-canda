@@ -12,8 +12,10 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
+          console.log("adadsa", process.env.NEXTAUTH_URL);
+
           const response = await fetch(
-            "http://localhost:3000/api/users/login",
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/login`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

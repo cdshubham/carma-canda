@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModels";
-// import { connectToDB } from "@/lib/mongoose";
 import { connect } from "@/db/connection";
 
 interface IChild {
@@ -9,7 +8,6 @@ interface IChild {
   gender: "male" | "female" | "other";
   birthday?: Date;
 }
-// GET handler to fetch user's family details
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
@@ -24,14 +22,12 @@ export async function GET(req: NextRequest) {
 
     await connect();
 
-    // Fetch user with children data
     const user = await User.findById(userId);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Format the response data
     const formattedData = {
       spouse: user.spouse
         ? {
@@ -93,7 +89,6 @@ export async function POST(req: NextRequest) {
 
     await connect();
 
-    // Find the user
     const user = await User.findById(userId);
 
     if (!user) {
@@ -110,7 +105,7 @@ export async function POST(req: NextRequest) {
       ) {
         spouseBirthday = new Date(
           parseInt(spouse.birthday.year),
-          parseInt(spouse.birthday.month) - 1, // JavaScript months are 0-indexed
+          parseInt(spouse.birthday.month) - 1,
           parseInt(spouse.birthday.day)
         );
       }
@@ -134,7 +129,7 @@ export async function POST(req: NextRequest) {
         ) {
           childBirthday = new Date(
             parseInt(child.birthday.year),
-            parseInt(child.birthday.month) - 1, // JavaScript months are 0-indexed
+            parseInt(child.birthday.month) - 1,
             parseInt(child.birthday.day)
           );
         }
@@ -147,14 +142,11 @@ export async function POST(req: NextRequest) {
         };
       });
 
-      // Update the children array in the user document
       user.children = formattedChildren;
     } else {
-      // If no children data provided, set it to an empty array
       user.children = [];
     }
 
-    // Log the user data before saving (for debugging)
     console.log(
       "Updating user with data:",
       JSON.stringify(
@@ -167,7 +159,6 @@ export async function POST(req: NextRequest) {
       )
     );
 
-    // Save the updated user
     await user.save();
 
     return NextResponse.json(
