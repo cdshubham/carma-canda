@@ -54,7 +54,7 @@ export async function GET() {
       await sendEmail(
         user.email,
         "Happy Birthday! 🎉",
-        `Dear ${user.first_name},\n\nWishing you a fantastic birthday filled with joy and happiness!\n\nBest regards,\nYour Company`,
+        `Dear ${user.first_name},\n\nWishing you a fantastic birthday filled with joy and happiness!\n\nBest regards,\nCarma Canda`,
         "https://www.sugar.org/wp-content/uploads/Birthday-Cake-1.png"
       );
     }
@@ -64,7 +64,7 @@ export async function GET() {
       await sendEmail(
         user.email,
         "Happy Anniversary! 🎊",
-        `Dear ${user.first_name},\n\nCongratulations on your special day! Wishing you many more years of happiness.\n\nBest regards,\nYour Company`,
+        `Dear ${user.first_name},\n\nCongratulations on your special day! Wishing you many more years of happiness.\n\nBest regards,\nCarma Canda`,
         "https://png.pngtree.com/png-vector/20240506/ourlarge/pngtree-happy-anniversary-my-love-png-image_12376873.png"
       );
     }
@@ -76,7 +76,7 @@ export async function GET() {
         await sendEmail(
           user.email,
           `Happy Birthday to Your Spouse, ${user.spouse.first_name}! 🎂`,
-          `Dear ${user.first_name},\n\nWishing your beloved ${user.spouse.first_name} a wonderful birthday!\n\nBest regards,\nYour Company`,
+          `Dear ${user.first_name},\n\nWishing your beloved ${user.spouse.first_name} a wonderful birthday!\n\nBest regards,\nCarma Canda`,
           "https://www.sugar.org/wp-content/uploads/Birthday-Cake-1.png"
         );
       }
@@ -92,7 +92,7 @@ export async function GET() {
           await sendEmail(
             user.email,
             `Happy Birthday to ${child.first_name}! 🎂`,
-            `Dear ${user.first_name},\n\nWishing your child, ${child.first_name}, a fantastic birthday!\n\nBest regards,\nYour Company`,
+            `Dear ${user.first_name},\n\nWishing your child, ${child.first_name}, a fantastic birthday!\n\nBest regards,\nCarma Canda`,
             "https://thumbs.dreamstime.com/b/cartoon-kids-birthday-party-greeting-card-happy-children-celebrating-balloons-gifts-colorful-vector-illustration-347960233.jpg"
           );
         }
