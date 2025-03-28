@@ -388,7 +388,7 @@ export default function HomePage() {
                           </Avatar>
                           <div className="min-w-0">
                             <h4 className="font-semibold text-sm sm:text-base truncate">
-                              {kid.first_name + " " + kid.first_name}
+                              {kid.first_name + " " + kid.last_name}
                             </h4>
                             <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-600 mt-1 gap-2 sm:gap-4">
                               <span className="flex items-center">
